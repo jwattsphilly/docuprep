@@ -9,6 +9,7 @@ private[attach_pdf] case class Count(countString: String)
 private[attach_pdf] case class ReportCount(countString: String)
 private[attach_pdf] case class SettingsRunning(settingsIsRunning: Boolean)
 private[attach_pdf] case class GuiRunning(guiIsRunning: Boolean)
+private[attach_pdf] case class PauseTimer(pause: Boolean)
 
 /**An Actor object whose purpose is to update the AddPDF_GUI labels and text box, as well as the SettingsIsRunning and
  * GuiIsRunning boolean fields.  This is to prevent race conditions encountered by multi-threading and to make sure
@@ -20,11 +21,12 @@ private[attach_pdf] case class GuiRunning(guiIsRunning: Boolean)
  * If a ReportCount case class is sent, the report timer label is updated.
  * If a SettingsRunning case class is sent, the AddPDF_Util.SettingIsRunning field is updated.
  * If a GUIRunning case class is sent, the AddPDF_Util.guiIsRunning field is updated.
+ * If a PauseTimer case class is sent, the AddPDF_Util.pauseTimer field is updated.
  * If the string "exit" is sent, the LabelUpdater will shut down.
  * All other messages are ignored.
  * 
  * @author James Watts
- * Last updated: February 13th, 2015
+ * Last updated: February 27th, 2015
  */
 private[attach_pdf] class LabelUpdater extends Actor {
   
@@ -61,6 +63,10 @@ private[attach_pdf] class LabelUpdater extends Actor {
     /* Request to update the GuiIsRunning Boolean field */
     case GuiRunning(running) =>
       AddPDF_Util.GuiIsRunning = running								// Update the GuiIsRunning field
+    
+    /* Request to pause the timer */
+    case PauseTimer(pause) =>
+      AddPDF_Util.pauseTimer = pause									// Update the pauseTimer field
     
     /* Request to stop the LabelUpdater thread */
     case "exit" =>

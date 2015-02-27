@@ -21,7 +21,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: February 20th, 2015
+ * Last Updated: February 27th, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -159,7 +159,7 @@ object AddPDF_Util {
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: February 20th, 2015
+   * Last Updated: February 27th, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
@@ -315,15 +315,15 @@ object AddPDF_Util {
         // either the Settings window is closed or the AddPDF window is closed and reopened.
         case ex:FileNotFoundException => 							// If one of the PDF files listed in the text file
           logger.error(s"${ex.getMessage()}\n")						// is not found
-          pauseTimer = true
+          guiUpdater ! PauseTimer(true)
           return
         case ex:IllegalArgumentException => 						// If "Begin"/"End" was not found in the text file
           logger.error(s"${ex.getMessage()}\n")						// or if either of the file names was not a .pdf
-          pauseTimer = true
+          guiUpdater ! PauseTimer(true)
           return
         case ex:Exception => 										// In case of any other Exceptions
           logger.error(s"${ex.getMessage()}\n")
-          pauseTimer = true
+          guiUpdater ! PauseTimer(true)
           return
       }
     }
@@ -377,7 +377,9 @@ object AddPDF_Util {
   }
   
   /**
-   * TODO:
+   * Assuming a connection to the remote server designated by the IP Address can be made, this method copies the input fileToSend
+   * to the destination folder on the remote server.  If a file by the same name and extension already exists in the folder, this 
+   * method will replace that file with the fileToSend.
    * 
    * @param	fileToSend						A java.io.File to copy to the remote server
    * 
@@ -386,14 +388,15 @@ object AddPDF_Util {
    * @param destinationFolderName			A String representation of the folder to copy the fileToSend into
    * 
    * @author James Watts
-   * Last Updated: February 20th, 2015
+   * Last Updated: February 27th, 2015
    */
   def sendFileToOtherServer(fileToSend:File, ipAddress:String, destinationFolderName:String)
   {
+    // TODO: Figure out how to implement this
     // Check to see if a connection can be made.  If not, we're in trouble.
     
     
-    // If connected, send the fileToSend to the destination folder
+    // If connected, send the fileToSend to the destination folder... somehow...
     
   }
   
@@ -608,9 +611,9 @@ object AddPDF_Util {
    * @return					A String representation of minutes and seconds for a timer label
    * 
    * @author James Watts
-   * Last Updated: February 13th, 2015
+   * Last Updated: February 27th, 2015
    */
-  protected[attach_pdf] def generateCountString(time:Int):String = {
+  def generateCountString(time:Int):String = {
     val minutes = time/60										// Get the minutes and seconds based off of the input time
     val seconds = time%60
     

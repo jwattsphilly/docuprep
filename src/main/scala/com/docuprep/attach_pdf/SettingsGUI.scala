@@ -211,7 +211,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     
     reactions+={
       case ButtonClicked(`closeButton`) => 
-          pauseTimer = false									// Un-Pause the timer,
+          guiUpdater ! PauseTimer(false)						// Un-Pause the timer,
           guiUpdater ! SettingsRunning(false)					// set the SettingsIsRunning flag to false,
           close()												// and close the window
         

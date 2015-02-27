@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="com.docuprep"
+		module="attach-pdf_2.10"
+		revision="1.0"
+		conf="test-internal"
+		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
+		date="20141121114539"/>
+	<dependencies>
+		<module organisation="com.typesafe.akka" name="akka-actor_2.11">
+			<revision name="2.3.3" status="release" pubdate="20140520131137" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://akka.io/" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, runtime, master" position="7">
+				<license name="Apache License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="2687" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\com.typesafe.akka\akka-actor_2.11\ivy-2.3.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/typesafe/akka/akka-actor_2.11/2.3.3/akka-actor_2.11-2.3.3.pom"/>
+				<caller organisation="com.docuprep" name="attach-pdf_2.10" conf="test-internal, test, optional, compile, provided, runtime" rev="2.3.3" rev-constraint-default="2.3.3" rev-constraint-dynamic="2.3.3" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="akka-actor_2.11" type="jar" ext="jar" status="no" details="" size="2514991" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\com.typesafe.akka\akka-actor_2.11\jars\akka-actor_2.11-2.3.3.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/typesafe/akka/akka-actor_2.11/2.3.3/akka-actor_2.11-2.3.3.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.typesafe" name="config">
+			<revision name="1.2.1" status="release" pubdate="20140502085416" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/typesafehub/config" downloaded="false" searched="false" default="false" conf="compile, master(*), runtime, compile(*), runtime(*), master" position="9">
+				<license name="Apache License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="2768" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\com.typesafe\config\ivy-1.2.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/typesafe/config/1.2.1/config-1.2.1.pom"/>
+				<caller organisation="com.typesafe.akka" name="akka-actor_2.11" conf="default, compile, runtime, master" rev="1.2.1" rev-constraint-default="1.2.1" rev-constraint-dynamic="1.2.1" callerrev="2.3.3"/>
+				<artifacts>
+					<artifact name="config" type="bundle" ext="jar" status="no" details="" size="219554" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\com.typesafe\config\bundles\config-1.2.1.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/typesafe/config/1.2.1/config-1.2.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang" name="scala-library">
+			<revision name="2.11.1" status="release" pubdate="20140520020221" resolver="public" artresolver="public" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.11.1/" downloaded="true" searched="true" default="false" conf="compile, master(*), runtime, compile(*), runtime(*), master, default(compile), default" position="8">
+				<license name="BSD 3-Clause" url="http://www.scala-lang.org/license.html"/>
+				<metadata-artifact status="successful" details="" size="1424" time="330" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.scala-lang\scala-library\ivy-2.11.1.xml" searched="true" original-local-location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.scala-lang\scala-library\ivy-2.11.1.xml.original" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.11.1/scala-library-2.11.1.pom"/>
+				<caller organisation="com.typesafe.akka" name="akka-actor_2.11" conf="default, compile, runtime, master" rev="2.11.1" rev-constraint-default="2.11.1" rev-constraint-dynamic="2.11.1" callerrev="2.3.3"/>
+				<caller organisation="com.docuprep" name="attach-pdf_2.10" conf="test-internal, test, optional, compile, provided, runtime" rev="2.10.4" rev-constraint-default="2.10.4" rev-constraint-dynamic="2.10.4" callerrev="1.0"/>
+				<caller organisation="org.scala-lang" name="scala-swing" conf="default, compile, runtime, master" rev="2.10.4" rev-constraint-default="2.10.4" rev-constraint-dynamic="2.10.4" callerrev="2.10.4"/>
+				<artifacts>
+					<artifact name="scala-library" type="jar" ext="jar" status="successful" details="" size="5538130" time="36172" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.scala-lang\scala-library\jars\scala-library-2.11.1.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.11.1/scala-library-2.11.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+			<revision name="2.10.4" status="release" pubdate="20140318154629" resolver="sbt-chain" artresolver="sbt-chain" evicted="latest-revision" evicted-reason="" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.10.4/" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, master(*), compile(*), runtime, runtime(*), master" position="-1">
+				<license name="BSD-like" url="http://www.scala-lang.org/downloads/license.html          "/>
+				<metadata-artifact status="no" details="" size="2517" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.scala-lang\scala-library\ivy-2.10.4.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.10.4/scala-library-2.10.4.pom"/>
+				<evicted-by rev="2.11.1"/>
+				<caller organisation="com.docuprep" name="attach-pdf_2.10" conf="test-internal, test, optional, compile, provided, runtime" rev="2.10.4" rev-constraint-default="2.10.4" rev-constraint-dynamic="2.10.4" callerrev="1.0"/>
+				<caller organisation="org.scala-lang" name="scala-swing" conf="default, compile, runtime, master" rev="2.10.4" rev-constraint-default="2.10.4" rev-constraint-dynamic="2.10.4" callerrev="2.10.4"/>
+				<artifacts>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="com.h2database" name="h2">
+			<revision name="1.3.148" status="release" pubdate="20101212044958" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.h2database.com" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, runtime, master" position="6">
+				<license name="The H2 License, Version 1.0" url="http://h2database.com/html/license.html"/>
+				<metadata-artifact status="no" details="" size="2366" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\com.h2database\h2\ivy-1.3.148.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/h2database/h2/1.3.148/h2-1.3.148.pom"/>
+				<caller organisation="com.docuprep" name="attach-pdf_2.10" conf="test-internal, test, optional, compile, provided, runtime" rev="1.3.148" rev-constraint-default="1.3.148" rev-constraint-dynamic="1.3.148" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="h2" type="jar" ext="jar" status="no" details="" size="1232266" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\com.h2database\h2\jars\h2-1.3.148.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/h2database/h2/1.3.148/h2-1.3.148.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.apache.logging.log4j" name="log4j">
+			<revision name="2.1" status="release" pubdate="20141019193833" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://logging.apache.org/log4j/2.x/" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, runtime, master" position="5">
+				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+				<metadata-artifact status="no" details="" size="21849" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.apache.logging.log4j\log4j\ivy-2.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j/2.1/log4j-2.1.pom"/>
+				<caller organisation="com.docuprep" name="attach-pdf_2.10" conf="test-internal, test, optional, compile, provided, runtime" rev="2.1" rev-constraint-default="2.1" rev-constraint-dynamic="2.1" callerrev="1.0"/>
+				<artifacts>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang" name="scala-swing">
+			<revision name="2.10.4" status="release" pubdate="20140318154753" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.10.4/" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, runtime, master" position="4">
+				<license name="BSD-like" url="http://www.scala-lang.org/downloads/license.html          "/>
+				<metadata-artifact status="no" details="" size="2838" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.scala-lang\scala-swing\ivy-2.10.4.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-swing/2.10.4/scala-swing-2.10.4.pom"/>
+				<caller organisation="com.docuprep" name="attach-pdf_2.10" conf="test-internal, test, optional, compile, provided, runtime" rev="2.10.4" rev-constraint-default="2.10.4" rev-constraint-dynamic="2.10.4" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="scala-swing" type="jar" ext="jar" status="no" details="" size="707298" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.scala-lang\scala-swing\jars\scala-swing-2.10.4.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/scala-swing/2.10.4/scala-swing-2.10.4.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.apache.pdfbox" name="pdfbox">
+			<revision name="1.8.6" status="release" pubdate="20140619055755" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, runtime, master" position="0">
+				<metadata-artifact status="no" details="" size="4810" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.apache.pdfbox\pdfbox\ivy-1.8.6.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/pdfbox/pdfbox/1.8.6/pdfbox-1.8.6.pom"/>
+				<caller organisation="com.docuprep" name="attach-pdf_2.10" conf="test-internal, test, optional, compile, provided, runtime" rev="1.8.6" rev-constraint-default="1.8.6" rev-constraint-dynamic="1.8.6" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="pdfbox" type="bundle" ext="jar" status="no" details="" size="4040495" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.apache.pdfbox\pdfbox\bundles\pdfbox-1.8.6.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/pdfbox/pdfbox/1.8.6/pdfbox-1.8.6.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.apache.pdfbox" name="jempbox">
+			<revision name="1.8.6" status="release" pubdate="20140619055456" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, master(*), runtime, compile(*), runtime(*), master" position="3">
+				<metadata-artifact status="no" details="" size="3711" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.apache.pdfbox\jempbox\ivy-1.8.6.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/pdfbox/jempbox/1.8.6/jempbox-1.8.6.pom"/>
+				<caller organisation="org.apache.pdfbox" name="pdfbox" conf="default, compile, runtime, master" rev="1.8.6" rev-constraint-default="1.8.6" rev-constraint-dynamic="1.8.6" callerrev="1.8.6"/>
+				<artifacts>
+					<artifact name="jempbox" type="bundle" ext="jar" status="no" details="" size="50982" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.apache.pdfbox\jempbox\bundles\jempbox-1.8.6.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/pdfbox/jempbox/1.8.6/jempbox-1.8.6.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.apache.pdfbox" name="fontbox">
+			<revision name="1.8.6" status="release" pubdate="20140619055425" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://pdfbox.apache.org/" downloaded="false" searched="false" default="false" conf="compile, master(*), runtime, compile(*), runtime(*), master" position="1">
+				<metadata-artifact status="no" details="" size="3877" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.apache.pdfbox\fontbox\ivy-1.8.6.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/pdfbox/fontbox/1.8.6/fontbox-1.8.6.pom"/>
+				<caller organisation="org.apache.pdfbox" name="pdfbox" conf="default, compile, runtime, master" rev="1.8.6" rev-constraint-default="1.8.6" rev-constraint-dynamic="1.8.6" callerrev="1.8.6"/>
+				<artifacts>
+					<artifact name="fontbox" type="bundle" ext="jar" status="no" details="" size="218560" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\org.apache.pdfbox\fontbox\bundles\fontbox-1.8.6.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/pdfbox/fontbox/1.8.6/fontbox-1.8.6.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="commons-logging" name="commons-logging">
+			<revision name="1.1.1" status="release" pubdate="20071126132410" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://commons.apache.org/logging" downloaded="false" searched="false" default="false" conf="compile, master(*), runtime, compile(*), runtime(*), master" position="2">
+				<metadata-artifact status="no" details="" size="3981" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\commons-logging\commons-logging\ivy-1.1.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.pom"/>
+				<caller organisation="org.apache.pdfbox" name="fontbox" conf="compile, runtime" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="1.8.6"/>
+				<caller organisation="org.apache.pdfbox" name="pdfbox" conf="default, compile, runtime, master" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="1.8.6"/>
+				<artifacts>
+					<artifact name="commons-logging" type="jar" ext="jar" status="no" details="" size="60686" time="0" location="C:\Scala\eclipse\scala_workspace\AddPDF\..\sbt\.ivy2\cache\commons-logging\commons-logging\jars\commons-logging-1.1.1.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>

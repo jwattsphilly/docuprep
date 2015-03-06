@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: February 13th, 2015
+ * Last Updated: February 27th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   

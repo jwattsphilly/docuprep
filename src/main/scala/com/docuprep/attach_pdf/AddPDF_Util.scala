@@ -739,7 +739,7 @@ object AddPDF_Util {
     saveSettingsToConfigFile()								// Save the current settings to the CONFIG file.
   }
   
-  /** TODO: Account for inbound/outbound folders on other servers
+  /** TODO: Account for inbound/outbound folders on other servers.  Maybe only use on inbound?
    *  
    * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist in the System. 
    * Displays an error Dialog if any folder listed does not exist.
@@ -751,7 +751,7 @@ object AddPDF_Util {
    * 								lists are valid folders.  False if any folder listed is not valid.
    * 
    * @author James Watts
-   * Last Updated: February 20th, 2015
+   * Last Updated: March 6th, 2015
    */
   def checkFolderValidity(inboundList:MutableList[String], outboundList:List[String]):Boolean = {	
     var allFoldersAreValid = true								// Check if all of the inbound and outbound folders are
@@ -821,6 +821,7 @@ object AddPDF_Util {
     }
     allFoldersAreUnique											// Return the Boolean flag
   }
+  
   
   /**
    * Saves the current settings to the configuration file so that they remain unchanged the next time the application is run.

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: February 27th, 2015
+ * Last Updated: March 6th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -93,17 +93,20 @@ object AddPDF_GUI extends SimpleSwingApplication {
         if(!SettingsIsRunning) closeSafely()					// If the close button was clicked, safely quit the application
         
       case ButtonClicked(`pauseButton`) =>						// If the pause button was clicked...
-        if(pauseTimer)											// If the timer is already paused,
-        {														// Unpause it and update the button's text and tooltip
-          guiUpdater ! PauseTimer(false)
-          pauseButton.text = "Pause"
-          pauseButton.tooltip = "Click to pause and reset the timer"
-        }
-        else													// Otherwise, if the timer is not already paused,
-        {														// then pause it and update the button's text and tooltip
-          guiUpdater ! PauseTimer(true)
-          pauseButton.text = "UnPause"
-          pauseButton.tooltip = "Click to unpause the timer"
+        if(!SettingsIsRunning)									// And the Settings GUI is not currently running...
+        {
+          if(pauseTimer)										// If the timer is already paused,
+          {														// Unpause it and update the button's text and tooltip
+            guiUpdater ! PauseTimer(false)
+            pauseButton.text = "Pause"
+            pauseButton.tooltip = "Click to pause and reset the timer"
+          }
+          else													// Otherwise, if the timer is not already paused,
+          {														// then pause it and update the button's text and tooltip
+            guiUpdater ! PauseTimer(true)
+            pauseButton.text = "UnPause"
+            pauseButton.tooltip = "Click to unpause the timer"
+          }
         }
     }
     
@@ -127,12 +130,14 @@ object AddPDF_GUI extends SimpleSwingApplication {
           }
         })
       }
-      contents += new Menu("Help")								// Add a second menu entitled "Help"
-      {
-        contents += new MenuItem(Action("Users Guide"){
-          // TODO: Create a Users Guide
-        })
-      }
+//      contents += new Menu("Help")								// Add a second menu entitled "Help"
+//      {
+//        contents += new MenuItem(Action("User's Guide"){
+//          // TODO: Create a Users Guide
+//          
+//          
+//        })
+//      }
     }
   }
   

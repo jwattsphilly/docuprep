@@ -21,7 +21,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: February 27th, 2015
+ * Last Updated: March 9th, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -43,7 +43,7 @@ object AddPDF_Util {
   private val initialInboundFolderList = config.getStringList("attachPDF.InboundFolders")
   private[attach_pdf] var currentInboundFolders = new MutableList[String]
   for(index <- 0 until initialInboundFolderList.size)
-  { 
+  {
     val temp = initialInboundFolderList.get(index)
     if(temp.isEmpty)
       currentInboundFolders += null
@@ -159,9 +159,12 @@ object AddPDF_Util {
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: February 27th, 2015
+   * Last Updated: March 9th, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {
+    /* TODO: Either account for inbound folders that are on other servers or copy entire inbound folders to current server first
+     * and then use this method on them. */
+    
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
     // Otherwise, if a Windows computer is being used, "\" is used as the folder separator
     val folderSeparator = File.separator
@@ -177,7 +180,7 @@ object AddPDF_Util {
 	    logger.info(s"Source Text File: $txtfile")
 	    
 	    // Find FileToAttach = infoList(0)
-	    val FileToAttach:File = new File(infoList(0).trim())
+	    val FileToAttach:File = new File(infoList(0).trim())// TODO: Account for a FileToAttach from another server
     	if (!FileToAttach.isFile()){								// If the File to Attach is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new FileNotFoundException(s"File not found: $FileToAttach")
@@ -189,7 +192,7 @@ object AddPDF_Util {
     	logger.debug(s"File to Attach: $FileToAttach")
     	
 	    // OriginalFile = infoList(1)
-	    val OriginalFile:File = new File(infoList(1).trim())
+	    val OriginalFile:File = new File(infoList(1).trim())// TODO: Account for an OriginalFile from another server
     	if (!OriginalFile.isFile()){								// If the Original File is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new FileNotFoundException(s"File not found: $OriginalFile")
@@ -246,7 +249,10 @@ object AddPDF_Util {
 	    // Create a PDFMergerUtility object and set the destination path name
 	    val merger = new PDFMergerUtility()
 	    merger.setDestinationFileName(s"${destinationPathNames(0)}$folderSeparator$ParsedOriginalName")
-	   
+	    
+	    /* TODO: Account for a destinationPathName(0) that is on a remote server
+	     * OR force destinationPathName(0) to be on the current server. */
+	    
 	    merger.addSource(Master)
 	    merger.addSource(Append)
 	    
@@ -283,7 +289,7 @@ object AddPDF_Util {
 	        
 	        // Use the IP Address to establish a connection & Send a copy of the CombinedFile to the destination folder on that server
 	        // TODO: Make sure this works!!
-	        sendFileToOtherServer(combinedFile, ipAddress, destFolder)
+	        sendFileToRemoteServer(combinedFile, ipAddress, destFolder)
 	      }
 	      
 	      /* Otherwise, assume the folder is on this server and just use FileUtils's copyFile method */
@@ -388,9 +394,9 @@ object AddPDF_Util {
    * @param destinationFolderName			A String representation of the folder to copy the fileToSend into
    * 
    * @author James Watts
-   * Last Updated: February 27th, 2015
+   * Last Updated: March 6th, 2015
    */
-  def sendFileToOtherServer(fileToSend:File, ipAddress:String, destinationFolderName:String)
+  def sendFileToRemoteServer(fileToSend:File, ipAddress:String, destinationFolderName:String)
   {
     // TODO: Figure out how to implement this
     // Check to see if a connection can be made.  If not, we're in trouble.
@@ -401,14 +407,14 @@ object AddPDF_Util {
   }
   
   /**
-   * Loops through the folders in currentInboundFolders and runs the countTextFiles method on each inbound folder
-   * in order to obtain a set and count of all .txt files contained within the inbound folders.
+   * If the timer is running, this method loops through the folders in currentInboundFolders and runs the countTextFiles 
+   * method on each inbound folder in order to obtain a set and count of all .txt files contained within the inbound folders.
    * 
    * This information is then passed in a message to the LabelUpdator so it can update the filesWaitingCountLabel 
    * and filesWaitingListBox.
    * 
    * @author James Watts
-   * Last Updated: January 30th, 2015
+   * Last Updated: March 9th, 2015
    */
   private def updateFilesWaiting() {
     if(!pauseTimer)	{											// If the pauseTimer flag is false (the timer is running)

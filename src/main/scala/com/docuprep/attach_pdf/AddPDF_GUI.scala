@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: March 6th, 2015
+ * Last Updated: March 13th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -90,10 +90,11 @@ object AddPDF_GUI extends SimpleSwingApplication {
     // Reactions
     reactions+={
       case ButtonClicked(`closeButton`) => 
-        if(!SettingsIsRunning) closeSafely()					// If the close button was clicked, safely quit the application
+        if(!SettingsIsRunning && !UsersGuideIsRunning) 
+          closeSafely()											// If the close button was clicked, safely quit the application
         
       case ButtonClicked(`pauseButton`) =>						// If the pause button was clicked...
-        if(!SettingsIsRunning)									// And the Settings GUI is not currently running...
+        if(!SettingsIsRunning && !UsersGuideIsRunning)			// And the Settings and UsersGuide GUIs are not currently running...
         {
           if(pauseTimer)										// If the timer is already paused,
           {														// Unpause it and update the button's text and tooltip
@@ -119,25 +120,29 @@ object AddPDF_GUI extends SimpleSwingApplication {
     menuBar = new MenuBar {										// Add a menu bar 
       contents += new Menu("File") 								// Add a menu entitled "File"
       {
-        contents += new MenuItem(Action("Exit")
-          {if(!SettingsIsRunning) closeSafely()})				// Add an "Exit" menu option that exits the application
+        contents += new MenuItem(Action("Exit")					// Add an "Exit" menu option that exits the application
+          {if(!SettingsIsRunning && !UsersGuideIsRunning) 
+            closeSafely()})				
         contents += new MenuItem(Action("Settings"){			// Add a "Settings" menu option
           if(!SettingsIsRunning)								// If there's not already a SettingsGUI application running,
           {
-            guiUpdater ! PauseTimer(true)						// When "Settings" is clicked, Pause the timer,
+            guiUpdater ! PauseTimer(true)						// When "Settings" is clicked, pause the timer,
             guiUpdater ! SettingsRunning(true)					// set the SettingsIsRunning flag to true,
         	SettingsGUI.startup(inputStringArray)				// and run the SettingsGUI application
           }
         })
       }
-//      contents += new Menu("Help")								// Add a second menu entitled "Help"
-//      {
-//        contents += new MenuItem(Action("User's Guide"){
-//          // TODO: Create a Users Guide
-//          
-//          
-//        })
-//      }
+      contents += new Menu("Help")								// Add a second menu entitled "Help"
+      {
+        contents += new MenuItem(Action("User's Guide"){
+          if(!UsersGuideIsRunning)								// If there's not already a UsersGuide application running,
+          {
+            guiUpdater ! PauseTimer(true)						// When "User's Guide" is clicked, pause the timer,
+            guiUpdater ! UsersGuideRunning(true)				// set the UsersGuideIsRunning flag to true,
+            UsersGuide.startup(inputStringArray)				// and run the UsersGuide application
+          }
+        })
+      }
     }
   }
   

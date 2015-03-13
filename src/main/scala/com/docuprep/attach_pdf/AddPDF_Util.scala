@@ -21,7 +21,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: March 9th, 2015
+ * Last Updated: March 13th, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -91,6 +91,11 @@ object AddPDF_Util {
   /* Flag for whether or not the GUI (AddPDF_GUI and/or SettingsGUI) is currently running.  This is for testing purposes so 
    * that the application can be run/tested without running the GUI. */
   private[attach_pdf] var GuiIsRunning = false
+  
+  /* Flag for whether or not a User's Guide GUI Application is currently running.  This is to ensure that only one User's Guide
+   * Application can run at a time and that the main AddPDF GUI Application cannot be closed while that User's Guide Application
+   * is running. */
+  private[attach_pdf] var UsersGuideIsRunning = false
   
   // Boolean values for initializing check boxes
   private[attach_pdf] var box2checked = (currentInboundFolders(1) != null)	// Initialize all check boxes to their most recent values

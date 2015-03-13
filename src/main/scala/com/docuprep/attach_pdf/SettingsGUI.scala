@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: February 27th, 2015
+ * Last Updated: March 13th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -201,7 +201,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     contents = new BorderPanel{
       layout(westPanel) = West									// West panel on West side
       layout(eastPanel) = East									// East panel on East side
-      border = Swing.EmptyBorder(20,0,20,0);					// Add space on top and bottom
+      border = Swing.EmptyBorder(20,0,20,0)						// Add space on top and bottom
     }
     
     size = new Dimension(750, 375)								// Set the size of the GUI
@@ -211,9 +211,12 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     
     reactions+={
       case ButtonClicked(`closeButton`) => 
-          guiUpdater ! PauseTimer(false)						// Un-Pause the timer,
-          guiUpdater ! SettingsRunning(false)					// set the SettingsIsRunning flag to false,
-          close()												// and close the window
+        if(!UsersGuideIsRunning)
+        {
+          guiUpdater ! PauseTimer(false)						// Un-Pause the timer (if a User's Guide application is not also running),
+        }
+        guiUpdater ! SettingsRunning(false)						// set the SettingsIsRunning flag to false,
+        close()													// and close the window
         
       case ButtonClicked(`applyButton`) => 						// Run the applyChanges method, which updates fields
         		    											// according to new text box inputs

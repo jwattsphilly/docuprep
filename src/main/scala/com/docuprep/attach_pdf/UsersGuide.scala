@@ -10,20 +10,106 @@ import AddPDF_Util._
  * Graphic User Interface for User's Guide for AddPDF application
  * 
  * @author James Watts
- * Last Updated: March 13th, 2014
+ * Last Updated: March 16th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
+  
+  private val arraySize = 26
   
   def top = new MainFrame{										// Create a new MainFrame for the User's Guide
     title = "User's Guide"										// Entitle it
     
     /* STRINGS */
     val generalSelection = "General Help"
-    val settingsSelection = "Settings"
     val mainPageSelection = "Main Page"
-    val generalText = "General Help..."		// TODO: Write up general help text
-    val settingsText = "Settings Help..."	// TODO: Write up help text for SettingsGUI
-    val mainPageText = "Main Page Help..."	// TODO: Write up help text for AddPDF_GUI
+    val settingsSelection = "Settings"
+    
+    /* Help Text for General Help */
+    val generalText = new Array[String](arraySize)
+    generalText(0) = "General Help..."	// TODO: Write up general help text
+    generalText(1) = "a"
+    generalText(2) = "b"
+    generalText(3) = "c"
+    generalText(4) = "d"
+    generalText(5) = "e"
+    generalText(6) = "f"
+    generalText(7) = "g"
+    generalText(8) = "h"
+    generalText(9) = "i"
+    generalText(10) = "j"
+    generalText(11) = "k"
+    generalText(12) = "l"
+    generalText(13) = "m"
+    generalText(14) = "n"
+    generalText(15) = "o"
+    generalText(16) = "p"
+    generalText(17) = "q"
+    generalText(18) = "r"
+    generalText(19) = "s"
+    generalText(20) = "t"
+    generalText(21) = "u"
+    generalText(22) = "v"
+    generalText(23) = "w"
+    generalText(24) = "x"
+    generalText(25) = "y"
+    
+    /* Help Text for Main Page Help */
+    val mainPageText = new Array[String](arraySize)
+    mainPageText(0) = "Main Page Help..."
+    mainPageText(1) = " "
+    mainPageText(2) = "Menu Bars:"
+    mainPageText(3) = "    File -> Exit:"
+    mainPageText(4) = "        Safely closes the Attach PDF application."
+    mainPageText(5) = "    File -> Settings:"
+    mainPageText(6) = "        Opens the Settings Graphic User Interface.  When Settings is running, the timers are paused."
+    mainPageText(7) = "    Help -> User's Guide:"
+    mainPageText(8) = "        Opens the interactive User's Guide for the Attach PDF application.  When the User's Guide"
+    mainPageText(9) = "    is running, the timers are paused."
+    mainPageText(10) = " "
+    mainPageText(11) = "Buttons:"
+    mainPageText(12) = "    Pause/UnPause:"
+    mainPageText(13) = "        Pauses/Unpauses the countdown timers."
+    mainPageText(14) = "    Close:"
+    mainPageText(15) = "        Safely closes the Attach PDF application."
+    mainPageText(16) = " "
+    mainPageText(17) = "Timers:"
+    mainPageText(18) = "    On the bottom lefthand corner of the window, you will see two timers."
+    mainPageText(19) = "    When the first timer, labeled \"next check in,\" reaches 0, the inbound folders set in Settings"
+    mainPageText(20) = "are searched for text files containing the necessary information to merge two PDF files.  The"
+    mainPageText(21) = "names of these text files are displayed in the white box underneath \"Files Waiting to be"
+    mainPageText(22) = "Processed.\"  The PDF files are then automatically merged and copied to the four outbound"
+    mainPageText(23) = "folders."
+    mainPageText(24) = "    When the second timer, labeled \"next report in,\" reaches 0, the application reports its status"
+    mainPageText(25) = "to the database set in Settings."
+    
+    /* Help Text for Settings Help */
+    val settingsText = new Array[String](arraySize)
+    settingsText(0) = "Settings Help..."	// TODO: Write up help text for SettingsGUI
+    settingsText(1) = "z"
+    settingsText(2) = "y"
+    settingsText(3) = "x"
+    settingsText(4) = "w"
+    settingsText(5) = "v"
+    settingsText(6) = "u"
+    settingsText(7) = "t"
+    settingsText(8) = "s"
+    settingsText(9) = "r"
+    settingsText(10) = "q"
+    settingsText(11) = "p"
+    settingsText(12) = "o"
+    settingsText(13) = "n"
+    settingsText(14) = "m"
+    settingsText(15) = "l"
+    settingsText(16) = "k"
+    settingsText(17) = "j"
+    settingsText(18) = "i"
+    settingsText(19) = "h"
+    settingsText(20) = "g"
+    settingsText(21) = "f"
+    settingsText(22) = "e"
+    settingsText(23) = "d"
+    settingsText(24) = "c"
+    settingsText(25) = "b"
     
     /* BUTTONS */
     val closeButton = new Button{								// Button to exit the window
@@ -38,13 +124,20 @@ object UsersGuide extends SimpleSwingApplication {
     val pullDownMenu = new ComboBox(List(generalSelection, mainPageSelection, settingsSelection))
     
     /* Labels */
-    val helpText1 = new Label(generalText)
-//    val helpText2 = new Label(generalText)
+    val helpText = new Array[Label](arraySize)
+    for(i <- 0 until arraySize)
+    {
+      helpText(i) = new Label(generalText(i))
+    }
     
+    /* */
     val HelpBox = new BoxPanel(Orientation.Vertical){
-      contents+=new BoxPanel(Orientation.Horizontal){
-        contents += helpText1
-        contents+=Swing.HGlue
+      for(i <- 0 until arraySize)
+      {
+        contents += new BoxPanel(Orientation.Horizontal){
+          contents += helpText(i)
+          contents += Swing.HGlue
+        }
       }
     }
     
@@ -67,13 +160,14 @@ object UsersGuide extends SimpleSwingApplication {
       border = Swing.EmptyBorder(0, 0, 20 ,0)					// Add some space at the bottom
     }
     
-    
     /* TODO: Documentation */
     contents = new BorderPanel{
       layout(helpPannel) = North
       layout(closeButton) = South
       border = Swing.EmptyBorder(20,20,20,20)
     }
+    
+    size = new Dimension(610, 600)								// Set the size of the GUI window
     
     listenTo(closeButton, searchButton)
     
@@ -84,16 +178,26 @@ object UsersGuide extends SimpleSwingApplication {
         
         if(selection == generalSelection)
         {
-          helpText1.text = generalText
+          for(i <- 0 until arraySize)
+          {
+            helpText(i).text = generalText(i)
+          }
+        }
+        else if(selection == mainPageSelection)
+        {
+          for(i <- 0 until arraySize)
+          {
+            helpText(i).text = mainPageText(i)
+          }
         }
         else if(selection == settingsSelection)
         {
-          helpText1.text = settingsText
+          for(i <- 0 until arraySize)
+          {
+            helpText(i).text = settingsText(i)
+          }
         }
-        else if (selection == mainPageSelection)
-        {
-          helpText1.text = mainPageText
-        }
+        
       
       case ButtonClicked(`closeButton`) => 
         if(!SettingsIsRunning)
@@ -105,6 +209,4 @@ object UsersGuide extends SimpleSwingApplication {
     }
     
   }
-  
-  
 }

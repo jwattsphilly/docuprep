@@ -16,12 +16,11 @@ import ch.qos.logback.classic.{Logger, LoggerContext}
 
 import com.typesafe.config.ConfigFactory
 
-
 /**
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: March 13th, 2015
+ * Last Updated: March 18th, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -164,7 +163,7 @@ object AddPDF_Util {
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: March 9th, 2015
+   * Last Updated: March 18th, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {
     /* TODO: Either account for inbound folders that are on other servers or copy entire inbound folders to current server first
@@ -292,9 +291,9 @@ object AddPDF_Util {
 	        // Separate the IP Address from the folder pathname
 	        val (ipAddress, destFolder) = parseOutIP(currentDestination)
 	        
-	        // Use the IP Address to establish a connection & Send a copy of the CombinedFile to the destination folder on that server
-	        // TODO: Make sure this works!!
-	        sendFileToRemoteServer(combinedFile, ipAddress, destFolder)
+	        /* Use the IP Address to establish a connection & send a copy of the CombinedFile to the destination folder 
+	         * on that server */
+	        sendFileToRemoteServer(combinedFile, ipAddress, destFolder)		// TODO: Make sure this works!!
 	      }
 	      
 	      /* Otherwise, assume the folder is on this server and just use FileUtils's copyFile method */
@@ -408,6 +407,51 @@ object AddPDF_Util {
     
     
     // If connected, send the fileToSend to the destination folder... somehow...
+    
+  }
+  
+  /**
+   * Assuming a connection to the remote server designated by the IP Address can be made, this method downloads the fileToReceive
+   * from the remote server and copies it into the folder designated by destinationPathName on the current server.  If a file by 
+   * the same name and extension already exists in the folder, this method will replace that file with the fileToReceive.
+   * 
+   * @param	fileToReceive					A String pathname of a file to download from the remote server
+   * 
+   * @param ipAddress						A String representation of the remote server's IP Address
+   * 
+   * @param destinationFolderName			A String representation of the folder to download the fileToReceive into
+   * 
+   * @author James Watts
+   * Last Updated: March 18th, 2015
+   */
+  def receiveFileFromRemoteServer(fileToReceive:String, ipAddress:String, destinationPathName:String)
+  {
+    // TODO: Figure out how to implement this
+    // Check to see if a connection can be made.  If not, we're in trouble.
+    
+    
+    // If connected, download the fileToReceive to the destination folder... somehow...
+    
+  }
+  
+  /**
+   * Assuming a connection to the remote server designated by the IP Address can be made, this method deletes the fileToDelete
+   * on the remote server.
+   * 
+   * @param	fileToDelete					A String pathname of a file to delete on the remote server
+   * 
+   * @param ipAddress						A String representation of the remote server's IP Address
+   * 
+   * @author James Watts
+   * Last Updated: March 18th, 2015
+   */
+  def deleteFileOnRemoteServer(fileToDelete:String, ipAddress:String)
+  {
+    // TODO: Figure out how to implement this
+    // Check to see if a connection can be made.  If not, we're in trouble.
+    
+    
+    // If connected, delete the fileToDelete from the remote server... somehow...
     
   }
   
@@ -700,7 +744,7 @@ object AddPDF_Util {
     
     // Check folders for validity and for no duplicates.  If all is good, set the currentInboundFolders and 
     // currentOutboundFolders lists to be the new inputs.  Otherwise, they will remain unchanged.
-    if(checkFolderValidity(tempInboundList, tempOutboundList) && checkFolderDuplicates(tempInboundList, tempOutboundList))
+    if(checkFolderValidity(tempInboundList) && checkFolderDuplicates(tempInboundList, tempOutboundList))
     {
       currentInboundFolders = tempInboundList
       currentOutboundFolders = tempOutboundList
@@ -750,23 +794,22 @@ object AddPDF_Util {
     saveSettingsToConfigFile()								// Save the current settings to the CONFIG file.
   }
   
-  /** TODO: Account for inbound/outbound folders on other servers.  Maybe only use on inbound?
+  /** TODO: Account for inbound folders on other servers.
    *  
-   * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist in the System. 
+   * Checks each member of the Inbound folders lists and makes sure all folders listed exist on their respective servers. 
    * Displays an error Dialog if any folder listed does not exist.
    * 
    * @param inboundList				MutableList of inbound folders (may contain nulls, but not empty strings)
-   * @param outboundList			List of outbound folders (must not contain nulls or empty strings)
    * 
-   * @return						Boolean true if all folders in the currentInboundFolders and currentOutboundFolders
-   * 								lists are valid folders.  False if any folder listed is not valid.
+   * @return						Boolean true if all folders in the currentInboundFolders lists are valid folders.  
+   * 								False if any folder listed is not valid.
    * 
    * @author James Watts
-   * Last Updated: March 6th, 2015
+   * Last Updated: March 18th, 2015
    */
-  def checkFolderValidity(inboundList:MutableList[String], outboundList:List[String]):Boolean = {	
-    var allFoldersAreValid = true								// Check if all of the inbound and outbound folders are
-    for(folder <- inboundList if folder!=null)					// valid folders.
+  def checkFolderValidity(inboundList:MutableList[String]):Boolean = {	
+    var allFoldersAreValid = true								// Check if all of the inbound folders are valid folders.
+    for(folder <- inboundList if folder!=null)
       if( !(new File(folder).isDirectory) )						// Search through all non-null inbound folders.  If any
       {															// inbound folder is not a valid directory, display an
         if(SettingsIsRunning)									// error and return a false.
@@ -774,13 +817,13 @@ object AddPDF_Util {
         allFoldersAreValid = false
       }
     
-    for(folder <- outboundList)									// Search through all outbound folders.  If any outbound
-      if( !(new File(folder).isDirectory) )						// folder is not a valid directory, display an error and
-      {															// return a false.
-    	if(SettingsIsRunning)
-    	  SettingsGUI.invalidFolderDialog(folder, false)
-    	allFoldersAreValid = false
-      }
+//    for(folder <- outboundList)									// Search through all outbound folders.  If any outbound
+//      if( !(new File(folder).isDirectory) )						// folder is not a valid directory, display an error and
+//      {															// return a false.
+//    	if(SettingsIsRunning)
+//    	  SettingsGUI.invalidFolderDialog(folder, false)
+//    	allFoldersAreValid = false
+//      }
     allFoldersAreValid											// Return the Boolean flag
   }
   

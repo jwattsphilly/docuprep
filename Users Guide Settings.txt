@@ -1,0 +1,37 @@
+Settings Help:
+
+Text Fields:
+	There are a total of 11 text fields included in the Settings application.  The types and 
+	descriptions of these fields are as follows:
+	
+	Inbound Folders:
+		Pathnames to the folders to search for the .txt files containing the merge information.  Any
+		Inbound Folder text field (apart from the first one) that is left blank is treated as if the 
+		checkbox above is unchecked, and that folder will not be included in the list of inbound 
+		folders to check.  Duplicate folder names and nonexistant folder names are not accepted.
+		If the desired folder pathname is on a remote server, prefix the pathname with a "\\" 
+		followed by the server's IP address.
+	PDF Folders:
+		Pathnames to the folders to copy merged PDF files into.  All four of these fields must be
+		filled in.  Duplicate folder names are not accepted.  If the desired folder pathname is on a 
+		remote server, prefix the pathname with a "\\" followed by the server's IP address.
+	Check For New Files Every:
+		An amount of seconds for the timer to countdown from before a merge is run.  This field must 
+		contain a positive whole number to be accepted.
+	Report Status Every:
+		An amount of seconds for the timer to countdown from before reporting the application's 
+		status to the database.  This field must contain a positive whole number to be accepted.
+	Database:
+		The name of the database the Attach PDF application reports to.  The database must be valid 
+		to be accepted.
+	
+Check Boxes:
+	When checked, the "Inbound Folder" fields directly beneath will be included in the list of 
+	folders to be checked for .txt files.  When unchecked, the "Inbound Folder" fields directly 
+	beneath will be excluded from that list.
+	
+Buttons:
+	Close:
+		Safely closes the Settings application.
+	Apply:
+		Applies any and all valid text field changes made to the to the Attach PDF application.

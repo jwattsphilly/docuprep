@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: March 18th, 2014
+ * Last Updated: March 19th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -19,51 +19,12 @@ object UsersGuide extends SimpleSwingApplication {
   def top = new MainFrame{										// Create a new MainFrame for the User's Guide
     title = "User's Guide"										// Entitle it
     
+    peer.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
+    override def closeOperation() = { closeUsersGuide() }		// Close the window instead of quitting the whole application
+    
     /* STRINGS */
-    val generalSelection = "General Help"
     val mainPageSelection = "Main Page"
     val settingsSelection = "Settings"
-    
-    /* Help Text for General Help */
-    val generalText = new Array[String](arraySize)
-    generalText(0) = "General Help..."	// TODO: Write up general help text
-    generalText(1) = " "
-    generalText(2) = " "
-    generalText(3) = " "
-    generalText(4) = " "
-    generalText(5) = " "
-    generalText(6) = " "
-    generalText(7) = " "
-    generalText(8) = " "
-    generalText(9) = " "
-    generalText(10) = " "
-    generalText(11) = " "
-    generalText(12) = " "
-    generalText(13) = " "
-    generalText(14) = " "
-    generalText(15) = " "
-    generalText(16) = " "
-    generalText(17) = " "
-    generalText(18) = " "
-    generalText(19) = " "
-    generalText(20) = " "
-    generalText(21) = " "
-    generalText(22) = " "
-    generalText(23) = " "
-    generalText(24) = " "
-    generalText(25) = " "
-    generalText(26) = " "
-    generalText(27) = " "
-    generalText(28) = " "
-    generalText(29) = " "
-    generalText(30) = " "
-    generalText(31) = " "
-    generalText(32) = " "
-    generalText(33) = " "
-    generalText(34) = " "
-    generalText(35) = " "
-    generalText(36) = " "
-    generalText(37) = ""
     
     /* Help Text for Main Page Help */
     val mainPageText = new Array[String](arraySize)
@@ -157,11 +118,11 @@ object UsersGuide extends SimpleSwingApplication {
     }
     
     /* ComboBox */
-    val pullDownMenu = new ComboBox(List(generalSelection, mainPageSelection, settingsSelection))
+    val pullDownMenu = new ComboBox(List(mainPageSelection, settingsSelection))
     
     /* Labels */
     val helpText = new Array[Label](arraySize)
-    for(i <- 0 until arraySize) helpText(i) = new Label(generalText(i))
+    for(i <- 0 until arraySize) helpText(i) = new Label(mainPageText(i))
     
     /* Vertical Box Panel to hold all help text */
     val HelpBox = new BoxPanel(Orientation.Vertical){
@@ -208,11 +169,7 @@ object UsersGuide extends SimpleSwingApplication {
       case ButtonClicked(`searchButton`) =>						// When the search button is pressed...
         val selection = pullDownMenu.selection.item				// Obtain the selection from the pull-down menu
         
-        if(selection == generalSelection)						// If General Help is wanted, display general help text
-        {
-          for(i <- 0 until arraySize) helpText(i).text = generalText(i)
-        }
-        else if(selection == mainPageSelection)					// If Main Page Help is wanted, display main page help text
+        if(selection == mainPageSelection)						// If Main Page Help is wanted, display main page help text
         {
           for(i <- 0 until arraySize) helpText(i).text = mainPageText(i)
         }
@@ -222,13 +179,25 @@ object UsersGuide extends SimpleSwingApplication {
         }
         
       
-      case ButtonClicked(`closeButton`) => 						// When the close button is pressed...
-        if(!SettingsIsRunning)
+      case ButtonClicked(`closeButton`) => 						// When the close button is pressed, call the close method
+        closeUsersGuide()
+    }
+    
+    /**
+     * Unpauses the timer (if Settings GUI is not also running) and closes the User's Guide window.
+     * This method is called when either the close button or the red X in the corner is pressed.
+     * 
+     * @author James Watts
+     * Last Updated: March 19th, 2014
+     */
+    private def closeUsersGuide()
+    {
+      if(!SettingsIsRunning)
         {
           guiUpdater ! PauseTimer(false)						// Only unpause the timer if the Settings GUI is not running
         }
-        guiUpdater ! UsersGuideRunning(false)					// Update the UsersGuideIsRunning flag to false
-        close() 												// Close the window
+      guiUpdater ! UsersGuideRunning(false)						// Update the UsersGuideIsRunning flag to false
+      close() 													// Close the window
     }
     
   }

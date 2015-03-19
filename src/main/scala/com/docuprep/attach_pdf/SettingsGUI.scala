@@ -10,12 +10,15 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: March 13th, 2015
+ * Last Updated: March 19th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
   def top = new MainFrame{
     title = "Settings"											// Set title
+    
+    peer.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
+    override def closeOperation() = { closeSettings() }			// Close the window instead of quitting the whole application
     
     // Labels for West Panel
     val inbound1Label = new Label("Inbound Folder: ")			// Inbound Folder (1) Label
@@ -211,12 +214,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     
     reactions+={
       case ButtonClicked(`closeButton`) => 
-        if(!UsersGuideIsRunning)
-        {
-          guiUpdater ! PauseTimer(false)						// Un-Pause the timer (if a User's Guide application is not also running),
-        }
-        guiUpdater ! SettingsRunning(false)						// set the SettingsIsRunning flag to false,
-        close()													// and close the window
+        closeSettings
         
       case ButtonClicked(`applyButton`) => 						// Run the applyChanges method, which updates fields
         		    											// according to new text box inputs
@@ -224,6 +222,23 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
         				PDF1Text.text, PDF2Text.text, PDF3Text.text, PDF4Text.text,
         				inbound2CheckBox.selected, inbound3CheckBox.selected, inbound4CheckBox.selected,
         				checkNewFilesText.text, reportStatusText.text, databaseText.text)
+    }
+    
+    /**
+     * Unpauses the timer (if User's Guide GUI is not also running) and closes the Settings window.
+     * This method is called when either the close button or the red X in the corner is pressed.
+     * 
+     * @author James Watts
+     * Last Updated: March 19th, 2014
+     */
+    private def closeSettings()
+    {
+      if(!UsersGuideIsRunning)
+        {
+          guiUpdater ! PauseTimer(false)						// Un-Pause the timer (if a User's Guide application is not also running),
+        }
+      guiUpdater ! SettingsRunning(false)						// set the SettingsIsRunning flag to false,
+      close()													// and close the window
     }
   }
   

@@ -879,10 +879,10 @@ object AddPDF_Util {
   
   /**
    * Saves the current settings to the configuration file so that they remain unchanged the next time the application is run.
-   * In order to do this, the CONFIG file is rewritten from scratch every time this method is run.
+   * In order to do this, this method rewrites the CONFIG file from scratch.
    * 
    * @author James Watts
-   * Last Updated: February 9th, 2015
+   * Last Updated: March 19th, 2015
    */
   def saveSettingsToConfigFile()
   {

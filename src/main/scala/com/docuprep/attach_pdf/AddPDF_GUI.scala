@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: March 13th, 2015
+ * Last Updated: March 19th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -29,6 +29,12 @@ object AddPDF_GUI extends SimpleSwingApplication {
   
   def top = new MainFrame{										// Create the MainFrame
     title = "Attach PDF Document"								// add a title
+    
+    peer.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
+    override def closeOperation()								// Safely quit the whole application if neither the Settings
+    { 															// nor User's Guide GUIs are running
+      if(!SettingsIsRunning && !UsersGuideIsRunning) closeSafely()
+    }
     
     guiUpdater ! GuiRunning(true)
     

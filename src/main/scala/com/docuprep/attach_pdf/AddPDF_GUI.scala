@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: March 19th, 2015
+ * Last Updated: March 20th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -36,17 +36,17 @@ object AddPDF_GUI extends SimpleSwingApplication {
       if(!SettingsIsRunning && !UsersGuideIsRunning) closeSafely()
     }
     
-    guiUpdater ! GuiRunning(true)
+    guiUpdater ! GuiRunning(true)								// Set the GuiIsRunning flag to true
     
     // Buttons
     private val closeButton = new Button{						// Close button	- quits the application
-      text = "Close"											// add title
+      text = "Close"											// add text
       tooltip = "Click to exit"									// add helpful hint
     }
     
-    private val pauseButton = new Button{
-      text = "Pause"
-      tooltip = "Click to pause and reset the timer"
+    private val pauseButton = new Button{						// Pause button - pauses/unpauses the timer
+      text = "Pause"											// add text
+      tooltip = "Click to pause and reset the timer"			// add helpful hint
     }
     
     /* Panel for the West (left) side of application */
@@ -155,12 +155,15 @@ object AddPDF_GUI extends SimpleSwingApplication {
   /**
    * Private helper method used to close the program safely.
    * 
+   * This method is called when either the close button or the red X in the corner is pressed or when the Exit 
+   * menu item is selected.
+   * 
    * @author James Watts
-   * Last Updated: January 6th, 2015
+   * Last Updated: March 19th, 2015
    */
   private def closeSafely() {
     guiUpdater ! GuiRunning(false)								// Set the GuiIsRunning field to false
-    safelyClose()												// Call AddPDF_Util's safelyClose method
+    closeUtility()												// Call AddPDF_Util's closeUtility method
     quit														// quit the GUI
   }
   

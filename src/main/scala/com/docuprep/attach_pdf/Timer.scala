@@ -5,10 +5,11 @@ package com.docuprep.attach_pdf
  * 
  * @param millisToCheck				An amount in milliseconds denoting how frequently to run the input operation op
  * 
- * @param op						Any function that returns a Unit for the Timer to run every millisToCheck milliseconds
+ * @param op						Any parameterless function that returns a Unit for the Timer to run every millisToCheck 
+ * 									milliseconds
  * 
  * @author James Watts
- * Last Updated: February 2nd, 2015
+ * Last Updated: March 20th, 2015
  */
 protected[attach_pdf] class Timer (millisToCheck: Int)(op: => Unit){
   

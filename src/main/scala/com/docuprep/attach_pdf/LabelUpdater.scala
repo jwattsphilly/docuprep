@@ -9,25 +9,26 @@ private[attach_pdf] case class Count(countString: String)
 private[attach_pdf] case class ReportCount(countString: String)
 private[attach_pdf] case class SettingsRunning(settingsIsRunning: Boolean)
 private[attach_pdf] case class GuiRunning(guiIsRunning: Boolean)
-private[attach_pdf] case class PauseTimer(pause: Boolean)
 private[attach_pdf] case class UsersGuideRunning(usersGuideRunning:Boolean)
+private[attach_pdf] case class PauseTimer(pause: Boolean)
 
-/**An Actor object whose purpose is to update the AddPDF_GUI labels and text box, as well as the SettingsIsRunning and
- * GuiIsRunning boolean fields.  This is to prevent race conditions encountered by multi-threading and to make sure
- * the GUI is updated quickly and by only one thread.
+/**An Actor object whose purpose is to update the AddPDF_GUI labels and text box, as well as the SettingsIsRunning,
+ * GuiIsRunning, and UsersGuideIsRunning boolean fields.  This is to prevent race conditions encountered by 
+ * multi-threading and to make sure the GUI is updated quickly and by only one thread.
  * 
  * If a FilesWaiting case class is sent, the files waiting count label and files waiting text box are updated.
  * If an Inbound case class is sent, the inbound folder label is updated.
  * If a Count case class is sent, the timer label is updated.
  * If a ReportCount case class is sent, the report timer label is updated.
  * If a SettingsRunning case class is sent, the AddPDF_Util.SettingIsRunning field is updated.
- * If a GUIRunning case class is sent, the AddPDF_Util.guiIsRunning field is updated.
+ * If a GUIRunning case class is sent, the AddPDF_Util.GuiIsRunning field is updated.
+ * If a UsersGuideRunning case class is sent, the AddPDF_Util.UsersGuideIsRunning is updated.
  * If a PauseTimer case class is sent, the AddPDF_Util.pauseTimer field is updated.
  * If the string "exit" is sent, the LabelUpdater will shut down.
  * All other messages are ignored.
  * 
  * @author James Watts
- * Last updated: February 27th, 2015
+ * Last updated: March 20th, 2015
  */
 private[attach_pdf] class LabelUpdater extends Actor {
   
@@ -75,8 +76,9 @@ private[attach_pdf] class LabelUpdater extends Actor {
     
     /* Request to stop the LabelUpdater thread */
     case "exit" =>
-      AddPDF_Util.GuiIsRunning = false									// Set the GuiIsRunning and SettingsIsRunning fields to false
+      AddPDF_Util.GuiIsRunning = false									// Set the AddPDF_Util Boolean fields to false
       AddPDF_Util.SettingsIsRunning = false
+      AddPDF_Util.UsersGuideIsRunning = false
       //context.stop(self)												// Stop the current Actor
       context.system.shutdown()											// Shutdown the Actor System
     

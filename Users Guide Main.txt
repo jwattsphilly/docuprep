@@ -7,7 +7,7 @@ Menu Bars:
 		Opens the Settings Graphic User Interface.  When Settings is running, the timers are paused.
 	Help -> User's Guide:
 		Opens the interactive User's Guide for the Attach PDF application.  When the User's Guide
-	is running, the timers are paused.
+		is running, the timers are paused.
 
 Buttons:
 	Pause/UnPause:
@@ -19,9 +19,9 @@ Buttons:
 Timers:
 	On the bottom left-hand corner of the window, you will see two timers.
 	When the first timer, labeled "next check in," reaches 0, the inbound folders set in Settings
-	are searched for text files containing the necessary information to merge two PDF files.
-	The names of these text files are displayed in the white box underneath "Files Waiting to be
+	are searched for text files containing the necessary information to merge two PDF files.  The
+	names of these text files are displayed in the white box underneath "Files Waiting to be
 	Processed."  The PDF files are then automatically merged and copied to the four outbound
-	folders.  
+	folders.
 	When the second timer, labeled "next report in," reaches 0, the application reports its status
 	to the database set in Settings.

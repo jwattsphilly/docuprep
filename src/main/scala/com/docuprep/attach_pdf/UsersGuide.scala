@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: March 19th, 2014
+ * Last Updated: March 20th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -81,7 +81,7 @@ object UsersGuide extends SimpleSwingApplication {
     settingsText(9) = "        checkbox above is unchecked, and that folder will not be included in the list of inbound"
     settingsText(10) = "        folders to check.  Duplicate folder names and nonexistant folder names are not accepted."
     settingsText(11) = """        If the desired folder pathname is on a remote server, prefix the pathname with a "\\""""
-    settingsText(12) = "        followed by by the server's IP address."
+    settingsText(12) = "        followed by the server's IP address."
     settingsText(13) = "    PDF Folders:"
     settingsText(14) = "        Pathnames to the folders to copy merged PDF files into.  All four of these fields must be"
     settingsText(15) = "        filled in.  Duplicate folder names are not accepted.  If the desired folder pathname is on a"
@@ -104,16 +104,16 @@ object UsersGuide extends SimpleSwingApplication {
     settingsText(32) = "Buttons:"
     settingsText(33) = "    Close:"
     settingsText(34) = "        Safely closes the Settings application."
-    settingsText(35) = "    Apply:";
+    settingsText(35) = "    Apply:"
     settingsText(36) = "        Applies any and all valid text field changes made to the to the Attach PDF application."
     settingsText(37) = "";
     
     /* Buttons */
     val closeButton = new Button{								// Button to exit the window
-      text = "Close"											// set its title
+      text = "Close"											// set its text
       tooltip = "Click to close this window"					// add a helpful message
     }
-    val searchButton = new Button{
+    val searchButton = new Button{								// Button for selection (Main Page help / Settings help)
       text = "Okay"
     }
     
@@ -121,21 +121,21 @@ object UsersGuide extends SimpleSwingApplication {
     val pullDownMenu = new ComboBox(List(mainPageSelection, settingsSelection))
     
     /* Labels */
-    val helpText = new Array[Label](arraySize)
+    val helpText = new Array[Label](arraySize)					// Create labels for each line of help text
     for(i <- 0 until arraySize) helpText(i) = new Label(mainPageText(i))
     
-    /* Vertical Box Panel to hold all help text */
+    /* Vertical BoxPanel to hold all help text */
     val HelpBox = new BoxPanel(Orientation.Vertical){
       for(i <- 0 until arraySize)
       {
         contents += new BoxPanel(Orientation.Horizontal){
-          contents += helpText(i)
-          contents += Swing.HGlue
+          contents += helpText(i)								// Add each label to the HelpBox BoxPanel
+          contents += Swing.HGlue								// And use HGlue to left-align
         }
       }
     }
     
-    /* Combine the lines of help text into one BoxPanel */
+    /* Combine all elements (apart from closeButton) into one BoxPanel */
     val helpPanel = new BoxPanel(Orientation.Vertical){
       contents+=new BoxPanel(Orientation.Horizontal)
       {
@@ -144,12 +144,12 @@ object UsersGuide extends SimpleSwingApplication {
       }
       contents+=new BoxPanel(Orientation.Horizontal)
       {
-        contents+=pullDownMenu
-        contents+=Swing.HStrut(5)
-        contents+=searchButton
+        contents+=pullDownMenu									// Add the pullDownMenu (the combo box)
+        contents+=Swing.HStrut(5)								// Horizontal space between the combo box and the search button
+        contents+=searchButton									// Add the search button to the right of the pullDownMenu
       }
-      contents+=Swing.VStrut(10)
-      contents+=HelpBox
+      contents+=Swing.VStrut(10)								// Vertical space between the combo box and the help text
+      contents+=HelpBox											// Add all of the help text
       
       border = Swing.EmptyBorder(0, 0, 20 ,0)					// Add some space at the bottom
     }
@@ -163,7 +163,7 @@ object UsersGuide extends SimpleSwingApplication {
     
     size = new Dimension(610, 800)								// Set the size of the GUI window
     
-    listenTo(closeButton, searchButton)
+    listenTo(closeButton, searchButton)							// Listen to the two buttons
     
     reactions+={
       case ButtonClicked(`searchButton`) =>						// When the search button is pressed...
@@ -177,9 +177,8 @@ object UsersGuide extends SimpleSwingApplication {
         {
           for(i <- 0 until arraySize) helpText(i).text = settingsText(i)
         }
-        
       
-      case ButtonClicked(`closeButton`) => 						// When the close button is pressed, call the close method
+      case ButtonClicked(`closeButton`) => 						// When the close button is pressed, call the closeUsersGuide method
         closeUsersGuide()
     }
     

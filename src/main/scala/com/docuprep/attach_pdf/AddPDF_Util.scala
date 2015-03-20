@@ -20,7 +20,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: March 18th, 2015
+ * Last Updated: March 20th, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -87,8 +87,8 @@ object AddPDF_Util {
    * is running. */
   private[attach_pdf] var SettingsIsRunning = false
   
-  /* Flag for whether or not the GUI (AddPDF_GUI and/or SettingsGUI) is currently running.  This is for testing purposes so 
-   * that the application can be run/tested without running the GUI. */
+  /* Flag for whether or not the GUI (AddPDF_GUI) is currently running.  This is for testing purposes so that the application can 
+   * be run/tested without running the GUI. */
   private[attach_pdf] var GuiIsRunning = false
   
   /* Flag for whether or not a User's Guide GUI Application is currently running.  This is to ensure that only one User's Guide
@@ -339,7 +339,6 @@ object AddPDF_Util {
     }
   }
   
-  
   /**
    * Private helper method to separate the items in a long String into a list of separate Strings that are "," 
    * delimited.
@@ -419,10 +418,10 @@ object AddPDF_Util {
    * 
    * @param ipAddress						A String representation of the remote server's IP Address
    * 
-   * @param destinationFolderName			A String representation of the folder to download the fileToReceive into
+   * @param destinationFolderName			A String representation of the local folder to download the fileToReceive into
    * 
    * @author James Watts
-   * Last Updated: March 18th, 2015
+   * Last Updated: March 20th, 2015
    */
   def receiveFileFromRemoteServer(fileToReceive:String, ipAddress:String, destinationPathName:String)
   {
@@ -435,15 +434,15 @@ object AddPDF_Util {
   }
   
   /**
-   * Assuming a connection to the remote server designated by the IP Address can be made, this method deletes the fileToDelete
-   * on the remote server.
+   * Assuming a connection to the remote server designated by the IP Address can be made and that the fileToDelete can be
+   * found on said server, this method deletes the fileToDelete from the remote server.
    * 
    * @param	fileToDelete					A String pathname of a file to delete on the remote server
    * 
    * @param ipAddress						A String representation of the remote server's IP Address
    * 
    * @author James Watts
-   * Last Updated: March 18th, 2015
+   * Last Updated: March 20th, 2015
    */
   def deleteFileOnRemoteServer(fileToDelete:String, ipAddress:String)
   {
@@ -455,7 +454,7 @@ object AddPDF_Util {
     
   }
   
-  /**
+  /** 							TODO: Account for inbound folders on remote servers.
    * If the timer is running, this method loops through the folders in currentInboundFolders and runs the countTextFiles 
    * method on each inbound folder in order to obtain a set and count of all .txt files contained within the inbound folders.
    * 
@@ -463,7 +462,7 @@ object AddPDF_Util {
    * and filesWaitingListBox.
    * 
    * @author James Watts
-   * Last Updated: March 9th, 2015
+   * Last Updated: March 20th, 2015
    */
   private def updateFilesWaiting() {
     if(!pauseTimer)	{											// If the pauseTimer flag is false (the timer is running)
@@ -499,14 +498,14 @@ object AddPDF_Util {
   }
   
   /**
-   * Helper method that reports the status of the PDF Merger by sending information to the 'dbTable' table in the
-   * database having the pathname of 'dbPath' (both of these parameters - as well as database username and password - 
-   * are set in the application.CONF file).
+   * Method that reports the status of the PDF Merger by sending information to the 'dbTable' table in the database
+   * having the pathname of 'dbPath' (both of these parameters - as well as database username and password - are set
+   * in the application.CONF file).
    * 
    * TODO: Report to actual work database instead of the test database.
    * 
    * @author James Watts
-   * Last Updated: February 20th, 2015
+   * Last Updated: March 20th, 2015
    */
   def reportStatus() {
     var conn:Connection = null;
@@ -576,11 +575,11 @@ object AddPDF_Util {
   }
   
   /**
-   * Helper method to retrieve the name of the user's machine and parse it to a string in the form of 'PDF (machineName)'.
+   * Method to retrieve the name of the user's machine and parse it to a string in the form of 'PDF (machineName)'.
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
    * 
    * @author James Watts
-   * Last Updated: February 16th, 2014
+   * Last Updated: March 20th, 2014
    */
   def getMachineName():String = 
   {
@@ -600,7 +599,7 @@ object AddPDF_Util {
   
   
   /**
-   * Depending on whether the pauseTimer is set to false or true, it either counts down and runs the merge method (or 
+   * Depending on whether the pauseTimer is set to false or true, count() either counts down and runs the merge method (or 
    * reportStatus method) or resets and pauses the GUI counter.
    * 
    * When the pauseTimer is set to false, it counts down from SettingsGUI.checkFilesTime to zero, decrementing by 1
@@ -618,7 +617,7 @@ object AddPDF_Util {
    * The timerLabel and reportTimerLabel are updated every time this method runs.
    * 
    * @author James Watts
-   * Last Updated: February 13th, 2015
+   * Last Updated: March 20th, 2015
    */
   def count() {
     if(!pauseTimer)														// If the pauseTimer flag is false (counter not paused)
@@ -659,14 +658,14 @@ object AddPDF_Util {
   
   
   /**
-   * Obtains the minutes and seconds based on the input seconds and combines them into an easy-to-read string formatted as MM:SS.
+   * Converts an input amount of seconds to an easy-to-read string displaying the minutes and seconds (formatted as MM:SS).
    * 
    * @param time				Int representing the number of seconds to convert to minutes and seconds
    * 
    * @return					A String representation of minutes and seconds for a timer label
    * 
    * @author James Watts
-   * Last Updated: February 27th, 2015
+   * Last Updated: March 20th, 2015
    */
   def generateCountString(time:Int):String = {
     val minutes = time/60										// Get the minutes and seconds based off of the input time
@@ -948,9 +947,9 @@ object AddPDF_Util {
    * Method to safely close the Utility object by shutting down the GUI label updater and stopping the timer.
    * 
    * @author James Watts
-   * Last Updated: January 12th, 2015
+   * Last Updated: March 20th, 2015
    */
-  def safelyClose()
+  def closeUtility()
   {
     guiUpdater ! "exit"										// Send an exit message to the Label Updater
     timer.stopTimer											// Stop the timer

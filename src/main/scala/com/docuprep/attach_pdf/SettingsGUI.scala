@@ -250,7 +250,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
    * @param isInbound					Boolean denoting if the pathname is from the inbound or outbound folder list
    * 
    * @author James Watts
-   * Last Updated: January 5th, 2015
+   * Last Updated: March 30th, 2015
    */
   protected[attach_pdf] def invalidFolderDialog(folder: String, isInbound: Boolean)
   {

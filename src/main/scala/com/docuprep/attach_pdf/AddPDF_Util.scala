@@ -20,7 +20,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: March 20th, 2015
+ * Last Updated: March 30th, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -163,12 +163,9 @@ object AddPDF_Util {
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: March 18th, 2015
+   * Last Updated: March 30th, 2015
    */
-  def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {
-    /* TODO: Either account for inbound folders that are on other servers or copy entire inbound folders to current server first
-     * and then use this method on them. */
-    
+  def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {    
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
     // Otherwise, if a Windows computer is being used, "\" is used as the folder separator
     val folderSeparator = File.separator
@@ -184,7 +181,7 @@ object AddPDF_Util {
 	    logger.info(s"Source Text File: $txtfile")
 	    
 	    // Find FileToAttach = infoList(0)
-	    val FileToAttach:File = new File(infoList(0).trim())// TODO: Account for a FileToAttach from another server
+	    val FileToAttach:File = new File(infoList(0).trim())
     	if (!FileToAttach.isFile()){								// If the File to Attach is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new FileNotFoundException(s"File not found: $FileToAttach")
@@ -196,7 +193,7 @@ object AddPDF_Util {
     	logger.debug(s"File to Attach: $FileToAttach")
     	
 	    // OriginalFile = infoList(1)
-	    val OriginalFile:File = new File(infoList(1).trim())// TODO: Account for an OriginalFile from another server
+	    val OriginalFile:File = new File(infoList(1).trim())
     	if (!OriginalFile.isFile()){								// If the Original File is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new FileNotFoundException(s"File not found: $OriginalFile")
@@ -254,9 +251,6 @@ object AddPDF_Util {
 	    val merger = new PDFMergerUtility()
 	    merger.setDestinationFileName(s"${destinationPathNames(0)}$folderSeparator$ParsedOriginalName")
 	    
-	    /* TODO: Account for a destinationPathName(0) that is on a remote server
-	     * OR force destinationPathName(0) to be on the current server. */
-	    
 	    merger.addSource(Master)
 	    merger.addSource(Append)
 	    
@@ -282,23 +276,7 @@ object AddPDF_Util {
 	    /* Copy new Combined File into the other 3 destination locations: */
 	    for(i <- 1 until destinationPathNames.size)
 	    {
-	      val currentDestination = destinationPathNames(i)
-	      
-	      /* If the pathname begins with a double folder separator and an IP address, 
-	       * then copy the Combined File to the folder on that server */
-	      if(currentDestination.startsWith(s"$folderSeparator$folderSeparator"))
-	      {
-	        // Separate the IP Address from the folder pathname
-	        val (ipAddress, destFolder) = parseOutIP(currentDestination)
-	        
-	        /* Use the IP Address to establish a connection & send a copy of the CombinedFile to the destination folder 
-	         * on that server */
-	        sendFileToRemoteServer(combinedFile, ipAddress, destFolder)		// TODO: Make sure this works!!
-	      }
-	      
-	      /* Otherwise, assume the folder is on this server and just use FileUtils's copyFile method */
-	      else
-	        FileUtils.copyFile(combinedFile, new File(s"$currentDestination$folderSeparator$ParsedOriginalName"))
+	      FileUtils.copyFile(combinedFile, new File(s"${destinationPathNames(i)}$folderSeparator$ParsedOriginalName"))
 	    }
 	    
     	// Close and Delete File to Attach
@@ -365,96 +343,6 @@ object AddPDF_Util {
   private def deleteQuotes(line: String) = line.replaceAll(""""""", "")
   
   /**
-   * When given a String folder pathname that begins with a double folder separator and an IP Address, this method parses out the IP
-   * Address and returns it in a tuple with the folder pathname
-   * 
-   * @param pathWithIP						A String folder pathname that begins with either "//" or "\\" followed by an IP Address
-   * 
-   * @return								A (String, String) tuple consisting of the IP Address and folder pathname contained in the 
-   * 										input String
-   * 
-   * @author James Watts
-   * Last Updated: February 20th, 2015
-   */
-  def parseOutIP(pathWithIP:String) = // TODO: does the folder path name have to have "C:" in front of it?
-  { 
-	val endpoint = (pathWithIP.substring(2)).indexOf(File.separator) + 2// Index of the end of the IP Address
-	val ipAddress = pathWithIP.substring(2, endpoint)					// Parse out the IP Address
-	val folder = s"C:${pathWithIP.substring(endpoint)}"					// Parse out the folder path
-	
-	(ipAddress, folder)													// Return the two parsed pieces of information in a tuple
-  }
-  
-  /**
-   * Assuming a connection to the remote server designated by the IP Address can be made, this method copies the input fileToSend
-   * to the destination folder on the remote server.  If a file by the same name and extension already exists in the folder, this 
-   * method will replace that file with the fileToSend.
-   * 
-   * @param	fileToSend						A java.io.File to copy to the remote server
-   * 
-   * @param ipAddress						A String representation of the remote server's IP Address
-   * 
-   * @param destinationFolderName			A String representation of the folder to copy the fileToSend into
-   * 
-   * @author James Watts
-   * Last Updated: March 6th, 2015
-   */
-  def sendFileToRemoteServer(fileToSend:File, ipAddress:String, destinationFolderName:String)
-  {
-    // TODO: Figure out how to implement this
-    // Check to see if a connection can be made.  If not, we're in trouble.
-    
-    
-    // If connected, send the fileToSend to the destination folder... somehow...
-    
-  }
-  
-  /**
-   * Assuming a connection to the remote server designated by the IP Address can be made, this method downloads the fileToReceive
-   * from the remote server and copies it into the folder designated by destinationPathName on the current server.  If a file by 
-   * the same name and extension already exists in the folder, this method will replace that file with the fileToReceive.
-   * 
-   * @param	fileToReceive					A String pathname of a file to download from the remote server
-   * 
-   * @param ipAddress						A String representation of the remote server's IP Address
-   * 
-   * @param destinationFolderName			A String representation of the local folder to download the fileToReceive into
-   * 
-   * @author James Watts
-   * Last Updated: March 20th, 2015
-   */
-  def receiveFileFromRemoteServer(fileToReceive:String, ipAddress:String, destinationPathName:String)
-  {
-    // TODO: Figure out how to implement this
-    // Check to see if a connection can be made.  If not, we're in trouble.
-    
-    
-    // If connected, download the fileToReceive to the destination folder... somehow...
-    
-  }
-  
-  /**
-   * Assuming a connection to the remote server designated by the IP Address can be made and that the fileToDelete can be
-   * found on said server, this method deletes the fileToDelete from the remote server.
-   * 
-   * @param	fileToDelete					A String pathname of a file to delete on the remote server
-   * 
-   * @param ipAddress						A String representation of the remote server's IP Address
-   * 
-   * @author James Watts
-   * Last Updated: March 20th, 2015
-   */
-  def deleteFileOnRemoteServer(fileToDelete:String, ipAddress:String)
-  {
-    // TODO: Figure out how to implement this
-    // Check to see if a connection can be made.  If not, we're in trouble.
-    
-    
-    // If connected, delete the fileToDelete from the remote server... somehow...
-    
-  }
-  
-  /** 							TODO: Account for inbound folders on remote servers.
    * If the timer is running, this method loops through the folders in currentInboundFolders and runs the countTextFiles 
    * method on each inbound folder in order to obtain a set and count of all .txt files contained within the inbound folders.
    * 
@@ -462,7 +350,7 @@ object AddPDF_Util {
    * and filesWaitingListBox.
    * 
    * @author James Watts
-   * Last Updated: March 20th, 2015
+   * Last Updated: March 30th, 2015
    */
   private def updateFilesWaiting() {
     if(!pauseTimer)	{											// If the pauseTimer flag is false (the timer is running)
@@ -710,7 +598,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated February 13th, 2015
+   * Last Updated March 30th, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -793,18 +681,17 @@ object AddPDF_Util {
     saveSettingsToConfigFile()								// Save the current settings to the CONFIG file.
   }
   
-  /** TODO: Account for inbound folders on other servers.
-   *  
+  /** 
    * Checks each member of the Inbound folders lists and makes sure all folders listed exist on their respective servers. 
    * Displays an error Dialog if any folder listed does not exist.
    * 
    * @param inboundList				MutableList of inbound folders (may contain nulls, but not empty strings)
    * 
-   * @return						Boolean true if all folders in the currentInboundFolders lists are valid folders.  
-   * 								False if any folder listed is not valid.
+   * @return						Boolean true if all folders in the inboundList lists are valid folders.
+   * 								False if any inbound folder listed is not valid.
    * 
    * @author James Watts
-   * Last Updated: March 18th, 2015
+   * Last Updated: March 30th, 2015
    */
   def checkFolderValidity(inboundList:MutableList[String]):Boolean = {	
     var allFoldersAreValid = true								// Check if all of the inbound folders are valid folders.
@@ -816,13 +703,6 @@ object AddPDF_Util {
         allFoldersAreValid = false
       }
     
-//    for(folder <- outboundList)									// Search through all outbound folders.  If any outbound
-//      if( !(new File(folder).isDirectory) )						// folder is not a valid directory, display an error and
-//      {															// return a false.
-//    	if(SettingsIsRunning)
-//    	  SettingsGUI.invalidFolderDialog(folder, false)
-//    	allFoldersAreValid = false
-//      }
     allFoldersAreValid											// Return the Boolean flag
   }
   
@@ -942,7 +822,7 @@ object AddPDF_Util {
       }
     }
   }
-    
+  
   /**
    * Method to safely close the Utility object by shutting down the GUI label updater and stopping the timer.
    * 

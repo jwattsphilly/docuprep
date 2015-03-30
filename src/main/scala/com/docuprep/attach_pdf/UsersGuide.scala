@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: March 20th, 2014
+ * Last Updated: March 30th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -106,7 +106,7 @@ object UsersGuide extends SimpleSwingApplication {
     settingsText(34) = "        Safely closes the Settings application."
     settingsText(35) = "    Apply:"
     settingsText(36) = "        Applies any and all valid text field changes made to the to the Attach PDF application."
-    settingsText(37) = "";
+    settingsText(37) = ""
     
     /* Buttons */
     val closeButton = new Button{								// Button to exit the window

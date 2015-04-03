@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: March 19th, 2015
+ * Last Updated: April 3rd, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -229,13 +229,13 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * This method is called when either the close button or the red X in the corner is pressed.
      * 
      * @author James Watts
-     * Last Updated: March 19th, 2014
+     * Last Updated: April 3rd, 2014
      */
     private def closeSettings()
     {
       if(!UsersGuideIsRunning)
         {
-          guiUpdater ! PauseTimer(false)						// Un-Pause the timer (if a User's Guide application is not also running),
+          guiUpdater ! PauseTimer(pauseTimerLastValue)			// Set pauseTimer to its most recent value (if a User's Guide application is not also running),
         }
       guiUpdater ! SettingsRunning(false)						// set the SettingsIsRunning flag to false,
       close()													// and close the window
@@ -298,6 +298,22 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     Dialog.showMessage(top.contents.head,
         s"$timeType must be a valid positive integer!",
         title = s"$timeType formatted incorrectly",
+        messageType = Dialog.Message.Error)
+  }
+  
+  /**
+   * Displays an error Dialog when the database name is invalid.
+   * 
+   * @param dbName						The invalid database name
+   * 
+   * @author James Watts
+   * Last Updated: April 3rd, 2015
+   */
+  protected[attach_pdf] def invalidDatabaseDialog(dbName: String)
+  {
+    Dialog.showMessage(top.contents.head,
+        s"$dbName is not a valid database name on the given path!",
+        title = s"Database name invalid",
         messageType = Dialog.Message.Error)
   }
 }

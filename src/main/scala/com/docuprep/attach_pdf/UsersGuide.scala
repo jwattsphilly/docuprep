@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: March 30th, 2014
+ * Last Updated: April 3rd, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -187,13 +187,13 @@ object UsersGuide extends SimpleSwingApplication {
      * This method is called when either the close button or the red X in the corner is pressed.
      * 
      * @author James Watts
-     * Last Updated: March 19th, 2014
+     * Last Updated: April 3rd, 2014
      */
     private def closeUsersGuide()
     {
       if(!SettingsIsRunning)
         {
-          guiUpdater ! PauseTimer(false)						// Only unpause the timer if the Settings GUI is not running
+          guiUpdater ! PauseTimer(pauseTimerLastValue)			// Only unpause the timer if the Settings GUI is not running
         }
       guiUpdater ! UsersGuideRunning(false)						// Update the UsersGuideIsRunning flag to false
       close() 													// Close the window

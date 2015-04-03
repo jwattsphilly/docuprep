@@ -28,7 +28,7 @@ private[attach_pdf] case class PauseTimer(pause: Boolean)
  * All other messages are ignored.
  * 
  * @author James Watts
- * Last updated: March 20th, 2015
+ * Last updated: April 3rd, 2015
  */
 private[attach_pdf] class LabelUpdater extends Actor {
   
@@ -72,6 +72,7 @@ private[attach_pdf] class LabelUpdater extends Actor {
     
     /* Request to pause the timer */
     case PauseTimer(pause) =>
+      AddPDF_Util.pauseTimerLastValue = AddPDF_Util.pauseTimer			// Update the pauseTimerLastVaue field
       AddPDF_Util.pauseTimer = pause									// Update the pauseTimer field
     
     /* Request to stop the LabelUpdater thread */

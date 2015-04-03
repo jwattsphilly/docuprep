@@ -20,7 +20,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: March 30th, 2015
+ * Last Updated: April 3rd, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -64,7 +64,7 @@ object AddPDF_Util {
   private[attach_pdf] var databaseName = config.getString("attachPDF.database.name")
   private val app = config.getString("attachPDF.database.application")
   private val driverClass = config.getString("attachPDF.database.driverClass")
-  private var dbPath = config.getString("attachPDF.database.pathname")		// TODO: dbPath and databaseName should be connected
+  private val dbPath = config.getString("attachPDF.database.pathname")		// Note: databaseName and dbPath are connected
   private val dbUser = config.getString("attachPDF.database.username")
   private val dbPswd = config.getString("attachPDF.database.password")
   private val dbTable = config.getString("attachPDF.database.table")
@@ -81,6 +81,7 @@ object AddPDF_Util {
   private[attach_pdf] var timeToNextCheck = checkFilesTime					// Initialize to checkFilesTime from CONFIG file
   private[attach_pdf] var timeToNextReport = reportStatusTime				// Initialize to reportStatusTime from CONFIG file
   private[attach_pdf] var pauseTimer = false								// Start with the timer running
+  private[attach_pdf] var pauseTimerLastValue = false
   
   /* Flag for whether or not a Settings GUI Application is currently running.  This is to ensure that only one Settings
    * Application can run at a time and that the main AddPDF GUI Application cannot be closed while that Settings Application
@@ -393,7 +394,7 @@ object AddPDF_Util {
    * TODO: Report to actual work database instead of the test database.
    * 
    * @author James Watts
-   * Last Updated: March 20th, 2015
+   * Last Updated: April 3rd, 2015
    */
   def reportStatus() {
     var conn:Connection = null;
@@ -402,8 +403,8 @@ object AddPDF_Util {
 	    Class.forName(driverClass)
 	    
 	    // TODO: Connect to work database with correct username and password (all should now be in application.conf)
-	    								// DB pathname 		// username // password
-	    conn = DriverManager.getConnection(dbPath, 				dbUser, 	dbPswd)
+	    									// DB pathname 							// username // password
+	    conn = DriverManager.getConnection(s"$dbPath${File.separator}$databaseName", dbUser, 		dbPswd)
 	    
 	    // 'trans_id' will be generated automatically, so no need to worry about that
 	    // 'last_reported' will be the current date and time (NOW())
@@ -598,7 +599,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated March 30th, 2015
+   * Last Updated April 3rd, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -631,7 +632,7 @@ object AddPDF_Util {
     
     // Check folders for validity and for no duplicates.  If all is good, set the currentInboundFolders and 
     // currentOutboundFolders lists to be the new inputs.  Otherwise, they will remain unchanged.
-    if(checkFolderValidity(tempInboundList) && checkFolderDuplicates(tempInboundList, tempOutboundList))
+    if(checkFolderValidity(tempInboundList, tempOutboundList) && checkFolderDuplicates(tempInboundList, tempOutboundList))
     {
       currentInboundFolders = tempInboundList
       currentOutboundFolders = tempOutboundList
@@ -672,34 +673,64 @@ object AddPDF_Util {
         if(SettingsIsRunning) SettingsGUI.invalidTimeDialog(false)
     }
     
-    databaseName = dbName									// Update data from database text box
-    														// TODO: Check for validity of database
+    /* Test the validity of the database */
+    val tempDBName = databaseName
+    var conn:Connection = null;
+    try{
+	    // Get the Driver class and establish a connection to the database
+	    Class.forName(driverClass)			// DB pathname 					// username // password
+	    conn = DriverManager.getConnection(s"$dbPath${File.separator}$dbName", 	dbUser, 	dbPswd)
+	    
+	    val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
+	    query.executeQuery()							// If this query works, then the database is valid. Otherwise, invalid.
+	    databaseName = dbName							// Update data from database text box only if the database name is valid
+    }
+    catch
+    {
+      case e:Exception => 
+        databaseName = tempDBName						// If no connection could be made, change databaseName back to its
+        if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(dbName)	// original value and display an error message
+    }
+    finally
+    {
+      if(conn != null)									// Make sure to close the database connection, if applicable
+    	  conn.close()
+    }
     
-    guiUpdater ! Inbound(currentInboundFolders(0))			// Send a message to the LabelUpdater to update the
-    														// inboundFolderLabel to include the first currentInboundFolder
+    guiUpdater ! Inbound(currentInboundFolders(0))		// Send a message to the LabelUpdater to update the
+    													// inboundFolderLabel to include the first currentInboundFolder
     
-    saveSettingsToConfigFile()								// Save the current settings to the CONFIG file.
+    saveSettingsToConfigFile()							// Save the current settings to the CONFIG file.
   }
   
   /** 
-   * Checks each member of the Inbound folders lists and makes sure all folders listed exist on their respective servers. 
-   * Displays an error Dialog if any folder listed does not exist.
+   * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist on their respective 
+   * servers.  Displays an error Dialog if any folder listed does not exist.
    * 
    * @param inboundList				MutableList of inbound folders (may contain nulls, but not empty strings)
+   * @param outboundList			List of outbound folders (must not contain nulls or empty strings)
    * 
-   * @return						Boolean true if all folders in the inboundList lists are valid folders.
-   * 								False if any inbound folder listed is not valid.
+   * @return						Boolean true if all folders in the inboundList and outboundList lists are valid folders.
+   * 								False if any inbound or outbound folder listed is not valid.
    * 
    * @author James Watts
-   * Last Updated: March 30th, 2015
+   * Last Updated: April 3rd, 2015
    */
-  def checkFolderValidity(inboundList:MutableList[String]):Boolean = {	
+  def checkFolderValidity(inboundList:MutableList[String], outboundList:List[String]):Boolean = {	
     var allFoldersAreValid = true								// Check if all of the inbound folders are valid folders.
     for(folder <- inboundList if folder!=null)
       if( !(new File(folder).isDirectory) )						// Search through all non-null inbound folders.  If any
       {															// inbound folder is not a valid directory, display an
         if(SettingsIsRunning)									// error and return a false.
           SettingsGUI.invalidFolderDialog(folder, true)
+        allFoldersAreValid = false
+      }
+    
+    for(folder <- outboundList)
+      if( !(new File(folder).isDirectory) )						// Search through all outbound folders.  If any outbound
+      {															// folder is not a valid directory, display an error
+        if(SettingsIsRunning)									// and return a false.
+          SettingsGUI.invalidFolderDialog(folder, false)
         allFoldersAreValid = false
       }
     

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: April 3rd, 2015
+ * Last Updated: April 10th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -33,7 +33,8 @@ object AddPDF_GUI extends SimpleSwingApplication {
     peer.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
     override def closeOperation()								// Safely quit the whole application if neither the Settings
     { 															// nor User's Guide GUIs are running
-      if(!SettingsIsRunning && !UsersGuideIsRunning) closeSafely()
+      if(!SettingsIsRunning && !UsersGuideIsRunning)
+        closeSafely()
     }
     
     guiUpdater ! GuiRunning(true)								// Set the GuiIsRunning flag to true
@@ -120,7 +121,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
     size = new Dimension(500, 500)								// Set the size of the GUI window
     
     val inputStringArray = new Array[String](2)					// A String Array whose only purpose is to be an input to
-    inputStringArray(0) = "no"									// run the SettingsGUI application
+    inputStringArray(0) = "no"									// run the SettingsGUI and UsersGuide applications
     inputStringArray(1) = "yes"
     
     menuBar = new MenuBar {										// Add a menu bar 

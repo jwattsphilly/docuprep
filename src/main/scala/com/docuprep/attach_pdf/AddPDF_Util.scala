@@ -5,7 +5,6 @@ import scala.io.Source
 import java.sql.{Connection, DriverManager}
 import collection.mutable.MutableList
 import akka.actor.{ActorSystem, Props}
-import java.net._
 
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.util.PDFMergerUtility
@@ -20,7 +19,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: April 3rd, 2015
+ * Last Updated: April 10th, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -164,7 +163,7 @@ object AddPDF_Util {
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: March 30th, 2015
+   * Last Updated: April 3rd, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {    
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
@@ -276,9 +275,7 @@ object AddPDF_Util {
 	    
 	    /* Copy new Combined File into the other 3 destination locations: */
 	    for(i <- 1 until destinationPathNames.size)
-	    {
 	      FileUtils.copyFile(combinedFile, new File(s"${destinationPathNames(i)}$folderSeparator$ParsedOriginalName"))
-	    }
 	    
     	// Close and Delete File to Attach
 	    if(beginTrue)
@@ -391,10 +388,8 @@ object AddPDF_Util {
    * having the pathname of 'dbPath' (both of these parameters - as well as database username and password - are set
    * in the application.CONF file).
    * 
-   * TODO: Report to actual work database instead of the test database.
-   * 
    * @author James Watts
-   * Last Updated: April 3rd, 2015
+   * Last Updated: April 10th, 2015
    */
   def reportStatus() {
     var conn:Connection = null;
@@ -453,7 +448,8 @@ object AddPDF_Util {
     }
     catch
     {
-      case e:Exception => logger.error("Problem connecting to the database")
+//      case e:Exception => logger.error("Problem connecting to the database")
+      case e:Exception => logger.error(s"Problem connecting to the database: ${e.getMessage}")
     }
     finally
     {
@@ -468,12 +464,12 @@ object AddPDF_Util {
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
    * 
    * @author James Watts
-   * Last Updated: March 20th, 2014
+   * Last Updated: April 3rd, 2014
    */
   def getMachineName():String = 
   {
     try{
-      val compName = InetAddress.getLocalHost().getHostName()			// Get the machine name
+      val compName = java.net.InetAddress.getLocalHost().getHostName()	// Get the machine name
       val machineName = s"PDF ($compName)"								// Surround it with "PDF (" and ")"
       
       // Account for a machine name that's too long
@@ -554,7 +550,7 @@ object AddPDF_Util {
    * @return					A String representation of minutes and seconds for a timer label
    * 
    * @author James Watts
-   * Last Updated: March 20th, 2015
+   * Last Updated: April 10th, 2015
    */
   def generateCountString(time:Int):String = {
     val minutes = time/60										// Get the minutes and seconds based off of the input time
@@ -564,6 +560,7 @@ object AddPDF_Util {
     val secondsString:String = if(seconds>9) seconds.toString else s"0$seconds"
     
     s"$minutesString:$secondsString"							// Return the count string formatted as MM:SS
+//    s"${if(minutes>9) minutes.toString else s"0$minutes"}:${if(seconds>9) seconds.toString else s"0$seconds"}" // Alternate method
   }
   
   /**
@@ -599,7 +596,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated April 3rd, 2015
+   * Last Updated April 10th, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -607,39 +604,36 @@ object AddPDF_Util {
 		  			checkFilesTimeString:String, reportStatusTimeString:String, dbName:String)
   {
     val tempInboundList = MutableList(inbound1)				// Create a new list for inbound folders,
-         													// starting with the primary folder
+         													// starting with the primary folder.
     
-    if(inbound2Checked && 									// If check box for second inbound folder is checked,
-        !inbound2.isEmpty)									// and it is not an empty string
-      tempInboundList += inbound2							// add the second inbound folder to the inbound list
-    else													// Otherwise, add a null
-      tempInboundList += null
+    if(inbound2Checked && !inbound2.isEmpty)				// If check box for second inbound folder is checked,	
+      tempInboundList += inbound2							// and it is not an empty string,
+    else													// add the second inbound folder to the inbound list.
+      tempInboundList += null								// Otherwise, add a null.
     
-    if(inbound3Checked &&									// If check box for third inbound folder is checked,
-    	!inbound3.isEmpty)									// and it is not an empty string
-      tempInboundList += inbound3							// add the third inbound folder to the inbound list
-    else													// Otherwise, add a null
-      tempInboundList += null
+    if(inbound3Checked && !inbound3.isEmpty)				// If check box for third inbound folder is checked,
+      tempInboundList += inbound3							// and it is not an empty string,
+    else													// add the third inbound folder to the inbound list.
+      tempInboundList += null								// Otherwise, add a null.
     
-    if(inbound4Checked &&									// If check box for fourth inbound folder is checked,
-        !inbound4.isEmpty)									// and it is not an empty string
-      tempInboundList += inbound4							// add the fourth inbound folder to the inbound list
-    else													// Otherwise, add a null
-      tempInboundList += null
+    if(inbound4Checked && !inbound4.isEmpty)				// If check box for fourth inbound folder is checked,
+      tempInboundList += inbound4							// and it is not an empty string,
+    else													// add the fourth inbound folder to the inbound list.
+      tempInboundList += null								// Otherwise, add a null.
     
     val tempOutboundList = List(PDF1, PDF2, PDF3, PDF4)		// Create a new list for outbound folders with all 4
-       														// of the updated PDF folder names
+       														// of the updated PDF folder names.
     
-    // Check folders for validity and for no duplicates.  If all is good, set the currentInboundFolders and 
-    // currentOutboundFolders lists to be the new inputs.  Otherwise, they will remain unchanged.
+    /* Check folders for validity and for no duplicates.  If all is good, set the currentInboundFolders and 
+     * currentOutboundFolders lists to be the new inputs.  Otherwise, they will remain unchanged. */
     if(checkFolderValidity(tempInboundList, tempOutboundList) && checkFolderDuplicates(tempInboundList, tempOutboundList))
     {
       currentInboundFolders = tempInboundList
       currentOutboundFolders = tempOutboundList
       
-      /* Update status of checked/unchecked boxes */
-      // Any box is considered unchecked if the inbound textbox below is empty.
-      // Otherwise, the boxXchecked field's value is changed to inboundXChecked
+      /* Update status of checked/unchecked boxes:
+       * 	Any box is considered unchecked if the inbound textbox below is empty.
+       * 	Otherwise, the boxXchecked field's value is changed to inboundXChecked */
       box2checked = (currentInboundFolders(1) != null) && inbound2Checked
       box3checked = (currentInboundFolders(2) != null) && inbound3Checked
       box4checked = (currentInboundFolders(3) != null) && inbound4Checked
@@ -703,6 +697,7 @@ object AddPDF_Util {
     saveSettingsToConfigFile()							// Save the current settings to the CONFIG file.
   }
   
+
   /** 
    * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist on their respective 
    * servers.  Displays an error Dialog if any folder listed does not exist.
@@ -854,6 +849,7 @@ object AddPDF_Util {
     }
   }
   
+
   /**
    * Method to safely close the Utility object by shutting down the GUI label updater and stopping the timer.
    * 

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: April 3rd, 2014
+ * Last Updated: April 10th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -198,6 +198,5 @@ object UsersGuide extends SimpleSwingApplication {
       guiUpdater ! UsersGuideRunning(false)						// Update the UsersGuideIsRunning flag to false
       close() 													// Close the window
     }
-    
   }
 }

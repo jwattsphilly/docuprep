@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: April 3rd, 2015
+ * Last Updated: April 13th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -108,6 +108,38 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       text = "Apply"											// set its title
       tooltip = "Click to apply changes"						// add a helpful message
     }
+    val chooseFolderInbound1 = new Button{						// Button for folder selection for Inbound Folder 1
+      text = "..."												// set its title
+      tooltip = "Choose a File Folder for Inbound Folder 1"		// add a helpful message
+    }
+    val chooseFolderInbound2 = new Button{						// Button for folder selection for Inbound Folder 2
+      text = "..."												// set its title
+      tooltip = "Choose a File Folder for Inbound Folder 2"		// add a helpful message
+    }
+    val chooseFolderInbound3 = new Button{						// Button for folder selection for Inbound Folder 3
+      text = "..."												// set its title
+      tooltip = "Choose a File Folder for Inbound Folder 3"		// add a helpful message
+    }
+    val chooseFolderInbound4 = new Button{						// Button for folder selection for Inbound Folder 4
+      text = "..."												// set its title
+      tooltip = "Choose a File Folder for Inbound Folder 4"		// add a helpful message
+    }
+    val chooseFolderPDF1 = new Button{							// Button for folder selection for PDF Folder 1
+      text = "..."												// set its title
+      tooltip = "Choose a File Folder for PDF Folder 1"			// add a helpful message
+    }
+    val chooseFolderPDF2 = new Button{							// Button for folder selection for PDF Folder 1
+      text = "..."												// set its title
+      tooltip = "Choose a File Folder for PDF Folder 2"			// add a helpful message
+    }
+    val chooseFolderPDF3 = new Button{							// Button for folder selection for PDF Folder 1
+      text = "..."												// set its title
+      tooltip = "Choose a File Folder for PDF Folder 3"			// add a helpful message
+    }
+    val chooseFolderPDF4 = new Button{							// Button for folder selection for PDF Folder 1
+      text = "..."												// set its title
+      tooltip = "Choose a File Folder for PDF Folder 4"			// add a helpful message
+    }
     
     // Panels:
     // West Panel:
@@ -116,10 +148,12 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for inbound folder 1
         contents+=inbound1Label									// add inbound folder 1 label
         contents+=inbound1Text									// add inbound folder 1 text box
+        contents+=chooseFolderInbound1							// add inbound folder 1 file select button
       }
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for PDF folder 1
         contents+=PDF1Label										// add PDF folder 1 label
         contents+=PDF1Text										// add PDF folder 1 text box
+        contents+=chooseFolderPDF1								// add PDF folder 1 file select button
       }
       contents+=Swing.VStrut(15)								// Add a vertical space
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for location 2 label
@@ -130,10 +164,12 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for inbound folder 2
     	contents+=inbound2Label									// add inbound folder 2 label
     	contents+=inbound2Text									// add inbound folder 2 text box
+    	contents+=chooseFolderInbound2							// add inbound folder 2 file select button
       }
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for PDF folder 2
     	contents+=PDF2Label										// add PDF folder 2 label
     	contents+=PDF2Text										// add PDF folder 2 text box
+    	contents+=chooseFolderPDF2								// add PDF folder 2 file select button
       }
       contents+=Swing.VStrut(15)								// Add a vertical space
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for location 3 label
@@ -144,10 +180,12 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for inbound folder 3
     	contents+=inbound3Label									// add inbound folder 3 label
     	contents+=inbound3Text									// add inbound folder 3 text box
+    	contents+=chooseFolderInbound3							// add inbound folder 3 file select button
       }
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for PDF folder 3
     	contents+=PDF3Label										// add PDF folder 3 label
     	contents+=PDF3Text										// add PDF folder 3 text box
+    	contents+=chooseFolderPDF3								// add PDF folder 3 file select button
       }
       contents+=Swing.VStrut(15)								// Add a vertical space
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for location 4 label
@@ -158,10 +196,12 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for inbound folder 4
     	contents+=inbound4Label									// add inbound folder 4 label
     	contents+=inbound4Text									// add inbound folder 4 text box
+    	contents+=chooseFolderInbound4							// add inbound folder 4 file select button
       }
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for PDF folder 4
     	contents+=PDF4Label										// add PDF folder 4 label
     	contents+=PDF4Text										// add PDF folder 4 text box
+    	contents+=chooseFolderPDF4								// add PDF folder 4 file select button
       }
       border = Swing.EmptyBorder(0,20,0,20)						// Set the border size (add space to left and right sides)
     }
@@ -207,15 +247,26 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       border = Swing.EmptyBorder(20,0,20,0)						// Add space on top and bottom
     }
     
-    size = new Dimension(750, 375)								// Set the size of the GUI
+    size = new Dimension(750, 400)								// Set the size of the GUI
     
-    // Listen to both buttons and all three CheckBoxes
-    listenTo(closeButton, applyButton, inbound2CheckBox, inbound3CheckBox, inbound4CheckBox)
+    // Listen to all buttons and all three CheckBoxes
+    listenTo(closeButton, applyButton, inbound2CheckBox, inbound3CheckBox, inbound4CheckBox,
+        chooseFolderInbound1, chooseFolderInbound2, chooseFolderInbound3, chooseFolderInbound4,
+        chooseFolderPDF1, chooseFolderPDF2, chooseFolderPDF3, chooseFolderPDF4)
     
     reactions+={
-      case ButtonClicked(`closeButton`) => 
-        closeSettings
+      case ButtonClicked(`closeButton`) => closeSettings
+      
+      case ButtonClicked(`chooseFolderInbound1`) => folderSelectionDialog(inbound1Text)
+      case ButtonClicked(`chooseFolderInbound2`) => folderSelectionDialog(inbound2Text)
+      case ButtonClicked(`chooseFolderInbound3`) => folderSelectionDialog(inbound3Text)
+      case ButtonClicked(`chooseFolderInbound4`) => folderSelectionDialog(inbound4Text)
         
+      case ButtonClicked(`chooseFolderPDF1`) => folderSelectionDialog(PDF1Text)
+      case ButtonClicked(`chooseFolderPDF2`) => folderSelectionDialog(PDF2Text)
+      case ButtonClicked(`chooseFolderPDF3`) => folderSelectionDialog(PDF3Text)
+      case ButtonClicked(`chooseFolderPDF4`) => folderSelectionDialog(PDF4Text)
+      
       case ButtonClicked(`applyButton`) => 						// Run the applyChanges method, which updates fields
         		    											// according to new text box inputs
         applyChanges(	inbound1Text.text, inbound2Text.text, inbound3Text.text, inbound4Text.text,
@@ -225,11 +276,30 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     }
     
     /**
+     * Opens a File Chooser dialog one level up from the filepath specified in the input TextField 
+     * object.  Once a folder is chosen from the File Chooser dialog, this method resets the input 
+     * TextField's text to be the pathname of the newly chosen folder.
+     * 
+     * @param tf					A TextField object
+     * 
+     * @author James Watts
+     * Last Updated April 13th, 2015
+     */
+    def folderSelectionDialog(tf:TextField)
+    {
+      val filechooser = new FileChooser(new java.io.File(s"${tf.text}\\.."))
+      filechooser.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
+      
+      if(filechooser.showDialog(null, "Select") == FileChooser.Result.Approve)
+        tf.text = filechooser.selectedFile.toString
+    }
+    
+    /**
      * Unpauses the timer (if User's Guide GUI is not also running) and closes the Settings window.
      * This method is called when either the close button or the red X in the corner is pressed.
      * 
      * @author James Watts
-     * Last Updated: April 3rd, 2014
+     * Last Updated: April 3rd, 2015
      */
     private def closeSettings()
     {

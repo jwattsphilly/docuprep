@@ -8,13 +8,14 @@ Text Fields:
 		Pathnames to the folders to search for the .txt files containing the merge information.  Any
 		Inbound Folder text field (apart from the first one) that is left blank is treated as if the 
 		checkbox above is unchecked, and that folder will not be included in the list of inbound 
-		folders to check.  Duplicate folder names and nonexistant folder names are not accepted.
-		If the desired folder pathname is on a remote server, prefix the pathname with a "\\"
-		followed by the server's IP address.
+		folders to check.  Duplicate folder names and non-existent folder names are not accepted.
+		You may use the button on the right-hand side to select a folder from a file chooser dialogue
+		or simply type in the pathname of the desired folder.
 	PDF Folders:
 		Pathnames to the folders to copy merged PDF files into.  All four of these fields must be
-		filled in.  Duplicate folder names are not accepted.  If the desired folder pathname is on a 
-		remote server, prefix the pathname with a "\\" followed by by the server's IP address.
+		filled in.   Duplicate folder names and non-existent folder names are not accepted.  You may
+		use the button on the right-hand side to select a folder from a file chooser dialogue or 
+		simply type in the pathname of the desired folder.
 	Check For New Files Every:
 		An amount of seconds for the timer to countdown from before a merge is run.  This field must 
 		contain a positive whole number to be accepted.

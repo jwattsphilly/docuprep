@@ -10,11 +10,11 @@ import AddPDF_Util._
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: April 10th, 2014
+ * Last Updated: April 15th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
-  private val arraySize = 38
+  private val arraySize = 39
   
   def top = new MainFrame{										// Create a new MainFrame for the User's Guide
     title = "User's Guide"										// Entitle it
@@ -65,7 +65,8 @@ object UsersGuide extends SimpleSwingApplication {
     mainPageText(34) = " "
     mainPageText(35) = " "
     mainPageText(36) = " "
-    mainPageText(37) = ""
+    mainPageText(37) = " "
+    mainPageText(38) = ""
     
     /* Help Text for Settings Help */
     val settingsText = new Array[String](arraySize)
@@ -80,33 +81,34 @@ object UsersGuide extends SimpleSwingApplication {
     settingsText(8) = "        Inbound Folder text field (apart from the first one) that is left blank is treated as if the"
     settingsText(9) = "        checkbox above is unchecked, and that folder will not be included in the list of inbound"
     settingsText(10) = "        folders to check.  Duplicate folder names and nonexistant folder names are not accepted."
-    settingsText(11) = """        If the desired folder pathname is on a remote server, prefix the pathname with a "\\""""
-    settingsText(12) = "        followed by the server's IP address."
+    settingsText(11) = "        You may use the button on the right-hand side to select a folder from a file chooser dialogue"
+    settingsText(12) = "        or simply type in the pathname of the desired folder."
     settingsText(13) = "    PDF Folders:"
     settingsText(14) = "        Pathnames to the folders to copy merged PDF files into.  All four of these fields must be"
-    settingsText(15) = "        filled in.  Duplicate folder names are not accepted.  If the desired folder pathname is on a"
-    settingsText(16) = """        remote server, prefix the pathname with a "\\" followed by by the server's IP address."""
-    settingsText(17) = "    Check For New Files Every:"
-    settingsText(18) = "        An amount of seconds for the timer to countdown from before a merge is run.  This field must"
-    settingsText(19) = "        contain a positive whole number to be accepted."
-    settingsText(20) = "    Report Status Every:"
-    settingsText(21) = "        An amount of seconds for the timer to countdown from before reporting the application's"
-    settingsText(22) = "        status to the database.  This field must contain a positive whole number to be accepted."
-    settingsText(23) = "    Database:"
-    settingsText(24) = "        The name of the database the Attach PDF application reports to.  The database must be valid"
-    settingsText(25) = "        to be accepted."
-    settingsText(26) = " "
-    settingsText(27) = "Check Boxes:"
-    settingsText(28) = "    When checked, the \"Inbound Folder\" fields directly beneath will be included in the list of"
-    settingsText(29) = "    folders to be checked for .txt files.  When unchecked, the \"Inbound Folder\" fields directly"
-    settingsText(30) = "    beneath will be excluded from that list."
-    settingsText(31) = " "
-    settingsText(32) = "Buttons:"
-    settingsText(33) = "    Close:"
-    settingsText(34) = "        Safely closes the Settings application."
-    settingsText(35) = "    Apply:"
-    settingsText(36) = "        Applies any and all valid text field changes made to the to the Attach PDF application."
-    settingsText(37) = ""
+    settingsText(15) = "        filled in.   Duplicate folder names and non-existent folder names are not accepted.  You may"
+    settingsText(16) = "        use the button on the right-hand side to select a folder from a file chooser dialogue or"
+    settingsText(17) = "        simply type in the pathname of the desired folder."
+    settingsText(18) = "    Check For New Files Every:"
+    settingsText(19) = "        An amount of seconds for the timer to countdown from before a merge is run.  This field must"
+    settingsText(20) = "        contain a positive whole number to be accepted."
+    settingsText(21) = "    Report Status Every:"
+    settingsText(22) = "        An amount of seconds for the timer to countdown from before reporting the application's"
+    settingsText(23) = "        status to the database.  This field must contain a positive whole number to be accepted."
+    settingsText(24) = "    Database:"
+    settingsText(25) = "        The name of the database the Attach PDF application reports to.  The database must be valid"
+    settingsText(26) = "        to be accepted."
+    settingsText(27) = " "
+    settingsText(28) = "Check Boxes:"
+    settingsText(29) = "    When checked, the \"Inbound Folder\" fields directly beneath will be included in the list of"
+    settingsText(30) = "    folders to be checked for .txt files.  When unchecked, the \"Inbound Folder\" fields directly"
+    settingsText(31) = "    beneath will be excluded from that list."
+    settingsText(32) = " "
+    settingsText(33) = "Buttons:"
+    settingsText(34) = "    Close:"
+    settingsText(35) = "        Safely closes the Settings application."
+    settingsText(36) = "    Apply:"
+    settingsText(37) = "        Applies any and all valid text field changes made to the to the Attach PDF application."
+    settingsText(38) = ""
     
     /* Buttons */
     val closeButton = new Button{								// Button to exit the window
@@ -170,13 +172,10 @@ object UsersGuide extends SimpleSwingApplication {
         val selection = pullDownMenu.selection.item				// Obtain the selection from the pull-down menu
         
         if(selection == mainPageSelection)						// If Main Page Help is wanted, display main page help text
-        {
           for(i <- 0 until arraySize) helpText(i).text = mainPageText(i)
-        }
+          
         else if(selection == settingsSelection)					// If Settings Help is wanted, display settings help text
-        {
           for(i <- 0 until arraySize) helpText(i).text = settingsText(i)
-        }
       
       case ButtonClicked(`closeButton`) => 						// When the close button is pressed, call the closeUsersGuide method
         closeUsersGuide()
@@ -187,14 +186,12 @@ object UsersGuide extends SimpleSwingApplication {
      * This method is called when either the close button or the red X in the corner is pressed.
      * 
      * @author James Watts
-     * Last Updated: April 3rd, 2014
+     * Last Updated: April 15th, 2014
      */
     private def closeUsersGuide()
     {
       if(!SettingsIsRunning)
-        {
           guiUpdater ! PauseTimer(pauseTimerLastValue)			// Only unpause the timer if the Settings GUI is not running
-        }
       guiUpdater ! UsersGuideRunning(false)						// Update the UsersGuideIsRunning flag to false
       close() 													// Close the window
     }

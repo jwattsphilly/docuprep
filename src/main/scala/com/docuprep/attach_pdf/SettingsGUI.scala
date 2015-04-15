@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: April 13th, 2015
+ * Last Updated: April 15th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -249,26 +249,27 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     
     size = new Dimension(750, 400)								// Set the size of the GUI
     
-    // Listen to all buttons and all three CheckBoxes
+    // Listen to all buttons and the three CheckBoxes
     listenTo(closeButton, applyButton, inbound2CheckBox, inbound3CheckBox, inbound4CheckBox,
         chooseFolderInbound1, chooseFolderInbound2, chooseFolderInbound3, chooseFolderInbound4,
         chooseFolderPDF1, chooseFolderPDF2, chooseFolderPDF3, chooseFolderPDF4)
     
     reactions+={
+      /* If the Close button is pressed, safely close the Settings Window. */
       case ButtonClicked(`closeButton`) => closeSettings
       
+      /* If any of the 'chooseFolder' buttons are pressed, run the folderSelectionDialog method. */
       case ButtonClicked(`chooseFolderInbound1`) => folderSelectionDialog(inbound1Text)
       case ButtonClicked(`chooseFolderInbound2`) => folderSelectionDialog(inbound2Text)
       case ButtonClicked(`chooseFolderInbound3`) => folderSelectionDialog(inbound3Text)
       case ButtonClicked(`chooseFolderInbound4`) => folderSelectionDialog(inbound4Text)
-        
       case ButtonClicked(`chooseFolderPDF1`) => folderSelectionDialog(PDF1Text)
       case ButtonClicked(`chooseFolderPDF2`) => folderSelectionDialog(PDF2Text)
       case ButtonClicked(`chooseFolderPDF3`) => folderSelectionDialog(PDF3Text)
       case ButtonClicked(`chooseFolderPDF4`) => folderSelectionDialog(PDF4Text)
       
-      case ButtonClicked(`applyButton`) => 						// Run the applyChanges method, which updates fields
-        		    											// according to new text box inputs
+      /* If the Apply button is pressed, run the applyChanges method, which updates fields according to new text box inputs. */
+      case ButtonClicked(`applyButton`) =>
         applyChanges(	inbound1Text.text, inbound2Text.text, inbound3Text.text, inbound4Text.text,
         				PDF1Text.text, PDF2Text.text, PDF3Text.text, PDF4Text.text,
         				inbound2CheckBox.selected, inbound3CheckBox.selected, inbound4CheckBox.selected,
@@ -276,18 +277,18 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     }
     
     /**
-     * Opens a File Chooser dialog one level up from the filepath specified in the input TextField 
+     * Opens a File Chooser dialog one level up from the filepath specified in the input TextField
      * object.  Once a folder is chosen from the File Chooser dialog, this method resets the input 
      * TextField's text to be the pathname of the newly chosen folder.
      * 
      * @param tf					A TextField object
      * 
      * @author James Watts
-     * Last Updated April 13th, 2015
+     * Last Updated April 15th, 2015
      */
     def folderSelectionDialog(tf:TextField)
     {
-      val filechooser = new FileChooser(new java.io.File(s"${tf.text}\\.."))
+      val filechooser = new FileChooser(new java.io.File(s"${tf.text}${java.io.File.separator}.."))
       filechooser.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
       
       if(filechooser.showDialog(null, "Select") == FileChooser.Result.Approve)
@@ -299,16 +300,14 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * This method is called when either the close button or the red X in the corner is pressed.
      * 
      * @author James Watts
-     * Last Updated: April 3rd, 2015
+     * Last Updated: April 15th, 2015
      */
     private def closeSettings()
     {
-      if(!UsersGuideIsRunning)
-        {
-          guiUpdater ! PauseTimer(pauseTimerLastValue)			// Set pauseTimer to its most recent value (if a User's Guide application is not also running),
-        }
-      guiUpdater ! SettingsRunning(false)						// set the SettingsIsRunning flag to false,
-      close()													// and close the window
+      if(!UsersGuideIsRunning)									// If a User's Guide application is not also running,
+        guiUpdater ! PauseTimer(pauseTimerLastValue)			// set pauseTimer to its most recent value.
+      guiUpdater ! SettingsRunning(false)						// Set the SettingsIsRunning flag to false
+      close()													// and close the window.
     }
   }
   

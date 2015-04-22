@@ -19,7 +19,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: April 10th, 2015
+ * Last Updated: April 22nd, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -389,7 +389,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: April 10th, 2015
+   * Last Updated: April 22nd, 2015
    */
   def reportStatus() {
     var conn:Connection = null;
@@ -596,7 +596,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated April 10th, 2015
+   * Last Updated April 22nd, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -631,9 +631,9 @@ object AddPDF_Util {
       currentInboundFolders = tempInboundList
       currentOutboundFolders = tempOutboundList
       
-      /* Update status of checked/unchecked boxes:
-       * 	Any box is considered unchecked if the inbound textbox below is empty.
-       * 	Otherwise, the boxXchecked field's value is changed to inboundXChecked */
+      /* Update status of checked/unchecked boxes:									*
+       * 	Any box is considered unchecked if the inbound textbox below is empty.	*
+       * 	Otherwise, the boxXchecked field's value is changed to inboundXChecked.	*/
       box2checked = (currentInboundFolders(1) != null) && inbound2Checked
       box3checked = (currentInboundFolders(2) != null) && inbound3Checked
       box4checked = (currentInboundFolders(3) != null) && inbound4Checked
@@ -677,22 +677,22 @@ object AddPDF_Util {
 	    
 	    val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
 	    query.executeQuery()							// If this query works, then the database is valid. Otherwise, invalid.
-	    databaseName = dbName							// Update data from database text box only if the database name is valid
+	    databaseName = dbName							// Update data from database text box only if the database name is valid.
     }
     catch
     {
       case e:Exception => 
         databaseName = tempDBName						// If no connection could be made, change databaseName back to its
-        if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(dbName)	// original value and display an error message
+        if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(dbName)		// original value and display an error message.
     }
     finally
     {
-      if(conn != null)									// Make sure to close the database connection, if applicable
+      if(conn != null)									// Make sure to close the database connection, if applicable.
     	  conn.close()
     }
     
     guiUpdater ! Inbound(currentInboundFolders(0))		// Send a message to the LabelUpdater to update the
-    													// inboundFolderLabel to include the first currentInboundFolder
+    													// inboundFolderLabel to include the first currentInboundFolder.
     
     saveSettingsToConfigFile()							// Save the current settings to the CONFIG file.
   }

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: April 15th, 2015
+ * Last Updated: April 22nd, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -277,14 +277,14 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     }
     
     /**
-     * Opens a File Chooser dialog one level up from the filepath specified in the input TextField
+     * Opens a File Chooser dialog one level up from the file pathname specified in the input TextField
      * object.  Once a folder is chosen from the File Chooser dialog, this method resets the input 
      * TextField's text to be the pathname of the newly chosen folder.
      * 
      * @param tf					A TextField object
      * 
      * @author James Watts
-     * Last Updated April 15th, 2015
+     * Last Updated April 22nd, 2015
      */
     def folderSelectionDialog(tf:TextField)
     {

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: April 10th, 2015
+ * Last Updated: April 27th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -44,7 +44,6 @@ object AddPDF_GUI extends SimpleSwingApplication {
       text = "Close"											// add text
       tooltip = "Click to exit"									// add helpful hint
     }
-    
     private val pauseButton = new Button{						// Pause button - pauses/unpauses the timer
       text = "Pause"											// add text
       tooltip = "Click to pause and reset the timer"			// add helpful hint
@@ -131,7 +130,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
           {if(!SettingsIsRunning && !UsersGuideIsRunning) 
             closeSafely()})				
         contents += new MenuItem(Action("Settings"){			// Add a "Settings" menu option
-          if(!SettingsIsRunning)								// If there's not already a SettingsGUI application running,
+          if(!SettingsIsRunning)								// If there's not already a SettingsGUI application running...
           {
             if(!UsersGuideIsRunning) guiUpdater ! PauseTimer(true)// When "Settings" is clicked, pause the timer,
             guiUpdater ! SettingsRunning(true)					// set the SettingsIsRunning flag to true,
@@ -142,7 +141,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
       contents += new Menu("Help")								// Add a second menu entitled "Help"
       {
         contents += new MenuItem(Action("User's Guide"){
-          if(!UsersGuideIsRunning)								// If there's not already a UsersGuide application running,
+          if(!UsersGuideIsRunning)								// If there's not already a UsersGuide application running...
           {
             if(!SettingsIsRunning) guiUpdater ! PauseTimer(true)// When "User's Guide" is clicked, pause the timer,
             guiUpdater ! UsersGuideRunning(true)				// set the UsersGuideIsRunning flag to true,
@@ -165,7 +164,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
   private def closeSafely() {
     guiUpdater ! GuiRunning(false)								// Set the GuiIsRunning field to false
     closeUtility()												// Call AddPDF_Util's closeUtility method
-    quit														// quit the GUI
+    quit														// Quit the GUI
   }
   
 }

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: April 22nd, 2015
+ * Last Updated: April 27th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -144,7 +144,6 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     // Panels:
     // West Panel:
     val westPanel = new BoxPanel(Orientation.Vertical){			// Panel for the West side of application
-      
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for inbound folder 1
         contents+=inbound1Label									// add inbound folder 1 label
         contents+=inbound1Text									// add inbound folder 1 text box
@@ -208,7 +207,6 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     
     // East panel:
     val eastPanel = new BoxPanel(Orientation.Vertical){			// Panel for the East side of application
-      
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for Check New Files label
     	contents+=checkNewFilesLabel							// add Check New Files label
     	contents+=Swing.HGlue									// add horizontal glue to left justify
@@ -217,7 +215,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     	contents+=checkNewFilesText								// add Check New Files text box
     	contents+=secondsLabel1									// add " Seconds."
       }
-      contents+=Swing.VStrut(15)								// add a vertical space
+      contents+=Swing.VStrut(15)								// Add a vertical space
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for Report Status label
     	contents+=reportStatusLabel								// add Report Status label
     	contents+=Swing.HGlue									// add horizontal glue to left justify
@@ -226,12 +224,12 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     	contents+=reportStatusText								// add Report Status text box
     	contents+=secondsLabel2									// add " Seconds."
       }
-      contents+=Swing.VStrut(30)								// add a vertical space
+      contents+=Swing.VStrut(30)								// Add a vertical space
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for Database input
         contents+=databaseLabel									// add "Database: "
         contents+=databaseText									// add Database text box
       }
-      contents+=Swing.VStrut(130)								// add a large vertical space
+      contents+=Swing.VStrut(130)								// Add a large vertical space
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for the two buttons
         contents+=closeButton									// add the Close Button
         contents+=Swing.HStrut(5)
@@ -284,9 +282,9 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * @param tf					A TextField object
      * 
      * @author James Watts
-     * Last Updated April 22nd, 2015
+     * Last Updated April 27th, 2015
      */
-    def folderSelectionDialog(tf:TextField)
+    private def folderSelectionDialog(tf:TextField)
     {
       val filechooser = new FileChooser(new java.io.File(s"${tf.text}${java.io.File.separator}.."))
       filechooser.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
@@ -316,10 +314,11 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
    * 
    * @param folder						Invalid String pathname of a file folder
    * 
-   * @param isInbound					Boolean denoting if the pathname is from the inbound or outbound folder list
+   * @param isInbound					Boolean denoting if the pathname is from the inbound or outbound folder list.
+   * 									True if inbound, false if outbound.
    * 
    * @author James Watts
-   * Last Updated: March 30th, 2015
+   * Last Updated: April 27th, 2015
    */
   protected[attach_pdf] def invalidFolderDialog(folder: String, isInbound: Boolean)
   {
@@ -337,10 +336,11 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
    * 
    * @param folder						Invalid String pathname of a file folder
    * 
-   * @param isInbound					Boolean denoting if the pathname is from the inbound or outbound folder list
+   * @param isInbound					Boolean denoting if the pathname is from the inbound or outbound folder list.
+   * 									True if inbound, false if outbound.
    * 
    * @author James Watts
-   * Last Updated: January 5th, 2015
+   * Last Updated: April 27th, 2015
    */
   protected[attach_pdf] def duplicateFolderDialog(folder: String, isInbound: Boolean)
   {
@@ -355,10 +355,11 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   /**
    * Displays an error Dialog when the Check Files Time or Report Status Time is invalid.
    * 
-   * @param isCheckFilesTime			Boolean denoting if the Check Files Time or Report Status Time is invalid
+   * @param isCheckFilesTime			Boolean denoting if the Check Files Time or Report Status Time is invalid.
+   * 									True if 'Check Files Time,' false if 'Report Status Time.'
    * 
    * @author James Watts
-   * Last Updated: January 5th, 2015
+   * Last Updated: April 27th, 2015
    */
   protected[attach_pdf] def invalidTimeDialog(isCheckFilesTime: Boolean)
   {

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: April 27th, 2015
+ * Last Updated: May 8th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -21,122 +21,122 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     override def closeOperation() = { closeSettings() }			// Close the window instead of quitting the whole application
     
     // Labels for West Panel
-    val inbound1Label = new Label("Inbound Folder: ")			// Inbound Folder (1) Label
-    val PDF1Label = new Label("PDF Folder:         ")			// PDF Folder (1) Label
-    val inbound2Label = new Label("Inbound Folder: ")			// Inbound Folder (2) Label
-    val PDF2Label = new Label("PDF Folder:         ")			// PDF Folder (2) Label
-    val inbound3Label = new Label("Inbound Folder: ")			// Inbound Folder (3) Label
-    val PDF3Label = new Label("PDF Folder:         ")			// PDF Folder (3) Label
-    val inbound4Label = new Label("Inbound Folder: ")			// Inbound Folder (4) Label
-    val PDF4Label = new Label("PDF Folder:         ")			// PDF Folder (4) Label
-    val location2Label = new Label(								// Label to denote Second Location
+    private val inbound1Label = new Label("Inbound Folder: ")	// Inbound Folder (1) Label
+    private val PDF1Label = new Label("PDF Folder:         ")	// PDF Folder (1) Label
+    private val inbound2Label = new Label("Inbound Folder: ")	// Inbound Folder (2) Label
+    private val PDF2Label = new Label("PDF Folder:         ")	// PDF Folder (2) Label
+    private val inbound3Label = new Label("Inbound Folder: ")	// Inbound Folder (3) Label
+    private val PDF3Label = new Label("PDF Folder:         ")	// PDF Folder (3) Label
+    private val inbound4Label = new Label("Inbound Folder: ")	// Inbound Folder (4) Label
+    private val PDF4Label = new Label("PDF Folder:         ")	// PDF Folder (4) Label
+    private val location2Label = new Label(						// Label to denote Second Location
         "Second Location (if applicable)")
-    val location3Label = new Label( 							// Label to denote Third Location
+    private val location3Label = new Label( 					// Label to denote Third Location
         "Third Location (if applicable)")
-    val location4Label = new Label(								// Label to denote Fourth Location
+    private val location4Label = new Label(						// Label to denote Fourth Location
         "Fourth Location (if applicable)")
     
     // Labels for East Panel
-    val checkNewFilesLabel = new Label("Check For New Files Every:")// Check for new files label
-    val reportStatusLabel = new Label("Report Status Every:")	// Status report label
-    val secondsLabel1 = new Label(" Seconds.")					// Seconds Label (1)
-    val secondsLabel2 = new Label(" Seconds.")					// Seconds Label (2)
-    val databaseLabel = new Label("Database: ")					// Database Label
+    private val checkNewFilesLabel = new Label("Check For New Files Every:")// Check for new files label
+    private val reportStatusLabel = new Label("Report Status Every:")		// Status report label
+    private val secondsLabel1 = new Label(" Seconds.")						// Seconds Label (1)
+    private val secondsLabel2 = new Label(" Seconds.")						// Seconds Label (2)
+    private val databaseLabel = new Label("Database: ")						// Database Label
     
     // Text Boxes for West Panel
-    val inbound1Text = new TextField {							// Text field to input primary inbound folder to find
+    private val inbound1Text = new TextField {					// Text field to input primary inbound folder to find
       columns = 30												// .txt file
       text = currentInboundFolders(0)							// Initialize Inbound Folder 1
     }
-    val PDF1Text = new TextField {								// Text field to input primary PDF folder to copy the new
+    private val PDF1Text = new TextField {						// Text field to input primary PDF folder to copy the new
       columns = 30												// PDF file into
       text = currentOutboundFolders(0) 							// Initialize PDF Folder 1
     }
-    val inbound2Text = new TextField {							// Text field to input secondary inbound folder to find
+    private val inbound2Text = new TextField {					// Text field to input secondary inbound folder to find
       columns = 30												// .txt file
       if(currentInboundFolders(1) != null)
     	text = currentInboundFolders(1)							// Initialize Inbound Folder 2
     }
-    val PDF2Text = new TextField {								// Text field to input secondary PDF folder to copy the
+    private val PDF2Text = new TextField {						// Text field to input secondary PDF folder to copy the
       columns = 30												// new PDF file into
       text = currentOutboundFolders(1) 							// Initialize PDF Folder 2
     }
-    val inbound3Text = new TextField {							// Text field to input third inbound folder to find .txt
+    private val inbound3Text = new TextField {					// Text field to input third inbound folder to find .txt
       columns = 30												// file
       if(currentInboundFolders(2) != null)
     	text = currentInboundFolders(2)							// Initialize Inbound Folder 3
     }
-    val PDF3Text = new TextField {								// Text field to input third PDF folder to copy the new
+    private val PDF3Text = new TextField {						// Text field to input third PDF folder to copy the new
       columns = 30												// PDF file into
       text = currentOutboundFolders(2)							// Initialize PDF Folder 3
     }
-    val inbound4Text = new TextField {							// Text field to input fourth inbound folder to find .txt
+    private val inbound4Text = new TextField {					// Text field to input fourth inbound folder to find .txt
       columns = 30												// file
       if(currentInboundFolders(3) != null)
     	text = currentInboundFolders(3)							// Initialize Inbound Folder 4
     }
-    val PDF4Text = new TextField {								// Text field to input fourth PDF folder to copy the new
+    private val PDF4Text = new TextField {						// Text field to input fourth PDF folder to copy the new
       columns = 30												// PDF file into
       text = currentOutboundFolders(3)							// Initialize PDF Folder 4
     }
     
     // Text Boxes for East Panel
-    val checkNewFilesText = new TextField {						// Text field to input time lapse between checking for
+    private val checkNewFilesText = new TextField {				// Text field to input time lapse between checking for
       columns = 5												// new files
       text = checkFilesTime.toString							// Initialize to checkFilesTime from AddPDF_Util
     }
-    val reportStatusText = new TextField {						// Text field to input time lapse for reporting the
+    private val reportStatusText = new TextField {				// Text field to input time lapse for reporting the
       columns = 5												// current status
       text = reportStatusTime.toString							// Initialize to reportStatusText from AddPDF_Util
     }
-    val databaseText = new TextField {							// Text field to input database to extract and place the
+    private val databaseText = new TextField {					// Text field to input database to extract and place the
       columns = 10												// PDF files
       text = databaseName										// Initialize to databaseName from AddPDF_Util
     }
     
     // Check Boxes
-    val inbound2CheckBox = new CheckBox{selected = box2checked}	// Initialize all check boxes to their most recent state
-    val inbound3CheckBox = new CheckBox{selected = box3checked}
-    val inbound4CheckBox = new CheckBox{selected = box4checked}
+    private val inbound2CheckBox = new CheckBox{selected = box2checked}	// Initialize all check boxes to their most recent state
+    private val inbound3CheckBox = new CheckBox{selected = box3checked}
+    private val inbound4CheckBox = new CheckBox{selected = box4checked}
     
     // Buttons
-    val closeButton = new Button{								// Button to exit the window
+    private val closeButton = new Button{						// Button to exit the window
       text = "Close"											// set its title
       tooltip = "Click to close this window"					// add a helpful message
     }
-    val applyButton = new Button{								// Button to apply changes to text boxes
+    private val applyButton = new Button{						// Button to apply changes to text boxes
       text = "Apply"											// set its title
       tooltip = "Click to apply changes"						// add a helpful message
     }
-    val chooseFolderInbound1 = new Button{						// Button for folder selection for Inbound Folder 1
+    private val chooseFolderInbound1 = new Button{				// Button for folder selection for Inbound Folder 1
       text = "..."												// set its title
       tooltip = "Choose a File Folder for Inbound Folder 1"		// add a helpful message
     }
-    val chooseFolderInbound2 = new Button{						// Button for folder selection for Inbound Folder 2
+    private val chooseFolderInbound2 = new Button{				// Button for folder selection for Inbound Folder 2
       text = "..."												// set its title
       tooltip = "Choose a File Folder for Inbound Folder 2"		// add a helpful message
     }
-    val chooseFolderInbound3 = new Button{						// Button for folder selection for Inbound Folder 3
+    private val chooseFolderInbound3 = new Button{				// Button for folder selection for Inbound Folder 3
       text = "..."												// set its title
       tooltip = "Choose a File Folder for Inbound Folder 3"		// add a helpful message
     }
-    val chooseFolderInbound4 = new Button{						// Button for folder selection for Inbound Folder 4
+    private val chooseFolderInbound4 = new Button{				// Button for folder selection for Inbound Folder 4
       text = "..."												// set its title
       tooltip = "Choose a File Folder for Inbound Folder 4"		// add a helpful message
     }
-    val chooseFolderPDF1 = new Button{							// Button for folder selection for PDF Folder 1
+    private val chooseFolderPDF1 = new Button{					// Button for folder selection for PDF Folder 1
       text = "..."												// set its title
       tooltip = "Choose a File Folder for PDF Folder 1"			// add a helpful message
     }
-    val chooseFolderPDF2 = new Button{							// Button for folder selection for PDF Folder 1
+    private val chooseFolderPDF2 = new Button{					// Button for folder selection for PDF Folder 1
       text = "..."												// set its title
       tooltip = "Choose a File Folder for PDF Folder 2"			// add a helpful message
     }
-    val chooseFolderPDF3 = new Button{							// Button for folder selection for PDF Folder 1
+    private val chooseFolderPDF3 = new Button{					// Button for folder selection for PDF Folder 1
       text = "..."												// set its title
       tooltip = "Choose a File Folder for PDF Folder 3"			// add a helpful message
     }
-    val chooseFolderPDF4 = new Button{							// Button for folder selection for PDF Folder 1
+    private val chooseFolderPDF4 = new Button{					// Button for folder selection for PDF Folder 1
       text = "..."												// set its title
       tooltip = "Choose a File Folder for PDF Folder 4"			// add a helpful message
     }
@@ -271,7 +271,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
         applyChanges(	inbound1Text.text, inbound2Text.text, inbound3Text.text, inbound4Text.text,
         				PDF1Text.text, PDF2Text.text, PDF3Text.text, PDF4Text.text,
         				inbound2CheckBox.selected, inbound3CheckBox.selected, inbound4CheckBox.selected,
-        				checkNewFilesText.text, reportStatusText.text, databaseText.text)
+        				checkNewFilesText.text, reportStatusText.text, databaseText.text				)
     }
     
     /**
@@ -298,14 +298,14 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * This method is called when either the close button or the red X in the corner is pressed.
      * 
      * @author James Watts
-     * Last Updated: April 15th, 2015
+     * Last Updated: May 8th, 2015
      */
     private def closeSettings()
     {
       if(!UsersGuideIsRunning)									// If a User's Guide application is not also running,
         guiUpdater ! PauseTimer(pauseTimerLastValue)			// set pauseTimer to its most recent value.
       guiUpdater ! SettingsRunning(false)						// Set the SettingsIsRunning flag to false
-      close()													// and close the window.
+      close()													// Close the window.
     }
   }
   

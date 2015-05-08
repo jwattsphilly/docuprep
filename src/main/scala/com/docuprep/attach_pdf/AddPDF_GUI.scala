@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: April 27th, 2015
+ * Last Updated: May 8th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -22,7 +22,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
   private [attach_pdf] val reportTimerLabel = new Label(s"next report in ${generateCountString(timeToNextReport)}")
   
   // Text Field
-  val filesWaitingListBox = new TextArea{						// textArea for the files waiting list
+  private [attach_pdf] val filesWaitingListBox = new TextArea{	// textArea for the files waiting list
     columns = 10
     rows = 10
   }
@@ -34,7 +34,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
     override def closeOperation()								// Safely quit the whole application if neither the Settings
     { 															// nor User's Guide GUIs are running
       if(!SettingsIsRunning && !UsersGuideIsRunning)
-        closeSafely()
+        closeGUISafely()
     }
     
     guiUpdater ! GuiRunning(true)								// Set the GuiIsRunning flag to true
@@ -97,7 +97,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
     reactions+={
       case ButtonClicked(`closeButton`) => 
         if(!SettingsIsRunning && !UsersGuideIsRunning) 
-          closeSafely()											// If the close button was clicked, safely quit the application
+          closeGUISafely()										// If the close button was clicked, safely quit the application
         
       case ButtonClicked(`pauseButton`) =>						// If the pause button was clicked...
         if(!SettingsIsRunning && !UsersGuideIsRunning)			// And the Settings and UsersGuide GUIs are not currently running...
@@ -128,7 +128,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
       {
         contents += new MenuItem(Action("Exit")					// Add an "Exit" menu option that exits the application
           {if(!SettingsIsRunning && !UsersGuideIsRunning) 
-            closeSafely()})				
+            closeGUISafely()})				
         contents += new MenuItem(Action("Settings"){			// Add a "Settings" menu option
           if(!SettingsIsRunning)								// If there's not already a SettingsGUI application running...
           {
@@ -159,9 +159,9 @@ object AddPDF_GUI extends SimpleSwingApplication {
    * menu item is selected.
    * 
    * @author James Watts
-   * Last Updated: March 19th, 2015
+   * Last Updated: May 8th, 2015
    */
-  private def closeSafely() {
+  private def closeGUISafely() {
     guiUpdater ! GuiRunning(false)								// Set the GuiIsRunning field to false
     closeUtility()												// Call AddPDF_Util's closeUtility method
     quit														// Quit the GUI

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: April 15th, 2014
+ * Last Updated: May 8th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -42,7 +42,7 @@ object UsersGuide extends SimpleSwingApplication {
     mainPageText(11) = "Buttons:"
     mainPageText(12) = "    Pause/UnPause:"
     mainPageText(13) = "        Pauses/Unpauses the countdown timers.  When the timers are paused, they are reset to"
-    mainPageText(14) = "        their highest values."
+    mainPageText(14) = "        their maximum values."
     mainPageText(15) = "    Close:"
     mainPageText(16) = "        Safely closes the Attach PDF application."
     mainPageText(17) = " "
@@ -112,11 +112,11 @@ object UsersGuide extends SimpleSwingApplication {
     
     /* Buttons */
     val closeButton = new Button{								// Button to exit the window
-      text = "Close"											// set its text
-      tooltip = "Click to close this window"					// add a helpful message
+      text = "Close"											// Set its text
+      tooltip = "Click to close this window"					// Add a helpful message
     }
     val searchButton = new Button{								// Button for selection (Main Page help / Settings help)
-      text = "Okay"
+      text = "Okay"												// Set its text
     }
     
     /* ComboBox */
@@ -186,12 +186,12 @@ object UsersGuide extends SimpleSwingApplication {
      * This method is called when either the close button or the red X in the corner is pressed.
      * 
      * @author James Watts
-     * Last Updated: April 15th, 2014
+     * Last Updated: May 8th, 2014
      */
     private def closeUsersGuide()
     {
-      if(!SettingsIsRunning)
-          guiUpdater ! PauseTimer(pauseTimerLastValue)			// Only unpause the timer if the Settings GUI is not running
+      if(!SettingsIsRunning)									// If the Settings GUI is not also running,
+          guiUpdater ! PauseTimer(pauseTimerLastValue)			// set pauseTimer to its most recent value.
       guiUpdater ! UsersGuideRunning(false)						// Update the UsersGuideIsRunning flag to false
       close() 													// Close the window
     }

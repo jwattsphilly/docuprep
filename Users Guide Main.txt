@@ -12,7 +12,7 @@ Menu Bars:
 Buttons:
 	Pause/UnPause:
 		Pauses/UnPauses the countdown timers.  When the timers are paused, they are reset to
-		their highest values.
+		their maximum values.
 	Close:
 		Safely closes the Attach PDF application.
 

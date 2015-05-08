@@ -19,7 +19,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: April 22nd, 2015
+ * Last Updated: May 8th, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -163,14 +163,28 @@ object AddPDF_Util {
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: April 3rd, 2015
+   * Last Updated: May 8th, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {    
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
     // Otherwise, if a Windows computer is being used, "\" is used as the folder separator
     val folderSeparator = File.separator
     
-    val filesList = (new File(inboundFolder)).listFiles				// Obtain all the contents of the inbound folder
+    var filesList = Array[File]()
+    
+    try{
+      filesList = (new File(inboundFolder)).listFiles				// Obtain all the contents of the inbound folder
+    }
+    catch{
+      case ex:FileNotFoundException => 								// If inbound folder could not be opened,
+        logger.error(s"${ex.getMessage()}\n")						// Log the error, pause the timer, and return
+        guiUpdater ! PauseTimer(true)
+        return
+      case ex:Exception =>											// If any other error,
+        logger.error(s"${ex.getMessage()}\n")						// Log the error, pause the timer, and return
+        guiUpdater ! PauseTimer(true)
+        return
+    }
     
     for(txtfile<-filesList if txtfile.getName.endsWith(".txt"))		// Find all .txt files and iterate through each
     {
@@ -848,7 +862,6 @@ object AddPDF_Util {
       }
     }
   }
-  
 
   /**
    * Method to safely close the Utility object by shutting down the GUI label updater and stopping the timer.
@@ -861,5 +874,4 @@ object AddPDF_Util {
     guiUpdater ! "exit"										// Send an exit message to the Label Updater
     timer.stopTimer											// Stop the timer
   }
-  
 }

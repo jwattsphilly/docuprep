@@ -28,7 +28,7 @@ private[attach_pdf] case class PauseTimer(pause: Boolean)
  * All other messages are ignored.
  * 
  * @author James Watts
- * Last updated: April 15th, 2015
+ * Last updated: May 11th, 2015
  */
 private[attach_pdf] class LabelUpdater extends Actor {
   
@@ -46,7 +46,7 @@ private[attach_pdf] class LabelUpdater extends Actor {
     /* Request to update the Inbound Folder label */
     case Inbound(inboundFolder) =>
       if(AddPDF_Util.GuiIsRunning)										// Update the inbound folder label if the GUI is running
-        AddPDF_GUI.inboundFolderLabel.text = s"on: $inboundFolder, etc."
+        AddPDF_GUI.inboundFolderLabel.text = s"on $inboundFolder, etc."
     
     /* Request to update the Timer label */
     case Count(countString) =>

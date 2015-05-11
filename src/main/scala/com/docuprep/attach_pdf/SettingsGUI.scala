@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 8th, 2015
+ * Last Updated: May 11th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -247,7 +247,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     
     size = new Dimension(750, 400)								// Set the size of the GUI
     
-    // Listen to all buttons and the three CheckBoxes
+    // Listen to all buttons and CheckBoxes
     listenTo(closeButton, applyButton, inbound2CheckBox, inbound3CheckBox, inbound4CheckBox,
         chooseFolderInbound1, chooseFolderInbound2, chooseFolderInbound3, chooseFolderInbound4,
         chooseFolderPDF1, chooseFolderPDF2, chooseFolderPDF3, chooseFolderPDF4)
@@ -294,11 +294,12 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     }
     
     /**
-     * Unpauses the timer (if User's Guide GUI is not also running) and closes the Settings window.
-     * This method is called when either the close button or the red X in the corner is pressed.
+     * Sets the timer to its most recent value (if User's Guide GUI is not also running) and closes the 
+     * Settings window.  This method is called when either the close button or the red X in the corner is 
+     * pressed.
      * 
      * @author James Watts
-     * Last Updated: May 8th, 2015
+     * Last Updated: May 11th, 2015
      */
     private def closeSettings()
     {
@@ -329,7 +330,6 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
         title = s"Error: Invalid $inOut Folder",
         messageType = Dialog.Message.Error)
   }
-  
   
   /**
    * Displays an error Dialog when an inbound or outbound folder pathname is repeated.

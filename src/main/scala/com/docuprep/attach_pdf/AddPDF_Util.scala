@@ -19,7 +19,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: May 8th, 2015
+ * Last Updated: May 11th, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -329,6 +329,7 @@ object AddPDF_Util {
     }
   }
   
+  
   /**
    * Private helper method to separate the items in a long String into a list of separate Strings that are "," 
    * delimited.
@@ -473,6 +474,7 @@ object AddPDF_Util {
     }  
   }
   
+  
   /**
    * Method to retrieve the name of the user's machine and parse it to a string in the form of 'PDF (machineName)'.
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
@@ -495,7 +497,6 @@ object AddPDF_Util {
       case (ex:Exception) => "PDF (Could not get name) "				// Hopefully, this line should never be reached
     }
   }
-  
   
   /**
    * Depending on whether the pauseTimer is set to false or true, count() either counts down and runs the merge method (or 
@@ -746,6 +747,7 @@ object AddPDF_Util {
     allFoldersAreValid											// Return the Boolean flag
   }
   
+  
   /**
    * Checks for duplicates in both the Inbound and Outbound folders lists.  Displays an error Dialog if any duplicates
    * appear in either list.
@@ -863,6 +865,7 @@ object AddPDF_Util {
     }
   }
 
+  
   /**
    * Method to safely close the Utility object by shutting down the GUI label updater and stopping the timer.
    * 

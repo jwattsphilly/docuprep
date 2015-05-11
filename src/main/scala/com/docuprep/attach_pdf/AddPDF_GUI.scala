@@ -10,13 +10,13 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 8th, 2015
+ * Last Updated: May 11th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
   // Labels
   private val filesWaitingLabel = new Label("Files Waiting to be Processed:")
-  private [attach_pdf] val inboundFolderLabel = new Label(s"on: ${currentInboundFolders(0)}, etc.")
+  private [attach_pdf] val inboundFolderLabel = new Label(s"on ${currentInboundFolders(0)}, etc.")
   private [attach_pdf] val filesWaitingCountLabel = new Label("0 files waiting")
   private [attach_pdf] val timerLabel = new Label(s"next check in ${generateCountString(timeToNextCheck)}")
   private [attach_pdf] val reportTimerLabel = new Label(s"next report in ${generateCountString(timeToNextReport)}")

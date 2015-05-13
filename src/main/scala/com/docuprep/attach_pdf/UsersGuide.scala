@@ -14,7 +14,7 @@ import AddPDF_Util._
  */
 object UsersGuide extends SimpleSwingApplication {
   
-  private val arraySize = 39
+  private val arraySize = 40
   
   def top = new MainFrame{										// Create a new MainFrame for the User's Guide
     title = "User's Guide"										// Entitle it
@@ -66,7 +66,8 @@ object UsersGuide extends SimpleSwingApplication {
     mainPageText(35) = " "
     mainPageText(36) = " "
     mainPageText(37) = " "
-    mainPageText(38) = ""
+    mainPageText(38) = " "
+    mainPageText(39) = ""
     
     /* Help Text for Settings Help */
     val settingsText = new Array[String](arraySize)
@@ -96,19 +97,20 @@ object UsersGuide extends SimpleSwingApplication {
     settingsText(23) = "        status to the database.  This field must contain a positive whole number to be accepted."
     settingsText(24) = "    Database:"
     settingsText(25) = "        The name of the database the Attach PDF application reports to.  The database must be valid"
-    settingsText(26) = "        to be accepted."
-    settingsText(27) = " "
-    settingsText(28) = "Check Boxes:"
-    settingsText(29) = "    When checked, the \"Inbound Folder\" fields directly beneath will be included in the list of"
-    settingsText(30) = "    folders to be checked for .txt files.  When unchecked, the \"Inbound Folder\" fields directly"
-    settingsText(31) = "    beneath will be excluded from that list."
-    settingsText(32) = " "
-    settingsText(33) = "Buttons:"
-    settingsText(34) = "    Close:"
-    settingsText(35) = "        Safely closes the Settings application."
-    settingsText(36) = "    Apply:"
-    settingsText(37) = "        Applies any and all valid text field changes made to the to the Attach PDF application."
-    settingsText(38) = ""
+    settingsText(26) = "        to be accepted.  You may use the button on the right-hand side to select a database from a"
+    settingsText(27) = "        file chooser dialogue."
+    settingsText(28) = " "
+    settingsText(29) = "Check Boxes:"
+    settingsText(30) = "    When checked, the \"Inbound Folder\" fields directly beneath will be included in the list of"
+    settingsText(31) = "    folders to be checked for .txt files.  When unchecked, the \"Inbound Folder\" fields directly"
+    settingsText(32) = "    beneath will be excluded from that list."
+    settingsText(33) = " "
+    settingsText(34) = "Buttons:"
+    settingsText(35) = "    Close:"
+    settingsText(36) = "        Safely closes the Settings application."
+    settingsText(37) = "    Apply:"
+    settingsText(38) = "        Applies any and all valid text field changes made to the to the Attach PDF application."
+    settingsText(39) = ""
     
     /* Buttons */
     val closeButton = new Button{								// Button to exit the window

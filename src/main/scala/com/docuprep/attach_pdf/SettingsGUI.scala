@@ -10,12 +10,14 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 11th, 2015
+ * Last Updated: May 13th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
   def top = new MainFrame{
     title = "Settings"											// Set title
+    
+    private var tempDatabasePath = dbPath
     
     peer.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
     override def closeOperation() = { closeSettings() }			// Close the window instead of quitting the whole application
@@ -140,6 +142,10 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       text = "..."												// set its title
       tooltip = "Choose a File Folder for PDF Folder 4"			// add a helpful message
     }
+    private val chooseDatabaseButton = new Button{				// Button for database selection
+      text = "..."												// set its title
+      tooltip = "Choose a Database to report to"				// add a helpful message
+    }
     
     // Panels:
     // West Panel:
@@ -228,6 +234,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for Database input
         contents+=databaseLabel									// add "Database: "
         contents+=databaseText									// add Database text box
+        contents+=chooseDatabaseButton							// add Database button
       }
       contents+=Swing.VStrut(130)								// Add a large vertical space
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for the two buttons
@@ -245,12 +252,12 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       border = Swing.EmptyBorder(20,0,20,0)						// Add space on top and bottom
     }
     
-    size = new Dimension(750, 400)								// Set the size of the GUI
+    size = new Dimension(775, 400)								// Set the size of the GUI
     
     // Listen to all buttons and CheckBoxes
     listenTo(closeButton, applyButton, inbound2CheckBox, inbound3CheckBox, inbound4CheckBox,
         chooseFolderInbound1, chooseFolderInbound2, chooseFolderInbound3, chooseFolderInbound4,
-        chooseFolderPDF1, chooseFolderPDF2, chooseFolderPDF3, chooseFolderPDF4)
+        chooseFolderPDF1, chooseFolderPDF2, chooseFolderPDF3, chooseFolderPDF4, chooseDatabaseButton)
     
     reactions+={
       /* If the Close button is pressed, safely close the Settings Window. */
@@ -266,12 +273,41 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       case ButtonClicked(`chooseFolderPDF3`) => folderSelectionDialog(PDF3Text)
       case ButtonClicked(`chooseFolderPDF4`) => folderSelectionDialog(PDF4Text)
       
+      /* If the chooseDatabaseButton is pressed, run the databaseSelectionDialog method */
+      case ButtonClicked(`chooseDatabaseButton`) => databaseSelectionDialog()
+      
       /* If the Apply button is pressed, run the applyChanges method, which updates fields according to new text box inputs. */
       case ButtonClicked(`applyButton`) =>
         applyChanges(	inbound1Text.text, inbound2Text.text, inbound3Text.text, inbound4Text.text,
         				PDF1Text.text, PDF2Text.text, PDF3Text.text, PDF4Text.text,
         				inbound2CheckBox.selected, inbound3CheckBox.selected, inbound4CheckBox.selected,
-        				checkNewFilesText.text, reportStatusText.text, databaseText.text				)
+        				checkNewFilesText.text, reportStatusText.text, tempDatabasePath, databaseText.text	)
+    }
+    
+    
+    /**
+     * Opens a File Chooser dialog in the path specified in tempDatabasePath.  Once a database file
+     * is chosen from the File Chooser dialog, this method sets the text in databaseText to be the name
+     * of the newly chosen database file and resets tempDatabasePath to be the pathname of the folder
+     * the database file is found in.
+     * 
+     * @author James Watts
+     * Last Updated May 13th, 2015
+     */
+    private def databaseSelectionDialog()
+    {
+      val temp = tempDatabasePath.stripPrefix("jdbc:h2:file:")	// TODO: Make more general
+      
+      val filechooser = new FileChooser(new java.io.File(s"${temp}"))
+      filechooser.fileSelectionMode = FileChooser.SelectionMode.FilesOnly
+      filechooser.fileFilter = new javax.swing.filechooser.FileNameExtensionFilter("Database", "db")	// Database files only
+      
+      if(filechooser.showDialog(null, "Select") == FileChooser.Result.Approve)
+      {
+        val nameOfDB = filechooser.selectedFile.getName()
+        databaseText.text = nameOfDB.stripSuffix(".mv.db")
+        tempDatabasePath = s"jdbc:h2:file:${filechooser.selectedFile.toString.stripSuffix(nameOfDB)}"	// TODO: Make more general
+      }
     }
     
     /**

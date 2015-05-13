@@ -19,7 +19,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: May 11th, 2015
+ * Last Updated: May 13th, 2015
  */
 object AddPDF_Util {
   /*******************************************
@@ -63,7 +63,7 @@ object AddPDF_Util {
   private[attach_pdf] var databaseName = config.getString("attachPDF.database.name")
   private val app = config.getString("attachPDF.database.application")
   private val driverClass = config.getString("attachPDF.database.driverClass")
-  private val dbPath = config.getString("attachPDF.database.pathname")		// Note: databaseName and dbPath are connected
+  private[attach_pdf] var dbPath = config.getString("attachPDF.database.pathname")	// Note: databaseName and dbPath are connected
   private val dbUser = config.getString("attachPDF.database.username")
   private val dbPswd = config.getString("attachPDF.database.password")
   private val dbTable = config.getString("attachPDF.database.table")
@@ -404,17 +404,19 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: April 22nd, 2015
+   * Last Updated: May 13th, 2015
    */
   def reportStatus() {
     var conn:Connection = null;
     try{
+    	val separatorIfNeeded = if(dbPath.endsWith("/") || dbPath.endsWith("\\")) "" else File.separator
+    	
 	    // Get the Driver class and establish a connection to the database
 	    Class.forName(driverClass)
 	    
 	    // TODO: Connect to work database with correct username and password (all should now be in application.conf)
 	    									// DB pathname 							// username // password
-	    conn = DriverManager.getConnection(s"$dbPath${File.separator}$databaseName", dbUser, 		dbPswd)
+	    conn = DriverManager.getConnection(s"$dbPath$separatorIfNeeded$databaseName", dbUser, 		dbPswd)
 	    
 	    // 'trans_id' will be generated automatically, so no need to worry about that
 	    // 'last_reported' will be the current date and time (NOW())
@@ -474,7 +476,6 @@ object AddPDF_Util {
     }  
   }
   
-  
   /**
    * Method to retrieve the name of the user's machine and parse it to a string in the form of 'PDF (machineName)'.
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
@@ -497,6 +498,7 @@ object AddPDF_Util {
       case (ex:Exception) => "PDF (Could not get name) "				// Hopefully, this line should never be reached
     }
   }
+  
   
   /**
    * Depending on whether the pauseTimer is set to false or true, count() either counts down and runs the merge method (or 
@@ -556,7 +558,6 @@ object AddPDF_Util {
     }
   }
   
-  
   /**
    * Converts an input amount of seconds to an easy-to-read string displaying the minutes and seconds (formatted as MM:SS).
    * 
@@ -578,6 +579,7 @@ object AddPDF_Util {
 //    s"${if(minutes>9) minutes.toString else s"0$minutes"}:${if(seconds>9) seconds.toString else s"0$seconds"}" // Alternate method
   }
   
+  
   /**
    * Method used to update fields according to text box inputs in the Settings GUI.  The fields that are updated 
    * are as follows:
@@ -588,7 +590,7 @@ object AddPDF_Util {
    *     	5. box4Checked
    *     	6. checkFilesTime
    *    	7. reportStatusTime
-   *     	8. databaseName
+   *     	8. dbPath / databaseName
    * This method also checks for the validity of all changes before the actual fields are updated.  If any of the
    * inbound or outbound folders are invalid or duplicates, the first five fields listed will not be updated.
    * Fields 6-8 are considered individually and each will be updated if its respective change results in a valid
@@ -608,15 +610,16 @@ object AddPDF_Util {
    * 									positive integer to be valid.
    * @param reportStatusTimeString		String representation of the report status time amount.  Must be a 
    * 									positive integer to be valid.
+   * @param dbPathName					String pathname of the folder the Database is found in.
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated April 22nd, 2015
+   * Last Updated May 13th, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
 		  			inbound2Checked:Boolean, inbound3Checked:Boolean, inbound4Checked:Boolean,
-		  			checkFilesTimeString:String, reportStatusTimeString:String, dbName:String)
+		  			checkFilesTimeString:String, reportStatusTimeString:String, dbPathName:String, dbName:String)
   {
     val tempInboundList = MutableList(inbound1)				// Create a new list for inbound folders,
          													// starting with the primary folder.
@@ -684,35 +687,39 @@ object AddPDF_Util {
     
     /* Test the validity of the database */
     val tempDBName = databaseName
+    val tempDatabasePath = dbPath
     var conn:Connection = null;
     try{
-	    // Get the Driver class and establish a connection to the database
-	    Class.forName(driverClass)			// DB pathname 					// username // password
-	    conn = DriverManager.getConnection(s"$dbPath${File.separator}$dbName", 	dbUser, 	dbPswd)
-	    
-	    val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
-	    query.executeQuery()							// If this query works, then the database is valid. Otherwise, invalid.
-	    databaseName = dbName							// Update data from database text box only if the database name is valid.
+      val separatorIfNeeded = if(dbPathName.endsWith("/") || dbPathName.endsWith("\\")) "" else File.separator
+      
+	  // Get the Driver class and establish a connection to the database
+	  Class.forName(driverClass)			// DB pathname 						// username // password
+	  conn = DriverManager.getConnection(s"$dbPathName$separatorIfNeeded$dbName", 	dbUser, 	dbPswd)
+	  
+	  val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
+	  query.executeQuery()							// If this query works, then the database is valid. Otherwise, invalid.
+	  databaseName = dbName							// Update data from database text box only if the database name is valid.
+	  dbPath = dbPathName
     }
     catch
     {
       case e:Exception => 
-        databaseName = tempDBName						// If no connection could be made, change databaseName back to its
-        if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(dbName)		// original value and display an error message.
+        databaseName = tempDBName					// If no connection could be made, change databaseName and dbPath back to
+        dbPath = tempDatabasePath					// their original values and display an error message.
+        if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(dbName)
     }
     finally
     {
-      if(conn != null)									// Make sure to close the database connection, if applicable.
+      if(conn != null)								// Make sure to close the database connection, if applicable.
     	  conn.close()
     }
     
-    guiUpdater ! Inbound(currentInboundFolders(0))		// Send a message to the LabelUpdater to update the
-    													// inboundFolderLabel to include the first currentInboundFolder.
+    guiUpdater ! Inbound(currentInboundFolders(0))	// Send a message to the LabelUpdater to update the
+    												// inboundFolderLabel to include the first currentInboundFolder.
     
-    saveSettingsToConfigFile()							// Save the current settings to the CONFIG file.
+    saveSettingsToConfigFile()						// Save the current settings to the CONFIG file.
   }
   
-
   /** 
    * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist on their respective 
    * servers.  Displays an error Dialog if any folder listed does not exist.
@@ -838,9 +845,9 @@ object AddPDF_Util {
       /* database */
       pw.append("\tdatabase {\r\n\t\tdriverClass = \"")									// driverClass
       pw.append(driverClass)
-      pw.append("\"\r\n\t\tpathname = \"")												// pathname
+      pw.append("\"\r\n\t\tpathname = \"\"\"")											// pathname
       pw.append(dbPath)
-      pw.append("\"\r\n\t\tname = \"")													// name
+      pw.append("\"\"\"\r\n\t\tname = \"")												// name
       pw.append(databaseName)
       pw.append("\"\r\n\t\ttable = \"")													// table
       pw.append(dbTable)

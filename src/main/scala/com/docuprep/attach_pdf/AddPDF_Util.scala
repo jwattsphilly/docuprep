@@ -810,7 +810,7 @@ object AddPDF_Util {
    * In order to do this, this method rewrites the CONFIG file from scratch.
    * 
    * @author James Watts
-   * Last Updated: March 19th, 2015
+   * Last Updated: May 13th, 2015
    */
   def saveSettingsToConfigFile()
   {

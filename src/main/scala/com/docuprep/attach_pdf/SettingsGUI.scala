@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 13th, 2015
+ * Last Updated: May 14th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -46,54 +46,54 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     private val databaseLabel = new Label("Database: ")						// Database Label
     
     // Text Boxes for West Panel
-    private val inbound1Text = new TextField {					// Text field to input primary inbound folder to find
-      columns = 30												// .txt file
+    private val inbound1Text = new TextField {					// Text field to input primary inbound folder to find .txt file
       text = currentInboundFolders(0)							// Initialize Inbound Folder 1
+      columns = 30
     }
-    private val PDF1Text = new TextField {						// Text field to input primary PDF folder to copy the new
-      columns = 30												// PDF file into
+    private val PDF1Text = new TextField {						// Text field to input primary PDF folder to copy the new PDF file into
       text = currentOutboundFolders(0) 							// Initialize PDF Folder 1
+      columns = 30
     }
-    private val inbound2Text = new TextField {					// Text field to input secondary inbound folder to find
-      columns = 30												// .txt file
-      if(currentInboundFolders(1) != null)
-    	text = currentInboundFolders(1)							// Initialize Inbound Folder 2
+    private val inbound2Text = new TextField {					// Text field to input secondary inbound folder to find .txt file
+      if(currentInboundFolders(1) != null)						// Initialize Inbound Folder 2 if applicable
+    	text = currentInboundFolders(1)
+      columns = 30
     }
-    private val PDF2Text = new TextField {						// Text field to input secondary PDF folder to copy the
-      columns = 30												// new PDF file into
+    private val PDF2Text = new TextField {						// Text field to input secondary PDF folder to copy the new PDF file into
       text = currentOutboundFolders(1) 							// Initialize PDF Folder 2
+      columns = 30
     }
-    private val inbound3Text = new TextField {					// Text field to input third inbound folder to find .txt
-      columns = 30												// file
-      if(currentInboundFolders(2) != null)
-    	text = currentInboundFolders(2)							// Initialize Inbound Folder 3
+    private val inbound3Text = new TextField {					// Text field to input third inbound folder to find .txt file
+      if(currentInboundFolders(2) != null)						// Initialize Inbound Folder 3 if applicable
+    	text = currentInboundFolders(2)
+      columns = 30
     }
-    private val PDF3Text = new TextField {						// Text field to input third PDF folder to copy the new
-      columns = 30												// PDF file into
+    private val PDF3Text = new TextField {						// Text field to input third PDF folder to copy the new PDF file into
       text = currentOutboundFolders(2)							// Initialize PDF Folder 3
+      columns = 30
     }
-    private val inbound4Text = new TextField {					// Text field to input fourth inbound folder to find .txt
-      columns = 30												// file
-      if(currentInboundFolders(3) != null)
-    	text = currentInboundFolders(3)							// Initialize Inbound Folder 4
+    private val inbound4Text = new TextField {					// Text field to input fourth inbound folder to find .txt file
+      if(currentInboundFolders(3) != null)						// Initialize Inbound Folder 4 if applicable
+    	text = currentInboundFolders(3)
+      columns = 30
     }
-    private val PDF4Text = new TextField {						// Text field to input fourth PDF folder to copy the new
-      columns = 30												// PDF file into
+    private val PDF4Text = new TextField {						// Text field to input fourth PDF folder to copy the new PDF file into
       text = currentOutboundFolders(3)							// Initialize PDF Folder 4
+      columns = 30
     }
     
     // Text Boxes for East Panel
-    private val checkNewFilesText = new TextField {				// Text field to input time lapse between checking for
-      columns = 5												// new files
+    private val checkNewFilesText = new TextField {				// Text field to input time lapse between checking for new files
       text = checkFilesTime.toString							// Initialize to checkFilesTime from AddPDF_Util
+      columns = 5
     }
-    private val reportStatusText = new TextField {				// Text field to input time lapse for reporting the
-      columns = 5												// current status
+    private val reportStatusText = new TextField {				// Text field to input time lapse for reporting the current status
       text = reportStatusTime.toString							// Initialize to reportStatusText from AddPDF_Util
+      columns = 5
     }
-    private val databaseText = new TextField {					// Text field to input database to extract and place the
-      columns = 10												// PDF files
+    private val databaseText = new TextField {					// Text field to input database to extract and place the PDF files
       text = databaseName										// Initialize to databaseName from AddPDF_Util
+      columns = 10
     }
     
     // Check Boxes
@@ -103,48 +103,48 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     
     // Buttons
     private val closeButton = new Button{						// Button to exit the window
-      text = "Close"											// set its title
-      tooltip = "Click to close this window"					// add a helpful message
+      text = "Close"											// Set its title
+      tooltip = "Click to close this window"					// Add a helpful message
     }
     private val applyButton = new Button{						// Button to apply changes to text boxes
-      text = "Apply"											// set its title
-      tooltip = "Click to apply changes"						// add a helpful message
+      text = "Apply"											// Set its title
+      tooltip = "Click to apply changes"						// Add a helpful message
     }
     private val chooseFolderInbound1 = new Button{				// Button for folder selection for Inbound Folder 1
-      text = "..."												// set its title
-      tooltip = "Choose a File Folder for Inbound Folder 1"		// add a helpful message
+      text = "..."												// Set its title
+      tooltip = "Choose a File Folder for Inbound Folder 1"		// Add a helpful message
     }
     private val chooseFolderInbound2 = new Button{				// Button for folder selection for Inbound Folder 2
-      text = "..."												// set its title
-      tooltip = "Choose a File Folder for Inbound Folder 2"		// add a helpful message
+      text = "..."												// Set its title
+      tooltip = "Choose a File Folder for Inbound Folder 2"		// Add a helpful message
     }
     private val chooseFolderInbound3 = new Button{				// Button for folder selection for Inbound Folder 3
-      text = "..."												// set its title
-      tooltip = "Choose a File Folder for Inbound Folder 3"		// add a helpful message
+      text = "..."												// Set its title
+      tooltip = "Choose a File Folder for Inbound Folder 3"		// Add a helpful message
     }
     private val chooseFolderInbound4 = new Button{				// Button for folder selection for Inbound Folder 4
-      text = "..."												// set its title
-      tooltip = "Choose a File Folder for Inbound Folder 4"		// add a helpful message
+      text = "..."												// Set its title
+      tooltip = "Choose a File Folder for Inbound Folder 4"		// Add a helpful message
     }
     private val chooseFolderPDF1 = new Button{					// Button for folder selection for PDF Folder 1
-      text = "..."												// set its title
-      tooltip = "Choose a File Folder for PDF Folder 1"			// add a helpful message
+      text = "..."												// Set its title
+      tooltip = "Choose a File Folder for PDF Folder 1"			// Add a helpful message
     }
     private val chooseFolderPDF2 = new Button{					// Button for folder selection for PDF Folder 1
-      text = "..."												// set its title
-      tooltip = "Choose a File Folder for PDF Folder 2"			// add a helpful message
+      text = "..."												// Set its title
+      tooltip = "Choose a File Folder for PDF Folder 2"			// Add a helpful message
     }
     private val chooseFolderPDF3 = new Button{					// Button for folder selection for PDF Folder 1
-      text = "..."												// set its title
-      tooltip = "Choose a File Folder for PDF Folder 3"			// add a helpful message
+      text = "..."												// Set its title
+      tooltip = "Choose a File Folder for PDF Folder 3"			// Add a helpful message
     }
     private val chooseFolderPDF4 = new Button{					// Button for folder selection for PDF Folder 1
-      text = "..."												// set its title
-      tooltip = "Choose a File Folder for PDF Folder 4"			// add a helpful message
+      text = "..."												// Set its title
+      tooltip = "Choose a File Folder for PDF Folder 4"			// Add a helpful message
     }
     private val chooseDatabaseButton = new Button{				// Button for database selection
-      text = "..."												// set its title
-      tooltip = "Choose a Database to report to"				// add a helpful message
+      text = "..."												// Set its title
+      tooltip = "Choose a Database to report to"				// Add a helpful message
     }
     
     // Panels:

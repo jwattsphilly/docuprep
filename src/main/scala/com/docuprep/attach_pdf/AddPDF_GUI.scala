@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 11th, 2015
+ * Last Updated: May 14th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -22,13 +22,13 @@ object AddPDF_GUI extends SimpleSwingApplication {
   private [attach_pdf] val reportTimerLabel = new Label(s"next report in ${generateCountString(timeToNextReport)}")
   
   // Text Field
-  private [attach_pdf] val filesWaitingListBox = new TextArea{	// textArea for the files waiting list
+  private [attach_pdf] val filesWaitingListBox = new TextArea{	// TextArea for the files waiting list
     columns = 10
     rows = 10
   }
   
   def top = new MainFrame{										// Create the MainFrame
-    title = "Attach PDF Document"								// add a title
+    title = "Attach PDF Document"								// Add a title
     
     peer.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
     override def closeOperation()								// Safely quit the whole application if neither the Settings
@@ -41,12 +41,12 @@ object AddPDF_GUI extends SimpleSwingApplication {
     
     // Buttons
     private val closeButton = new Button{						// Close button	- quits the application
-      text = "Close"											// add text
-      tooltip = "Click to exit"									// add helpful hint
+      text = "Close"											// Add text
+      tooltip = "Click to exit"									// Add helpful hint
     }
     private val pauseButton = new Button{						// Pause button - pauses/unpauses the timer
-      text = "Pause"											// add text
-      tooltip = "Click to pause and reset the timer"			// add helpful hint
+      text = "Pause"											// Add text
+      tooltip = "Click to pause and reset the timer"			// Add helpful hint
     }
     
     /* Panel for the West (left) side of application */
@@ -59,7 +59,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
         contents+=inboundFolderLabel							// Inbound Folder label
         contents+=Swing.HGlue									// Horizontal Glue to keep the label left-aligned
       }
-      contents+=new ScrollPane(filesWaitingListBox)				// List of text files waiting to be processed
+      contents+=new ScrollPane(filesWaitingListBox)				// List of text files waiting to be processed, scrollable just in case
       contents+=new BoxPanel(Orientation.Horizontal){
         contents+=filesWaitingCountLabel						// Files Waiting Count label
         contents+=Swing.HGlue									// Horizontal Glue to keep the label left-aligned
@@ -95,12 +95,12 @@ object AddPDF_GUI extends SimpleSwingApplication {
     
     // Reactions
     reactions+={
-      case ButtonClicked(`closeButton`) => 
-        if(!SettingsIsRunning && !UsersGuideIsRunning) 
-          closeGUISafely()										// If the close button was clicked, safely quit the application
+      case ButtonClicked(`closeButton`) => 						// If the close button was clicked,
+        if(!SettingsIsRunning && !UsersGuideIsRunning) 			// and the Settings and UsersGuide GUIs are not currently running,
+          closeGUISafely()										// safely quit the application
         
-      case ButtonClicked(`pauseButton`) =>						// If the pause button was clicked...
-        if(!SettingsIsRunning && !UsersGuideIsRunning)			// And the Settings and UsersGuide GUIs are not currently running...
+      case ButtonClicked(`pauseButton`) =>						// If the pause button was clicked,
+        if(!SettingsIsRunning && !UsersGuideIsRunning)			// and the Settings and UsersGuide GUIs are not currently running...
         {
           if(pauseTimer)										// If the timer is already paused,
           {														// Unpause it and update the button's text and tooltip

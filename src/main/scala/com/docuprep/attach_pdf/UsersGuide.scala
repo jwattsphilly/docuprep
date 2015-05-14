@@ -4,13 +4,13 @@ import swing._
 import BorderPanel.Position.{North, South}
 import event.ButtonClicked
 
-import AddPDF_Util._
+import AddPDF_Util.{SettingsIsRunning,guiUpdater,pauseTimerLastValue}
 
 /**
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: May 8th, 2014
+ * Last Updated: May 14th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   

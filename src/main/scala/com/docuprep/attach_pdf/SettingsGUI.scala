@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 14th, 2015
+ * Last Updated: May 19th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -284,7 +284,6 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
         				checkNewFilesText.text, reportStatusText.text, tempDatabasePath, databaseText.text	)
     }
     
-    
     /**
      * Opens a File Chooser dialog in the path specified in tempDatabasePath.  Once a database file
      * is chosen from the File Chooser dialog, this method sets the text in databaseText to be the name
@@ -292,11 +291,11 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * the database file is found in.
      * 
      * @author James Watts
-     * Last Updated May 13th, 2015
+     * Last Updated May 19th, 2015
      */
     private def databaseSelectionDialog()
     {
-      val temp = tempDatabasePath.stripPrefix("jdbc:h2:file:")	// TODO: Make more general
+      val temp = tempDatabasePath
       
       val filechooser = new FileChooser(new java.io.File(s"${temp}"))
       filechooser.fileSelectionMode = FileChooser.SelectionMode.FilesOnly
@@ -306,7 +305,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       {
         val nameOfDB = filechooser.selectedFile.getName()
         databaseText.text = nameOfDB.stripSuffix(".mv.db")
-        tempDatabasePath = s"jdbc:h2:file:${filechooser.selectedFile.toString.stripSuffix(nameOfDB)}"	// TODO: Make more general
+        tempDatabasePath = s"${filechooser.selectedFile.toString.stripSuffix(nameOfDB)}"
       }
     }
     

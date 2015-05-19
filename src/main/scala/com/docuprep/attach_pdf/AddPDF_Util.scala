@@ -16,12 +16,13 @@ import ch.qos.logback.classic.{Logger, LoggerContext}
 import com.typesafe.config.ConfigFactory
 
 /**
- * Utility object that contains a list of methods and fields designed for use by the AddPDF_GUI application.
+ * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: May 13th, 2015
+ * Last Updated: May 19th, 2015
  */
 object AddPDF_Util {
+  
   /*******************************************
    *  General Setup of the Utility Object: 	 *
    *******************************************/
@@ -63,7 +64,8 @@ object AddPDF_Util {
   private[attach_pdf] var databaseName = config.getString("attachPDF.database.name")
   private val app = config.getString("attachPDF.database.application")
   private val driverClass = config.getString("attachPDF.database.driverClass")
-  private[attach_pdf] var dbPath = config.getString("attachPDF.database.pathname")	// Note: databaseName and dbPath are connected
+  private val jdbcPrefix = config.getString("attachPDF.database.jdbcPrefix")
+  private[attach_pdf] var dbPath = config.getString("attachPDF.database.pathname")	// Note: jdbcPrefix, databaseName, and dbPath are connected
   private val dbUser = config.getString("attachPDF.database.username")
   private val dbPswd = config.getString("attachPDF.database.password")
   private val dbTable = config.getString("attachPDF.database.table")
@@ -404,7 +406,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: May 13th, 2015
+   * Last Updated: May 19th, 2015
    */
   def reportStatus() {
     var conn:Connection = null;
@@ -415,8 +417,8 @@ object AddPDF_Util {
 	    Class.forName(driverClass)
 	    
 	    // TODO: Connect to work database with correct username and password (all should now be in application.conf)
-	    									// DB pathname 							// username // password
-	    conn = DriverManager.getConnection(s"$dbPath$separatorIfNeeded$databaseName", dbUser, 		dbPswd)
+	    									// DB pathname 										// username // password
+	    conn = DriverManager.getConnection(s"$jdbcPrefix$dbPath$separatorIfNeeded$databaseName", dbUser, 		dbPswd)
 	    
 	    // 'trans_id' will be generated automatically, so no need to worry about that
 	    // 'last_reported' will be the current date and time (NOW())
@@ -465,7 +467,6 @@ object AddPDF_Util {
     }
     catch
     {
-//      case e:Exception => logger.error("Problem connecting to the database")
       case e:Exception => logger.error(s"Problem connecting to the database: ${e.getMessage}")
     }
     finally
@@ -481,7 +482,7 @@ object AddPDF_Util {
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
    * 
    * @author James Watts
-   * Last Updated: April 3rd, 2014
+   * Last Updated: May 19th, 2014
    */
   def getMachineName():String = 
   {
@@ -490,7 +491,7 @@ object AddPDF_Util {
       val machineName = s"PDF ($compName)"								// Surround it with "PDF (" and ")"
       
       // Account for a machine name that's too long
-      val returnName = if (machineName.length > 25) (machineName.substring(0, 24)+")") else machineName
+      val returnName = if (machineName.length > 25) (s"${machineName.substring(0, 24)})") else machineName
       val paddingAmount = (25 - returnName.length())					// Calculate the amount of needed padding
       s"$returnName${" " * paddingAmount}"								// Return the machine name with the padding
     }
@@ -501,8 +502,8 @@ object AddPDF_Util {
   
   
   /**
-   * Depending on whether the pauseTimer is set to false or true, count() either counts down and runs the merge method (or 
-   * reportStatus method) or resets and pauses the GUI counter.
+   * Depending on whether the pauseTimer is set to false or true, count() either counts down and runs the merge method 
+   * (or reportStatus method) or resets and pauses the GUI counter.
    * 
    * When the pauseTimer is set to false, it counts down from SettingsGUI.checkFilesTime to zero, decrementing by 1
    * every time it is run (once per second in this application).  Once the count reaches zero, the merge method is
@@ -519,7 +520,7 @@ object AddPDF_Util {
    * The timerLabel and reportTimerLabel are updated every time this method runs.
    * 
    * @author James Watts
-   * Last Updated: March 20th, 2015
+   * Last Updated: May 19th, 2015
    */
   def count() {
     if(!pauseTimer)														// If the pauseTimer flag is false (counter not paused)
@@ -557,6 +558,7 @@ object AddPDF_Util {
       guiUpdater ! ReportCount(generateCountString(timeToNextReport))	// Update the report timer label
     }
   }
+  
   
   /**
    * Converts an input amount of seconds to an easy-to-read string displaying the minutes and seconds (formatted as MM:SS).
@@ -614,7 +616,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated May 13th, 2015
+   * Last Updated May 19th, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -693,8 +695,8 @@ object AddPDF_Util {
       val separatorIfNeeded = if(dbPathName.endsWith("/") || dbPathName.endsWith("\\")) "" else File.separator
       
 	  // Get the Driver class and establish a connection to the database
-	  Class.forName(driverClass)			// DB pathname 						// username // password
-	  conn = DriverManager.getConnection(s"$dbPathName$separatorIfNeeded$dbName", 	dbUser, 	dbPswd)
+	  Class.forName(driverClass)			// DB pathname 									// username // password
+	  conn = DriverManager.getConnection(s"$jdbcPrefix$dbPathName$separatorIfNeeded$dbName", 	dbUser, 	dbPswd)
 	  
 	  val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
 	  query.executeQuery()							// If this query works, then the database is valid. Otherwise, invalid.
@@ -719,6 +721,7 @@ object AddPDF_Util {
     
     saveSettingsToConfigFile()						// Save the current settings to the CONFIG file.
   }
+  
   
   /** 
    * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist on their respective 
@@ -810,7 +813,7 @@ object AddPDF_Util {
    * In order to do this, this method rewrites the CONFIG file from scratch.
    * 
    * @author James Watts
-   * Last Updated: May 13th, 2015
+   * Last Updated: May 19th, 2015
    */
   def saveSettingsToConfigFile()
   {
@@ -845,7 +848,9 @@ object AddPDF_Util {
       /* database */
       pw.append("\tdatabase {\r\n\t\tdriverClass = \"")									// driverClass
       pw.append(driverClass)
-      pw.append("\"\r\n\t\tpathname = \"\"\"")											// pathname
+      pw.append("\"\r\n\t\tjdbcPrefix = \"\"\"")										// jdbcPrefix
+      pw.append(jdbcPrefix)
+      pw.append("\"\"\"\r\n\t\tpathname = \"\"\"")										// pathname
       pw.append(dbPath)
       pw.append("\"\"\"\r\n\t\tname = \"")												// name
       pw.append(databaseName)
@@ -884,4 +889,5 @@ object AddPDF_Util {
     guiUpdater ! "exit"										// Send an exit message to the Label Updater
     timer.stopTimer											// Stop the timer
   }
+  
 }

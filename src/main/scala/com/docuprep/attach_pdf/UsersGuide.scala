@@ -10,7 +10,7 @@ import AddPDF_Util.{SettingsIsRunning,guiUpdater,pauseTimerLastValue}
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: May 14th, 2014
+ * Last Updated: May 19th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -117,7 +117,7 @@ object UsersGuide extends SimpleSwingApplication {
       text = "Close"											// Set its text
       tooltip = "Click to close this window"					// Add a helpful message
     }
-    val searchButton = new Button{								// Button for selection (Main Page help / Settings help)
+    val searchButton = new Button{								// Button for help selection (Main Page help / Settings help)
       text = "Okay"												// Set its text
     }
     
@@ -146,6 +146,7 @@ object UsersGuide extends SimpleSwingApplication {
         contents+=new Label("Welcome to the User's Guide.  What would you like help with?")
         contents+=Swing.HGlue
       }
+      contents+=Swing.VStrut(2)									// Small vertical space between 'Welcome to User's Guide' and combo box
       contents+=new BoxPanel(Orientation.Horizontal)
       {
         contents+=pullDownMenu									// Add the pullDownMenu (the combo box)
@@ -165,7 +166,7 @@ object UsersGuide extends SimpleSwingApplication {
       border = Swing.EmptyBorder(20,20,20,20)
     }
     
-    size = new Dimension(610, 800)								// Set the size of the GUI window
+    size = new Dimension(610, 810)								// Set the size of the GUI window
     
     listenTo(closeButton, searchButton)							// Listen to the two buttons
     

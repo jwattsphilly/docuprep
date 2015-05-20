@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 19th, 2015
+ * Last Updated: May 20th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -149,7 +149,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     
     // Panels:
     // West Panel:
-    val westPanel = new BoxPanel(Orientation.Vertical){			// Panel for the West side of application
+    private val westPanel = new BoxPanel(Orientation.Vertical){	// Panel for the West side of application
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for inbound folder 1
         contents+=inbound1Label									// add inbound folder 1 label
         contents+=inbound1Text									// add inbound folder 1 text box
@@ -212,7 +212,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     }
     
     // East panel:
-    val eastPanel = new BoxPanel(Orientation.Vertical){			// Panel for the East side of application
+    private val eastPanel = new BoxPanel(Orientation.Vertical){	// Panel for the East side of application
       contents+=new BoxPanel(Orientation.Horizontal){			// Panel for Check New Files label
     	contents+=checkNewFilesLabel							// add Check New Files label
     	contents+=Swing.HGlue									// add horizontal glue to left justify

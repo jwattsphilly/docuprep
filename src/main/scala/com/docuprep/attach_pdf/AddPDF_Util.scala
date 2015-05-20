@@ -19,7 +19,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: May 19th, 2015
+ * Last Updated: May 20th, 2015
  */
 object AddPDF_Util {
   
@@ -331,7 +331,6 @@ object AddPDF_Util {
     }
   }
   
-  
   /**
    * Private helper method to separate the items in a long String into a list of separate Strings that are "," 
    * delimited.
@@ -406,10 +405,10 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: May 19th, 2015
+   * Last Updated: May 20th, 2015
    */
   def reportStatus() {
-    var conn:Connection = null;
+    var conn:Connection = null
     try{
     	val separatorIfNeeded = if(dbPath.endsWith("/") || dbPath.endsWith("\\")) "" else File.separator
     	
@@ -500,7 +499,6 @@ object AddPDF_Util {
     }
   }
   
-  
   /**
    * Depending on whether the pauseTimer is set to false or true, count() either counts down and runs the merge method 
    * (or reportStatus method) or resets and pauses the GUI counter.
@@ -580,7 +578,6 @@ object AddPDF_Util {
     s"$minutesString:$secondsString"							// Return the count string formatted as MM:SS
 //    s"${if(minutes>9) minutes.toString else s"0$minutes"}:${if(seconds>9) seconds.toString else s"0$seconds"}" // Alternate method
   }
-  
   
   /**
    * Method used to update fields according to text box inputs in the Settings GUI.  The fields that are updated 
@@ -757,7 +754,6 @@ object AddPDF_Util {
     allFoldersAreValid											// Return the Boolean flag
   }
   
-  
   /**
    * Checks for duplicates in both the Inbound and Outbound folders lists.  Displays an error Dialog if any duplicates
    * appear in either list.
@@ -813,9 +809,9 @@ object AddPDF_Util {
    * In order to do this, this method rewrites the CONFIG file from scratch.
    * 
    * @author James Watts
-   * Last Updated: May 19th, 2015
+   * Last Updated: May 20th, 2015
    */
-  def saveSettingsToConfigFile()
+  private def saveSettingsToConfigFile()
   {
     var pw:PrintWriter = null
     try{
@@ -876,7 +872,6 @@ object AddPDF_Util {
       }
     }
   }
-
   
   /**
    * Method to safely close the Utility object by shutting down the GUI label updater and stopping the timer.

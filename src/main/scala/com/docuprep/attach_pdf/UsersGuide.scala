@@ -10,7 +10,7 @@ import AddPDF_Util.{SettingsIsRunning,guiUpdater,pauseTimerLastValue}
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: May 19th, 2014
+ * Last Updated: May 20th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -23,11 +23,11 @@ object UsersGuide extends SimpleSwingApplication {
     override def closeOperation() = { closeUsersGuide() }		// Close the window instead of quitting the whole application
     
     /* STRINGS */
-    val mainPageSelection = "Main Page"
-    val settingsSelection = "Settings"
+    private val mainPageSelection = "Main Page"
+    private val settingsSelection = "Settings"
     
     /* Help Text for Main Page Help */
-    val mainPageText = new Array[String](arraySize)
+    private val mainPageText = new Array[String](arraySize)
     mainPageText(0) = "Main Page Help:"
     mainPageText(1) = " "
     mainPageText(2) = "Menu Bars:"
@@ -70,7 +70,7 @@ object UsersGuide extends SimpleSwingApplication {
     mainPageText(39) = ""
     
     /* Help Text for Settings Help */
-    val settingsText = new Array[String](arraySize)
+    private val settingsText = new Array[String](arraySize)
     settingsText(0) = "Settings Help:"
     settingsText(1) = " "
     settingsText(2) = "Text Fields:"
@@ -113,23 +113,23 @@ object UsersGuide extends SimpleSwingApplication {
     settingsText(39) = ""
     
     /* Buttons */
-    val closeButton = new Button{								// Button to exit the window
+    private val closeButton = new Button{						// Button to exit the window
       text = "Close"											// Set its text
       tooltip = "Click to close this window"					// Add a helpful message
     }
-    val searchButton = new Button{								// Button for help selection (Main Page help / Settings help)
+    private val searchButton = new Button{						// Button for help selection (Main Page help / Settings help)
       text = "Okay"												// Set its text
     }
     
     /* ComboBox */
-    val pullDownMenu = new ComboBox(List(mainPageSelection, settingsSelection))
+    private val pullDownMenu = new ComboBox(List(mainPageSelection, settingsSelection))
     
     /* Labels */
-    val helpText = new Array[Label](arraySize)					// Create labels for each line of help text
+    private val helpText = new Array[Label](arraySize)			// Create labels for each line of help text
     for(i <- 0 until arraySize) helpText(i) = new Label(mainPageText(i))
     
     /* Vertical BoxPanel to hold all help text */
-    val HelpBox = new BoxPanel(Orientation.Vertical){
+    private val HelpBox = new BoxPanel(Orientation.Vertical){
       for(i <- 0 until arraySize)
       {
         contents += new BoxPanel(Orientation.Horizontal){
@@ -140,7 +140,7 @@ object UsersGuide extends SimpleSwingApplication {
     }
     
     /* Combine all elements (apart from closeButton) into one BoxPanel */
-    val helpPanel = new BoxPanel(Orientation.Vertical){
+    private val helpPanel = new BoxPanel(Orientation.Vertical){
       contents+=new BoxPanel(Orientation.Horizontal)
       {
         contents+=new Label("Welcome to the User's Guide.  What would you like help with?")

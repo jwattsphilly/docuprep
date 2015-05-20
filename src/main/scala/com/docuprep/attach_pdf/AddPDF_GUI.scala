@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 14th, 2015
+ * Last Updated: May 20th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -50,7 +50,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
     }
     
     /* Panel for the West (left) side of application */
-    val westPanel = new BoxPanel(Orientation.Vertical){ 		// Add the following contents into a BoxPanel:
+    private val westPanel = new BoxPanel(Orientation.Vertical){ // Add the following contents into a BoxPanel:
       contents+=new BoxPanel(Orientation.Horizontal){
         contents+=filesWaitingLabel								// Files Waiting label
         contents+=Swing.HGlue									// Horizontal Glue to keep the label left-aligned
@@ -75,9 +75,9 @@ object AddPDF_GUI extends SimpleSwingApplication {
     }
     
     /* Panel for the East (right) side of application */
-    val eastPanel = new BoxPanel(Orientation.Vertical){
-      contents+=Swing.VStrut(375)								// Add a large vertical space to position the buttons
-      contents+=new BoxPanel(Orientation.Horizontal){			// at the bottom of the GUI
+    private val eastPanel = new BoxPanel(Orientation.Vertical){
+      contents+=Swing.VStrut(375)								// Add a large vertical space to position the buttons at the bottom
+      contents+=new BoxPanel(Orientation.Horizontal){			// of the GUI
         contents+=pauseButton
         contents+=Swing.HStrut(5)
         contents+=closeButton
@@ -119,7 +119,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
     
     size = new Dimension(500, 500)								// Set the size of the GUI window
     
-    val inputStringArray = new Array[String](2)					// A String Array whose only purpose is to be an input to
+    private val inputStringArray = new Array[String](2)			// A String Array whose only purpose is to be an input to
     inputStringArray(0) = "no"									// run the SettingsGUI and UsersGuide applications
     inputStringArray(1) = "yes"
     

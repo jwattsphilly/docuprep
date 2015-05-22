@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 20th, 2015
+ * Last Updated: May 22nd, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -409,15 +409,20 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   /**
    * Displays an error Dialog when the database name is invalid.
    * 
-   * @param dbName						The invalid database name
+   * @param dbPathWithName				Full pathname of the invalid database as a String.
+   * @param dbExists					Boolean denoting if the database file exists in the file system or not.
    * 
    * @author James Watts
-   * Last Updated: April 3rd, 2015
+   * Last Updated: May 22nd, 2015
    */
-  protected[attach_pdf] def invalidDatabaseDialog(dbName: String)
+  protected[attach_pdf] def invalidDatabaseDialog(dbPathWithName:String, dbExists:Boolean)
   {
+    val messagePart2 = 
+      if(dbExists) "The database file does not contain the correct table or a connection could not be made." 
+      else "The database file does not exist."
+    
     Dialog.showMessage(top.contents.head,
-        s"$dbName is not a valid database name on the given path!",
+        s"$dbPathWithName is not a valid database!  $messagePart2",
         title = s"Database name invalid",
         messageType = Dialog.Message.Error)
   }

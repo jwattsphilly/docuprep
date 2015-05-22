@@ -19,7 +19,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: May 20th, 2015
+ * Last Updated: May 22nd, 2015
  */
 object AddPDF_Util {
   
@@ -557,7 +557,6 @@ object AddPDF_Util {
     }
   }
   
-  
   /**
    * Converts an input amount of seconds to an easy-to-read string displaying the minutes and seconds (formatted as MM:SS).
    * 
@@ -578,6 +577,7 @@ object AddPDF_Util {
     s"$minutesString:$secondsString"							// Return the count string formatted as MM:SS
 //    s"${if(minutes>9) minutes.toString else s"0$minutes"}:${if(seconds>9) seconds.toString else s"0$seconds"}" // Alternate method
   }
+  
   
   /**
    * Method used to update fields according to text box inputs in the Settings GUI.  The fields that are updated 
@@ -613,7 +613,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated May 19th, 2015
+   * Last Updated May 22nd, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -685,41 +685,19 @@ object AddPDF_Util {
     }
     
     /* Test the validity of the database */
-    val tempDBName = databaseName
-    val tempDatabasePath = dbPath
-    var conn:Connection = null;
-    try{
-      val separatorIfNeeded = if(dbPathName.endsWith("/") || dbPathName.endsWith("\\")) "" else File.separator
-      
-	  // Get the Driver class and establish a connection to the database
-	  Class.forName(driverClass)			// DB pathname 									// username // password
-	  conn = DriverManager.getConnection(s"$jdbcPrefix$dbPathName$separatorIfNeeded$dbName", 	dbUser, 	dbPswd)
-	  
-	  val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
-	  query.executeQuery()							// If this query works, then the database is valid. Otherwise, invalid.
-	  databaseName = dbName							// Update data from database text box only if the database name is valid.
+    if(checkDatabaseValidity(dbPathName, dbName))			// Update data from database text box only if the database is valid.
+    {
+      databaseName = dbName
 	  dbPath = dbPathName
     }
-    catch
-    {
-      case e:Exception => 
-        databaseName = tempDBName					// If no connection could be made, change databaseName and dbPath back to
-        dbPath = tempDatabasePath					// their original values and display an error message.
-        if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(dbName)
-    }
-    finally
-    {
-      if(conn != null)								// Make sure to close the database connection, if applicable.
-    	  conn.close()
-    }
     
-    guiUpdater ! Inbound(currentInboundFolders(0))	// Send a message to the LabelUpdater to update the
-    												// inboundFolderLabel to include the first currentInboundFolder.
+    guiUpdater ! Inbound(currentInboundFolders(0))			// Send a message to the LabelUpdater to update the
+    														// inboundFolderLabel to include the first currentInboundFolder.
     
-    saveSettingsToConfigFile()						// Save the current settings to the CONFIG file.
+    saveSettingsToConfigFile()								// Save the current settings to the CONFIG file.
   }
   
-  
+
   /** 
    * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist on their respective 
    * servers.  Displays an error Dialog if any folder listed does not exist.
@@ -804,6 +782,54 @@ object AddPDF_Util {
   }
   
   
+  /**
+   * Checks the validity of the database on the input file path.  Displays an error Dialog if the database is invalid.
+   * 
+   * @param dbPathName				String pathname of the folder the Database is found in.
+   * @param dbName					String name of Database to report to.
+   * 
+   * @return						Boolean true if the Database exists and is valid, false if otherwise.
+   * 
+   * @author James Watts
+   * Last Updated: May 22nd, 2015
+   */
+  private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):Boolean = 
+  {
+    val separatorIfNeeded = if(dbPathName.endsWith("/") || dbPathName.endsWith("\\")) "" else File.separator
+    
+    /* First check to see if the database file exists as a file */
+    if(!(new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile())
+    {
+      if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(s"$dbPathName$separatorIfNeeded$dbName", false)
+      false									// If it doesn't exist, return a false before trying to connect
+    }
+    else									// Otherwise, if the file exists, try to make a connection to the database
+    {
+      var conn:Connection = null
+      try{
+	    /* Get the Driver class and establish a connection to the database */
+	    Class.forName(driverClass)			// DB pathname 									// username // password
+	    conn = DriverManager.getConnection(s"$jdbcPrefix$dbPathName$separatorIfNeeded$dbName", 	dbUser, 	dbPswd)
+	    
+	    val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
+	    query.executeQuery()				// If this query works, then the database is valid. Otherwise, invalid.
+	    true
+      }
+      catch
+      {
+        case e:Exception => 				// If connection cannot be made or the database does not contain the correct table,
+          if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(s"$dbPathName$separatorIfNeeded$dbName", true)
+          false								// then return a false.
+      }
+      finally
+      {
+        if(conn != null)					// Make sure to close the database connection, if applicable.
+          conn.close()
+      }
+    }
+  }
+  
+
   /**
    * Saves the current settings to the configuration file so that they remain unchanged the next time the application is run.
    * In order to do this, this method rewrites the CONFIG file from scratch.

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 22nd, 2015
+ * Last Updated: May 27th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -23,27 +23,25 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     override def closeOperation() = { closeSettings() }			// Close the window instead of quitting the whole application
     
     // Labels for West Panel
-    private val inbound1Label = new Label("Inbound Folder: ")	// Inbound Folder (1) Label
-    private val PDF1Label = new Label("PDF Folder:         ")	// PDF Folder (1) Label
-    private val inbound2Label = new Label("Inbound Folder: ")	// Inbound Folder (2) Label
-    private val PDF2Label = new Label("PDF Folder:         ")	// PDF Folder (2) Label
-    private val inbound3Label = new Label("Inbound Folder: ")	// Inbound Folder (3) Label
-    private val PDF3Label = new Label("PDF Folder:         ")	// PDF Folder (3) Label
-    private val inbound4Label = new Label("Inbound Folder: ")	// Inbound Folder (4) Label
-    private val PDF4Label = new Label("PDF Folder:         ")	// PDF Folder (4) Label
-    private val location2Label = new Label(						// Label to denote Second Location
-        "Second Location (if applicable)")
-    private val location3Label = new Label( 					// Label to denote Third Location
-        "Third Location (if applicable)")
-    private val location4Label = new Label(						// Label to denote Fourth Location
-        "Fourth Location (if applicable)")
+    private val inbound1Label	= new Label("Inbound Folder: ")					// Inbound Folder (1) Label
+    private val PDF1Label 		= new Label("PDF Folder:         ")				// PDF Folder (1) Label
+    private val inbound2Label 	= new Label("Inbound Folder: ")					// Inbound Folder (2) Label
+    private val PDF2Label 		= new Label("PDF Folder:         ")				// PDF Folder (2) Label
+    private val inbound3Label 	= new Label("Inbound Folder: ")					// Inbound Folder (3) Label
+    private val PDF3Label 		= new Label("PDF Folder:         ")				// PDF Folder (3) Label
+    private val inbound4Label 	= new Label("Inbound Folder: ")					// Inbound Folder (4) Label
+    private val PDF4Label 		= new Label("PDF Folder:         ")				// PDF Folder (4) Label
+    private val location2Label 	= new Label("Second Location (if applicable)")	// Label to denote Second Location
+    private val location3Label 	= new Label("Third Location (if applicable)")	// Label to denote Third Location
+    private val location4Label 	= new Label("Fourth Location (if applicable)")	// Label to denote Fourth Location
+        
     
     // Labels for East Panel
-    private val checkNewFilesLabel = new Label("Check For New Files Every:")// Check for new files label
-    private val reportStatusLabel = new Label("Report Status Every:")		// Status report label
-    private val secondsLabel1 = new Label(" Seconds.")						// Seconds Label (1)
-    private val secondsLabel2 = new Label(" Seconds.")						// Seconds Label (2)
-    private val databaseLabel = new Label("Database: ")						// Database Label
+    private val checkNewFilesLabel	= new Label("Check For New Files Every:")	// Check for new files label
+    private val reportStatusLabel	= new Label("Report Status Every:")			// Status report label
+    private val secondsLabel1		= new Label(" Seconds.")					// Seconds Label (1)
+    private val secondsLabel2		= new Label(" Seconds.")					// Seconds Label (2)
+    private val databaseLabel		= new Label("Database: ")					// Database Label
     
     // Text Boxes for West Panel
     private val inbound1Text = new TextField {					// Text field to input primary inbound folder to find .txt file
@@ -268,10 +266,10 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       case ButtonClicked(`chooseFolderInbound2`) => folderSelectionDialog(inbound2Text)
       case ButtonClicked(`chooseFolderInbound3`) => folderSelectionDialog(inbound3Text)
       case ButtonClicked(`chooseFolderInbound4`) => folderSelectionDialog(inbound4Text)
-      case ButtonClicked(`chooseFolderPDF1`) => folderSelectionDialog(PDF1Text)
-      case ButtonClicked(`chooseFolderPDF2`) => folderSelectionDialog(PDF2Text)
-      case ButtonClicked(`chooseFolderPDF3`) => folderSelectionDialog(PDF3Text)
-      case ButtonClicked(`chooseFolderPDF4`) => folderSelectionDialog(PDF4Text)
+      case ButtonClicked(`chooseFolderPDF1`) 	 => folderSelectionDialog(PDF1Text)
+      case ButtonClicked(`chooseFolderPDF2`)	 => folderSelectionDialog(PDF2Text)
+      case ButtonClicked(`chooseFolderPDF3`)	 => folderSelectionDialog(PDF3Text)
+      case ButtonClicked(`chooseFolderPDF4`)	 => folderSelectionDialog(PDF4Text)
       
       /* If the chooseDatabaseButton is pressed, run the databaseSelectionDialog method */
       case ButtonClicked(`chooseDatabaseButton`) => databaseSelectionDialog()
@@ -291,7 +289,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * the database file is found in.
      * 
      * @author James Watts
-     * Last Updated May 19th, 2015
+     * Last Updated May 27th, 2015
      */
     private def databaseSelectionDialog()
     {
@@ -304,7 +302,8 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       if(filechooser.showDialog(null, "Select") == FileChooser.Result.Approve)
       {
         val nameOfDB = filechooser.selectedFile.getName()
-        databaseText.text = nameOfDB.stripSuffix(".mv.db")
+        databaseText.text = nameOfDB.stripSuffix(".db")
+        databaseText.text = (databaseText.text).stripSuffix(".mv")	// Just in case the file is a .mv.db
         tempDatabasePath = s"${filechooser.selectedFile.toString.stripSuffix(nameOfDB)}"
       }
     }

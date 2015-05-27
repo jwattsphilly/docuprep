@@ -19,7 +19,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: May 22nd, 2015
+ * Last Updated: May 27th, 2015
  */
 object AddPDF_Util {
   
@@ -331,16 +331,16 @@ object AddPDF_Util {
     }
   }
   
+  
   /**
-   * Private helper method to separate the items in a long String into a list of separate Strings that are "," 
-   * delimited.
+   * Private helper method to separate the items in a long String into a list of separate Strings that are "," delimited.
    * 
    * @param line							A String that contains items separated by commas
    * 
    * @return								A list of separated Strings that were previously "," delimited
    * 
    * @author James Watts
-   * Last Updated: January 9th, 2015
+   * Last Updated: May 27th, 2015
    */
   private def separateString(line: String) = line.split(",").toList
   
@@ -405,7 +405,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: May 20th, 2015
+   * Last Updated: May 27th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -425,13 +425,6 @@ object AddPDF_Util {
 	    // 'machine_name' will be "PDF(" + the machine name + ")"
 	    val machineName = getMachineName()
 	    
-//	    val queryStatement = conn.prepareStatement(
-//	        s"SELECT * FROM $dbTable WHERE Application = ? AND Machine_Name = ?")
-//	    val updateStatement = conn.prepareStatement(
-//	        s"UPDATE $dbTable SET Last_Reported = NOW() WHERE Application = ? AND Machine_Name = ?")
-//	    val insertStatement = conn.prepareStatement(
-//	        s"INSERT INTO $dbTable (application, last_reported, machine_name, comments, status) VALUES (?, NOW(), ?, ?, ?)")
-	    
 	    val queryStatement = conn.prepareStatement(
 	        s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '$machineName'")
 	    val updateStatement = conn.prepareStatement(
@@ -440,24 +433,16 @@ object AddPDF_Util {
 	        s"INSERT INTO $dbTable (application, last_reported, machine_name, comments, status) VALUES ('$app', NOW(), '$machineName', '${" "*255}', '${" "*25}')")
 	    
 	    // Query to see if the machine name (with the given application (PACKAGE CREATOR)) is in the table already
-//	    queryStatement.setString(1, app)
-//	    queryStatement.setString(2, machineName)
 	    val results = queryStatement.executeQuery()
 	    
 	    if(results.next)
 	    {
 	      /* If the row already exists, just update its last_reported column */
-//	      updateStatement.setString(1, app)
-//	      updateStatement.setString(2, machineName)
 	      updateStatement.executeUpdate()
 	    }
 	    else
 	    {
 	      /* If the row hasn't been created yet, insert a new row into the "app_tracking" table with the gathered information */
-//	      insertStatement.setString(1, app)
-//	      insertStatement.setString(2, machineName)
-//	      insertStatement.setString(3, (" ")*255)		// Comments and Status are just whitespace
-//	      insertStatement.setString(4, (" ")*25)
 	      insertStatement.executeUpdate()
 	    }
 	    
@@ -476,6 +461,7 @@ object AddPDF_Util {
     }  
   }
   
+
   /**
    * Method to retrieve the name of the user's machine and parse it to a string in the form of 'PDF (machineName)'.
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
@@ -499,6 +485,7 @@ object AddPDF_Util {
     }
   }
   
+  
   /**
    * Depending on whether the pauseTimer is set to false or true, count() either counts down and runs the merge method 
    * (or reportStatus method) or resets and pauses the GUI counter.
@@ -518,45 +505,50 @@ object AddPDF_Util {
    * The timerLabel and reportTimerLabel are updated every time this method runs.
    * 
    * @author James Watts
-   * Last Updated: May 19th, 2015
+   * Last Updated: May 27th, 2015
    */
   def count() {
     if(!pauseTimer)														// If the pauseTimer flag is false (counter not paused)
     {
-      if(timeToNextCheck<=0){											// If the timeToNextCheck counter reached zero (or below)
+      if(timeToNextCheck<=0)
+      {																	// If the timeToNextCheck counter reached zero (or below)
         for(index <- 0 until currentInboundFolders.length; 				// Loop through the inbound folders
           if currentInboundFolders(index) != null)
            merge(currentInboundFolders(index),currentOutboundFolders)	// Start the merging process
         
         timeToNextCheck=checkFilesTime									// Restart the timer
         guiUpdater ! Count(generateCountString(timeToNextCheck))		// Update the timer label
-        updateFilesWaiting()
+        updateFilesWaiting()											// Update the list and count of files waiting
       }
-      else {															// If the timeToNextCheck counter has not reached zero yet
-        if(timeToNextCheck == 1)										// Update the files waiting if we're at 1 second left
-          updateFilesWaiting()
+      else 
+      {																	// If the timeToNextCheck counter has not reached zero yet
+        if(timeToNextCheck == 1) updateFilesWaiting()					// Update the files waiting if we're at 1 second left
         timeToNextCheck-=1												// Decrement the timer by 1 second
         guiUpdater ! Count(generateCountString(timeToNextCheck))		// Update the timer label
         
       }
-      if(timeToNextReport<=0){											// If the timeToNextReport counter reached zero (or below)
+      if(timeToNextReport<=0)
+      {																	// If the timeToNextReport counter reached zero (or below)
+        reportStatus()													// Report the status 
         timeToNextReport = reportStatusTime								// Restart the counter
         guiUpdater ! ReportCount(generateCountString(timeToNextReport))	// Update the report timer label
-        reportStatus()													// Report the status 
       }
-      else {															// If the timeToNextReport counter has not reached zero yet
+      else
+      {																	// If the timeToNextReport counter has not reached zero yet
         timeToNextReport-=1												// Decrement the counter by 1 second
         guiUpdater ! ReportCount(generateCountString(timeToNextReport))	// Update the report timer label
       }
     }
-    else {																// If the pauseTimer is true (counter is paused)
-      timeToNextCheck = checkFilesTime 									// Restart the timer and keep it at its max value
-      timeToNextReport = reportStatusTime								// Restart the report timer and keep it at its max value
-      guiUpdater ! Count(generateCountString(timeToNextCheck))			// Update the timer label
-      guiUpdater ! ReportCount(generateCountString(timeToNextReport))	// Update the report timer label
+    else
+    {																	// If the pauseTimer is true (counter is paused)
+      timeToNextCheck = checkFilesTime 									// Restart both timers and keep them at their max values
+      timeToNextReport = reportStatusTime
+      guiUpdater ! Count(generateCountString(timeToNextCheck))			// Update the two timer labels
+      guiUpdater ! ReportCount(generateCountString(timeToNextReport))
     }
   }
   
+
   /**
    * Converts an input amount of seconds to an easy-to-read string displaying the minutes and seconds (formatted as MM:SS).
    * 
@@ -577,7 +569,6 @@ object AddPDF_Util {
     s"$minutesString:$secondsString"							// Return the count string formatted as MM:SS
 //    s"${if(minutes>9) minutes.toString else s"0$minutes"}:${if(seconds>9) seconds.toString else s"0$seconds"}" // Alternate method
   }
-  
   
   /**
    * Method used to update fields according to text box inputs in the Settings GUI.  The fields that are updated 
@@ -829,7 +820,6 @@ object AddPDF_Util {
     }
   }
   
-
   /**
    * Saves the current settings to the configuration file so that they remain unchanged the next time the application is run.
    * In order to do this, this method rewrites the CONFIG file from scratch.

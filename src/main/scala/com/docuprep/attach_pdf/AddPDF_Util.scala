@@ -19,7 +19,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: May 27th, 2015
+ * Last Updated: May 29th, 2015
  */
 object AddPDF_Util {
   
@@ -64,8 +64,8 @@ object AddPDF_Util {
   private[attach_pdf] var databaseName = config.getString("attachPDF.database.name")
   private val app = config.getString("attachPDF.database.application")
   private val driverClass = config.getString("attachPDF.database.driverClass")
-  private val jdbcPrefix = config.getString("attachPDF.database.jdbcPrefix")
-  private[attach_pdf] var dbPath = config.getString("attachPDF.database.pathname")	// Note: jdbcPrefix, databaseName, and dbPath are connected
+  private val jdbcPrefix = config.getString("attachPDF.database.jdbcPrefix")  // Note: jdbcPrefix, databaseName, and dbPath are connected
+  private[attach_pdf] var dbPath = config.getString("attachPDF.database.pathname")
   private val dbUser = config.getString("attachPDF.database.username")
   private val dbPswd = config.getString("attachPDF.database.password")
   private val dbTable = config.getString("attachPDF.database.table")
@@ -405,7 +405,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: May 27th, 2015
+   * Last Updated: May 29th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -442,7 +442,7 @@ object AddPDF_Util {
 	    }
 	    else
 	    {
-	      /* If the row hasn't been created yet, insert a new row into the "app_tracking" table with the gathered information */
+	      /* If the row hasn't been created yet, insert a new row into the 'dbTable' table with the gathered information */
 	      insertStatement.executeUpdate()
 	    }
 	    
@@ -461,7 +461,6 @@ object AddPDF_Util {
     }  
   }
   
-
   /**
    * Method to retrieve the name of the user's machine and parse it to a string in the form of 'PDF (machineName)'.
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
@@ -548,7 +547,6 @@ object AddPDF_Util {
     }
   }
   
-
   /**
    * Converts an input amount of seconds to an easy-to-read string displaying the minutes and seconds (formatted as MM:SS).
    * 
@@ -687,8 +685,7 @@ object AddPDF_Util {
     
     saveSettingsToConfigFile()								// Save the current settings to the CONFIG file.
   }
-  
-
+ 
   /** 
    * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist on their respective 
    * servers.  Displays an error Dialog if any folder listed does not exist.
@@ -722,6 +719,7 @@ object AddPDF_Util {
     
     allFoldersAreValid											// Return the Boolean flag
   }
+  
   
   /**
    * Checks for duplicates in both the Inbound and Outbound folders lists.  Displays an error Dialog if any duplicates
@@ -782,14 +780,15 @@ object AddPDF_Util {
    * @return						Boolean true if the Database exists and is valid, false if otherwise.
    * 
    * @author James Watts
-   * Last Updated: May 22nd, 2015
+   * Last Updated: May 29th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):Boolean = 
   {
     val separatorIfNeeded = if(dbPathName.endsWith("/") || dbPathName.endsWith("\\")) "" else File.separator
     
     /* First check to see if the database file exists as a file */
-    if(!(new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile())
+    if(		!(new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile()
+        && 	!(new File(s"$dbPathName$separatorIfNeeded$dbName.db")).isFile()	)
     {
       if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(s"$dbPathName$separatorIfNeeded$dbName", false)
       false									// If it doesn't exist, return a false before trying to connect

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 27th, 2015
+ * Last Updated: May 29th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -34,7 +34,6 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     private val location2Label 	= new Label("Second Location (if applicable)")	// Label to denote Second Location
     private val location3Label 	= new Label("Third Location (if applicable)")	// Label to denote Third Location
     private val location4Label 	= new Label("Fourth Location (if applicable)")	// Label to denote Fourth Location
-        
     
     // Labels for East Panel
     private val checkNewFilesLabel	= new Label("Check For New Files Every:")	// Check for new files label
@@ -48,17 +47,9 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       text = currentInboundFolders(0)							// Initialize Inbound Folder 1
       columns = 30
     }
-    private val PDF1Text = new TextField {						// Text field to input primary PDF folder to copy the new PDF file into
-      text = currentOutboundFolders(0) 							// Initialize PDF Folder 1
-      columns = 30
-    }
     private val inbound2Text = new TextField {					// Text field to input secondary inbound folder to find .txt file
       if(currentInboundFolders(1) != null)						// Initialize Inbound Folder 2 if applicable
     	text = currentInboundFolders(1)
-      columns = 30
-    }
-    private val PDF2Text = new TextField {						// Text field to input secondary PDF folder to copy the new PDF file into
-      text = currentOutboundFolders(1) 							// Initialize PDF Folder 2
       columns = 30
     }
     private val inbound3Text = new TextField {					// Text field to input third inbound folder to find .txt file
@@ -66,16 +57,24 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     	text = currentInboundFolders(2)
       columns = 30
     }
-    private val PDF3Text = new TextField {						// Text field to input third PDF folder to copy the new PDF file into
-      text = currentOutboundFolders(2)							// Initialize PDF Folder 3
-      columns = 30
-    }
     private val inbound4Text = new TextField {					// Text field to input fourth inbound folder to find .txt file
       if(currentInboundFolders(3) != null)						// Initialize Inbound Folder 4 if applicable
     	text = currentInboundFolders(3)
       columns = 30
     }
-    private val PDF4Text = new TextField {						// Text field to input fourth PDF folder to copy the new PDF file into
+    private val PDF1Text	 = new TextField {					// Text field to input primary PDF folder to copy the new PDF file into
+      text = currentOutboundFolders(0) 							// Initialize PDF Folder 1
+      columns = 30
+    }
+    private val PDF2Text	 = new TextField {					// Text field to input secondary PDF folder to copy the new PDF file into
+      text = currentOutboundFolders(1) 							// Initialize PDF Folder 2
+      columns = 30
+    }
+    private val PDF3Text	 = new TextField {					// Text field to input third PDF folder to copy the new PDF file into
+      text = currentOutboundFolders(2)							// Initialize PDF Folder 3
+      columns = 30
+    }
+    private val PDF4Text	 = new TextField {					// Text field to input fourth PDF folder to copy the new PDF file into
       text = currentOutboundFolders(3)							// Initialize PDF Folder 4
       columns = 30
     }
@@ -85,11 +84,11 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       text = checkFilesTime.toString							// Initialize to checkFilesTime from AddPDF_Util
       columns = 5
     }
-    private val reportStatusText = new TextField {				// Text field to input time lapse for reporting the current status
+    private val reportStatusText  = new TextField {				// Text field to input time lapse for reporting the current status
       text = reportStatusTime.toString							// Initialize to reportStatusText from AddPDF_Util
       columns = 5
     }
-    private val databaseText = new TextField {					// Text field to input database to extract and place the PDF files
+    private val databaseText	  = new TextField {				// Text field to input database to extract and place the PDF files
       text = databaseName										// Initialize to databaseName from AddPDF_Util
       columns = 10
     }
@@ -100,11 +99,11 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     private val inbound4CheckBox = new CheckBox{selected = box4checked}
     
     // Buttons
-    private val closeButton = new Button{						// Button to exit the window
+    private val closeButton 		 = new Button{				// Button to exit the window
       text = "Close"											// Set its title
       tooltip = "Click to close this window"					// Add a helpful message
     }
-    private val applyButton = new Button{						// Button to apply changes to text boxes
+    private val applyButton 		 = new Button{				// Button to apply changes to text boxes
       text = "Apply"											// Set its title
       tooltip = "Click to apply changes"						// Add a helpful message
     }
@@ -124,19 +123,19 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       text = "..."												// Set its title
       tooltip = "Choose a File Folder for Inbound Folder 4"		// Add a helpful message
     }
-    private val chooseFolderPDF1 = new Button{					// Button for folder selection for PDF Folder 1
+    private val chooseFolderPDF1 	 = new Button{				// Button for folder selection for PDF Folder 1
       text = "..."												// Set its title
       tooltip = "Choose a File Folder for PDF Folder 1"			// Add a helpful message
     }
-    private val chooseFolderPDF2 = new Button{					// Button for folder selection for PDF Folder 1
+    private val chooseFolderPDF2 	 = new Button{				// Button for folder selection for PDF Folder 1
       text = "..."												// Set its title
       tooltip = "Choose a File Folder for PDF Folder 2"			// Add a helpful message
     }
-    private val chooseFolderPDF3 = new Button{					// Button for folder selection for PDF Folder 1
+    private val chooseFolderPDF3 	 = new Button{				// Button for folder selection for PDF Folder 1
       text = "..."												// Set its title
       tooltip = "Choose a File Folder for PDF Folder 3"			// Add a helpful message
     }
-    private val chooseFolderPDF4 = new Button{					// Button for folder selection for PDF Folder 1
+    private val chooseFolderPDF4 	 = new Button{				// Button for folder selection for PDF Folder 1
       text = "..."												// Set its title
       tooltip = "Choose a File Folder for PDF Folder 4"			// Add a helpful message
     }
@@ -289,12 +288,13 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * the database file is found in.
      * 
      * @author James Watts
-     * Last Updated May 27th, 2015
+     * Last Updated May 29th, 2015
      */
     private def databaseSelectionDialog()
     {
       val temp = tempDatabasePath
       
+      /* Create a FileChooser for the user to select the database from. */
       val filechooser = new FileChooser(new java.io.File(s"${temp}"))
       filechooser.fileSelectionMode = FileChooser.SelectionMode.FilesOnly
       filechooser.fileFilter = new javax.swing.filechooser.FileNameExtensionFilter("Database", "db")	// Database files only
@@ -316,10 +316,11 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * @param tf					A TextField object
      * 
      * @author James Watts
-     * Last Updated April 27th, 2015
+     * Last Updated April 29th, 2015
      */
     private def folderSelectionDialog(tf:TextField)
     {
+      /* Create a FileChooser for the user to select the folder from. */
       val filechooser = new FileChooser(new java.io.File(s"${tf.text}${java.io.File.separator}.."))
       filechooser.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
       

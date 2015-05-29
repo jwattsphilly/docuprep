@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 27th, 2015
+ * Last Updated: May 29th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -33,8 +33,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
     peer.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
     override def closeOperation()								// Safely quit the whole application if neither the Settings
     { 															// nor User's Guide GUIs are running
-      if(!SettingsIsRunning && !UsersGuideIsRunning)
-        closeGUISafely()
+      if(!SettingsIsRunning && !UsersGuideIsRunning) closeGUISafely()
     }
     
     guiUpdater ! GuiRunning(true)								// Set the GuiIsRunning flag to true

@@ -19,7 +19,7 @@ import com.typesafe.config.ConfigFactory
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: May 29th, 2015
+ * Last Updated: June 2nd, 2015
  */
 object AddPDF_Util {
   
@@ -63,7 +63,7 @@ object AddPDF_Util {
   /* Get the database info from the CONFIG file */
   private[attach_pdf] var databaseName = config.getString("attachPDF.database.name")
   private val app = config.getString("attachPDF.database.application")
-  private val driverClass = config.getString("attachPDF.database.driverClass")
+  private val driverClass = config.getString("attachPDF.database.driverClass")	// TODO: Make driverClass & jdbcPrefix variable
   private val jdbcPrefix = config.getString("attachPDF.database.jdbcPrefix")  // Note: jdbcPrefix, databaseName, and dbPath are connected
   private[attach_pdf] var dbPath = config.getString("attachPDF.database.pathname")
   private val dbUser = config.getString("attachPDF.database.username")
@@ -331,7 +331,6 @@ object AddPDF_Util {
     }
   }
   
-  
   /**
    * Private helper method to separate the items in a long String into a list of separate Strings that are "," delimited.
    * 
@@ -547,6 +546,7 @@ object AddPDF_Util {
     }
   }
   
+  
   /**
    * Converts an input amount of seconds to an easy-to-read string displaying the minutes and seconds (formatted as MM:SS).
    * 
@@ -567,6 +567,7 @@ object AddPDF_Util {
     s"$minutesString:$secondsString"							// Return the count string formatted as MM:SS
 //    s"${if(minutes>9) minutes.toString else s"0$minutes"}:${if(seconds>9) seconds.toString else s"0$seconds"}" // Alternate method
   }
+  
   
   /**
    * Method used to update fields according to text box inputs in the Settings GUI.  The fields that are updated 
@@ -602,7 +603,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated May 22nd, 2015
+   * Last Updated June 2nd, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -678,6 +679,7 @@ object AddPDF_Util {
     {
       databaseName = dbName
 	  dbPath = dbPathName
+	  // TODO: Update driverClass and jdbcPrefix if database is valid
     }
     
     guiUpdater ! Inbound(currentInboundFolders(0))			// Send a message to the LabelUpdater to update the
@@ -719,7 +721,6 @@ object AddPDF_Util {
     
     allFoldersAreValid											// Return the Boolean flag
   }
-  
   
   /**
    * Checks for duplicates in both the Inbound and Outbound folders lists.  Displays an error Dialog if any duplicates
@@ -770,7 +771,6 @@ object AddPDF_Util {
     allFoldersAreUnique											// Return the Boolean flag
   }
   
-  
   /**
    * Checks the validity of the database on the input file path.  Displays an error Dialog if the database is invalid.
    * 
@@ -780,15 +780,17 @@ object AddPDF_Util {
    * @return						Boolean true if the Database exists and is valid, false if otherwise.
    * 
    * @author James Watts
-   * Last Updated: May 29th, 2015
+   * Last Updated: June 2nd, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):Boolean = 
   {
     val separatorIfNeeded = if(dbPathName.endsWith("/") || dbPathName.endsWith("\\")) "" else File.separator
     
     /* First check to see if the database file exists as a file */
-    if(		!(new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile()
-        && 	!(new File(s"$dbPathName$separatorIfNeeded$dbName.db")).isFile()	)
+    if(		!(new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile()	// Account for .mv.db files
+        && 	!(new File(s"$dbPathName$separatorIfNeeded$dbName.db")).isFile()	// Account for .db files (TODO: is this necessary?)
+        &&	!(new File(s"$dbPathName$separatorIfNeeded$dbName.mdf")).isFile()	// Account for .mdf files
+        &&	!(new File(s"$dbPathName$separatorIfNeeded$dbName.sdf")).isFile())	// Account for .sdf files
     {
       if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(s"$dbPathName$separatorIfNeeded$dbName", false)
       false									// If it doesn't exist, return a false before trying to connect
@@ -797,6 +799,8 @@ object AddPDF_Util {
     {
       var conn:Connection = null
       try{
+        // TODO: Change driverClass and jdbcPrefix according to database type (.mv.db or .sdf/.mdf)
+        
 	    /* Get the Driver class and establish a connection to the database */
 	    Class.forName(driverClass)			// DB pathname 									// username // password
 	    conn = DriverManager.getConnection(s"$jdbcPrefix$dbPathName$separatorIfNeeded$dbName", 	dbUser, 	dbPswd)

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 29th, 2015
+ * Last Updated: June 2nd, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -288,7 +288,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * the database file is found in.
      * 
      * @author James Watts
-     * Last Updated May 29th, 2015
+     * Last Updated June 2nd, 2015
      */
     private def databaseSelectionDialog()
     {
@@ -297,13 +297,23 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       /* Create a FileChooser for the user to select the database from. */
       val filechooser = new FileChooser(new java.io.File(s"${temp}"))
       filechooser.fileSelectionMode = FileChooser.SelectionMode.FilesOnly
-      filechooser.fileFilter = new javax.swing.filechooser.FileNameExtensionFilter("Database", "db")	// Database files only
+      filechooser.fileFilter = new javax.swing.filechooser.FileNameExtensionFilter("Database", "db", "mdf", "sdf") // Database files only
       
       if(filechooser.showDialog(null, "Select") == FileChooser.Result.Approve)
       {
         val nameOfDB = filechooser.selectedFile.getName()
-        databaseText.text = nameOfDB.stripSuffix(".db")
-        databaseText.text = (databaseText.text).stripSuffix(".mv")	// Just in case the file is a .mv.db
+        
+        // TODO: Keep an account of which database type is being used and pass it to the applyChanges method
+        
+        /* Account for different database types */
+        var nameWithoutExtension = nameOfDB.stripSuffix(".db")
+        nameWithoutExtension = nameWithoutExtension.stripSuffix(".mv")	// If an H2 database, the extension is .mv.db
+        nameWithoutExtension = nameWithoutExtension.stripSuffix(".mdf")	// If an MS SQL Express database, the extension is .mdf (or .MDF)
+        nameWithoutExtension = nameWithoutExtension.stripSuffix(".MDF")
+        nameWithoutExtension = nameWithoutExtension.stripSuffix(".sdf")	// If an MS SQL Compact database, the extension is .sdf (or .SDF)
+        nameWithoutExtension = nameWithoutExtension.stripSuffix(".SDF")
+        
+        databaseText.text = nameWithoutExtension
         tempDatabasePath = s"${filechooser.selectedFile.toString.stripSuffix(nameOfDB)}"
       }
     }

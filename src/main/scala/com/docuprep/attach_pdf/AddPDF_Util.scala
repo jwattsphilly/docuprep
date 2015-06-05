@@ -15,17 +15,23 @@ import ch.qos.logback.classic.{Logger, LoggerContext}
 
 import com.typesafe.config.ConfigFactory
 
+object DatabaseType extends Enumeration {
+  type DatabaseType = Value
+  val MS_SQL_DATABASE, H2_DATABASE, NO_TYPE = Value
+}
+
 /**
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: June 2nd, 2015
+ * Last Updated: June 5th, 2015
  */
 object AddPDF_Util {
   
   /*******************************************
    *  General Setup of the Utility Object: 	 *
    *******************************************/
+  import DatabaseType._
   
   /** Set up the Logger for this program 	**/
   private val logger:Logger = (LoggerFactory.getLogger("com.docuprep.attach_pdf.AddPDF_Util")).asInstanceOf[ch.qos.logback.classic.Logger]
@@ -63,12 +69,15 @@ object AddPDF_Util {
   /* Get the database info from the CONFIG file */
   private[attach_pdf] var databaseName = config.getString("attachPDF.database.name")
   private val app = config.getString("attachPDF.database.application")
-  private val driverClass = config.getString("attachPDF.database.driverClass")	// TODO: Make driverClass & jdbcPrefix variable
-  private val jdbcPrefix = config.getString("attachPDF.database.jdbcPrefix")  // Note: jdbcPrefix, databaseName, and dbPath are connected
   private[attach_pdf] var dbPath = config.getString("attachPDF.database.pathname")
   private val dbUser = config.getString("attachPDF.database.username")
   private val dbPswd = config.getString("attachPDF.database.password")
   private val dbTable = config.getString("attachPDF.database.table")
+  private var dbType = config.getString("attachPDF.database.type") match {
+    case "H2_DATABASE"		=> H2_DATABASE
+    case "MS_SQL_DATABASE"	=> MS_SQL_DATABASE
+  	case _					=> NO_TYPE
+  }
   
   /** Initialize other important fields **/
   // GUI Label Updater (Actor)
@@ -404,20 +413,37 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: May 29th, 2015
+   * Last Updated: June 5th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
     try{
     	val separatorIfNeeded = if(dbPath.endsWith("/") || dbPath.endsWith("\\")) "" else File.separator
     	
-	    // Get the Driver class and establish a connection to the database
-	    Class.forName(driverClass)
-	    
-	    // TODO: Connect to work database with correct username and password (all should now be in application.conf)
-	    									// DB pathname 										// username // password
-	    conn = DriverManager.getConnection(s"$jdbcPrefix$dbPath$separatorIfNeeded$databaseName", dbUser, 		dbPswd)
-	    
+    	if (dbType == H2_DATABASE)
+    	{
+    	  val driverClass = "org.h2.Driver"
+          val jdbcPrefix = """jdbc:h2:file:"""
+            
+          // Get the Driver class and establish a connection to the database
+          Class.forName(driverClass)			// DB pathname 									// username // password
+          conn = DriverManager.getConnection(s"$jdbcPrefix$dbPath$separatorIfNeeded$databaseName", dbUser, 		dbPswd)
+    	}
+    	else if(dbType == MS_SQL_DATABASE)
+    	{
+    	  val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+    	  val jdbcPrefix = """jdbc:sqlserver://"""									// TODO: Make sure this is right!!!!!
+          val databaseNamePrefix = ";databaseName="
+          val ipaddress = parseOutIP(dbPath)
+          
+          Class.forName(driverClass)			// DB pathname 											// username // password
+	      conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName;", 	dbUser, 	dbPswd)
+    	}
+    	else if(dbType == NO_TYPE)
+    	{
+    	  return
+    	}
+    	
 	    // 'trans_id' will be generated automatically, so no need to worry about that
 	    // 'last_reported' will be the current date and time (NOW())
 	    
@@ -458,6 +484,38 @@ object AddPDF_Util {
       if(conn != null)
     	  conn.close()
     }  
+  }
+  
+  /**
+   * When given a String folder pathname that begins with a an IP Address, this method parses out the IP Address and returns it
+   * 
+   * @param pathWithIP						A String folder pathname that begins with either "//" or "\\" followed by an IP Address
+   * 
+   * @return								The IP Address contained in the input String as a String
+   * 
+   * @author James Watts
+   * Last Updated: June 5th, 2015
+   */
+  def parseOutIP(pathWithIP:String):String = 
+  {
+    if(pathWithIP.startsWith("""\\""") || pathWithIP.startsWith("""//"""))
+    {
+      val endpoint = (pathWithIP.substring(2)).indexOf(File.separator) + 2		// Index of the end of the IP Address
+      val ipAddress:String = pathWithIP.substring(2, endpoint)					// Get the IP Address
+      ipAddress
+    }
+    else if(pathWithIP.startsWith("""\""") || pathWithIP.startsWith("""/"""))
+    {
+      val endpoint = (pathWithIP.substring(1)).indexOf(File.separator) + 1		// Index of the end of the IP Address
+      val ipAddress:String = pathWithIP.substring(1, endpoint)					// Get the IP Address
+      ipAddress
+    }
+    else
+    {
+      val endpoint = pathWithIP.indexOf(File.separator)							// Index of the end of the IP Address
+      val ipAddress:String = pathWithIP.substring(0, endpoint)					// Get the IP Address
+      ipAddress
+    }
   }
   
   /**
@@ -568,7 +626,6 @@ object AddPDF_Util {
 //    s"${if(minutes>9) minutes.toString else s"0$minutes"}:${if(seconds>9) seconds.toString else s"0$seconds"}" // Alternate method
   }
   
-  
   /**
    * Method used to update fields according to text box inputs in the Settings GUI.  The fields that are updated 
    * are as follows:
@@ -603,7 +660,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated June 2nd, 2015
+   * Last Updated June 3rd, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -675,11 +732,12 @@ object AddPDF_Util {
     }
     
     /* Test the validity of the database */
-    if(checkDatabaseValidity(dbPathName, dbName))			// Update data from database text box only if the database is valid.
+    val tempDbType = checkDatabaseValidity(dbPathName, dbName)
+    if(tempDbType == MS_SQL_DATABASE || tempDbType == H2_DATABASE) // Update data from database text box only if the database is valid.
     {
       databaseName = dbName
 	  dbPath = dbPathName
-	  // TODO: Update driverClass and jdbcPrefix if database is valid
+	  dbType = tempDbType
     }
     
     guiUpdater ! Inbound(currentInboundFolders(0))			// Send a message to the LabelUpdater to update the
@@ -777,49 +835,80 @@ object AddPDF_Util {
    * @param dbPathName				String pathname of the folder the Database is found in.
    * @param dbName					String name of Database to report to.
    * 
-   * @return						Boolean true if the Database exists and is valid, false if otherwise.
+   * @return						Boolean true if the Database exists and is valid, false if otherwise. (TODO)
    * 
    * @author James Watts
-   * Last Updated: June 2nd, 2015
+   * Last Updated: June 5th, 2015
    */
-  private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):Boolean = 
+  private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {
     val separatorIfNeeded = if(dbPathName.endsWith("/") || dbPathName.endsWith("\\")) "" else File.separator
     
-    /* First check to see if the database file exists as a file */
-    if(		!(new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile()	// Account for .mv.db files
-        && 	!(new File(s"$dbPathName$separatorIfNeeded$dbName.db")).isFile()	// Account for .db files (TODO: is this necessary?)
-        &&	!(new File(s"$dbPathName$separatorIfNeeded$dbName.mdf")).isFile()	// Account for .mdf files
-        &&	!(new File(s"$dbPathName$separatorIfNeeded$dbName.sdf")).isFile())	// Account for .sdf files
+    /* First check to see if the database file exists as a file and is of the right file type */
+    if((new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile())	// If an H2 database...
     {
-      if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(s"$dbPathName$separatorIfNeeded$dbName", false)
-      false									// If it doesn't exist, return a false before trying to connect
-    }
-    else									// Otherwise, if the file exists, try to make a connection to the database
-    {
+      // type = H2_DATABASE
+      var driverClass = "org.h2.Driver"
+      var jdbcPrefix = """jdbc:h2:file:"""
       var conn:Connection = null
       try{
-        // TODO: Change driverClass and jdbcPrefix according to database type (.mv.db or .sdf/.mdf)
-        
-	    /* Get the Driver class and establish a connection to the database */
+    	/* Get the Driver class and establish a connection to the database */
 	    Class.forName(driverClass)			// DB pathname 									// username // password
 	    conn = DriverManager.getConnection(s"$jdbcPrefix$dbPathName$separatorIfNeeded$dbName", 	dbUser, 	dbPswd)
 	    
 	    val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
-	    query.executeQuery()				// If this query works, then the database is valid. Otherwise, invalid.
-	    true
+	    query.executeQuery()				// If this query works, then the database is a valid H2 database. Otherwise, invalid.
+	    H2_DATABASE
       }
       catch
       {
         case e:Exception => 				// If connection cannot be made or the database does not contain the correct table,
           if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(s"$dbPathName$separatorIfNeeded$dbName", true)
-          false								// then return a false.
+          NO_TYPE							// then display a message and return a NO_TYPE.
       }
       finally
       {
         if(conn != null)					// Make sure to close the database connection, if applicable.
           conn.close()
       }
+    }
+    else if(	(new File(s"$dbPathName$separatorIfNeeded$dbName.mdf")).isFile()	// If a Microsoft SQL Server database...
+    		||	(new File(s"$dbPathName$separatorIfNeeded$dbName.sdf")).isFile())
+    {
+      // type = MS_SQL_DATABASE
+      val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+      val jdbcPrefix = """jdbc:sqlserver://"""									// TODO: Make sure this is right!!!!!
+      val databaseNamePrefix = ";databaseName="
+      val ipaddress = parseOutIP(dbPath)
+
+      var conn:Connection = null
+      try{
+      
+    	/* Get the Driver class and establish a connection to the database */
+	    Class.forName(driverClass)			// DB pathname 											// username // password
+	    conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName;", 	dbUser, 	dbPswd)
+	    
+	    val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
+	    query.executeQuery()				// If this query works, then the database is a valid MS SQL database. Otherwise, invalid.
+	    MS_SQL_DATABASE
+      }
+      catch
+      {
+        case e:Exception => 				// If connection cannot be made or the database does not contain the correct table,
+          println(e.getMessage())// TODO: get rid of this
+          if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(s"$dbPathName$separatorIfNeeded$dbName", true)
+          NO_TYPE							// then display a message and return a NO_TYPE.
+      }
+      finally
+      {
+        if(conn != null)					// Make sure to close the database connection, if applicable.
+          conn.close()
+      }
+    }
+    else									// Non existent file or not of the right database file type
+    {
+      if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(s"$dbPathName$separatorIfNeeded$dbName", false)
+      NO_TYPE								// If it doesn't exist, return a NO_TYPE instead of trying to connect
     }
   }
   
@@ -828,7 +917,7 @@ object AddPDF_Util {
    * In order to do this, this method rewrites the CONFIG file from scratch.
    * 
    * @author James Watts
-   * Last Updated: May 20th, 2015
+   * Last Updated: June 3rd, 2015
    */
   private def saveSettingsToConfigFile()
   {
@@ -861,11 +950,9 @@ object AddPDF_Util {
       pw.append(s"\tcheckFilesTime = $checkFilesTime\r\n\treportStatusTime = $reportStatusTime\r\n")
       
       /* database */
-      pw.append("\tdatabase {\r\n\t\tdriverClass = \"")									// driverClass
-      pw.append(driverClass)
-      pw.append("\"\r\n\t\tjdbcPrefix = \"\"\"")										// jdbcPrefix
-      pw.append(jdbcPrefix)
-      pw.append("\"\"\"\r\n\t\tpathname = \"\"\"")										// pathname
+      pw.append("\tdatabase {\r\n\t\ttype = \"")										// type
+      pw.append(dbType.toString)
+      pw.append("\"\r\n\t\tpathname = \"\"\"")											// pathname
       pw.append(dbPath)
       pw.append("\"\"\"\r\n\t\tname = \"")												// name
       pw.append(databaseName)

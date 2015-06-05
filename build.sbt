@@ -13,8 +13,9 @@ lazy val root = (project in file(".")).
 			// For Logging:
 			"ch.qos.logback" % "logback-classic" % "1.1.2",
 			"org.slf4j" % "slf4j-api" % "1.7.7",
-			// For the Database: // TODO: Change to Microsoft SQL Server Database for actual thing
+			// For the Database:
 			"com.h2database" % "h2" % "1.3.148",
+			"com.microsoft" % "sqljdbc" % "1.1.1501",
 			// For multi-threading:
 			"com.typesafe.akka" % "akka-actor_2.11" % "2.3.3",
 			// For working with a configuration file:

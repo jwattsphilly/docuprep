@@ -15,7 +15,6 @@ lazy val root = (project in file(".")).
 			"org.slf4j" % "slf4j-api" % "1.7.7",
 			// For the Database:
 			"com.h2database" % "h2" % "1.3.148",
-			"com.microsoft" % "sqljdbc" % "1.1.1501",
 			// For multi-threading:
 			"com.typesafe.akka" % "akka-actor_2.11" % "2.3.3",
 			// For working with a configuration file:

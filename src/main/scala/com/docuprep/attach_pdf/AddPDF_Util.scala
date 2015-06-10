@@ -15,6 +15,12 @@ import ch.qos.logback.classic.{Logger, LoggerContext}
 
 import com.typesafe.config.ConfigFactory
 
+/**
+ * Enumeration to distinguish the types of databases allowed for use by the AddPDF_GUI application.
+ * 
+ * @author James Watts
+ * Last Updated: June 10th, 2015
+ */
 object DatabaseType extends Enumeration {
   type DatabaseType = Value
   val MS_SQL_DATABASE, H2_DATABASE, NO_TYPE = Value
@@ -24,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: June 5th, 2015
+ * Last Updated: June 10th, 2015
  */
 object AddPDF_Util {
   
@@ -494,28 +500,29 @@ object AddPDF_Util {
    * @return								The IP Address contained in the input String as a String
    * 
    * @author James Watts
-   * Last Updated: June 5th, 2015
+   * Last Updated: June 10th, 2015
    */
   def parseOutIP(pathWithIP:String):String = 
   {
+    var ipAddress:String = ""
     if(pathWithIP.startsWith("""\\""") || pathWithIP.startsWith("""//"""))
     {
       val endpoint = (pathWithIP.substring(2)).indexOf(File.separator) + 2		// Index of the end of the IP Address
-      val ipAddress:String = pathWithIP.substring(2, endpoint)					// Get the IP Address
-      ipAddress
+      ipAddress = pathWithIP.substring(2, endpoint)								// Get the IP Address
     }
     else if(pathWithIP.startsWith("""\""") || pathWithIP.startsWith("""/"""))
     {
       val endpoint = (pathWithIP.substring(1)).indexOf(File.separator) + 1		// Index of the end of the IP Address
-      val ipAddress:String = pathWithIP.substring(1, endpoint)					// Get the IP Address
-      ipAddress
+      ipAddress = pathWithIP.substring(1, endpoint)								// Get the IP Address
     }
     else
     {
       val endpoint = pathWithIP.indexOf(File.separator)							// Index of the end of the IP Address
-      val ipAddress:String = pathWithIP.substring(0, endpoint)					// Get the IP Address
-      ipAddress
+      ipAddress = pathWithIP.substring(0, endpoint)								// Get the IP Address
     }
+    
+    /* If the 'IP Address' obtained is actually just 'C:', then return 'localhost' */
+    if(ipAddress == "C:") "localhost" else ipAddress
   }
   
   /**
@@ -540,7 +547,6 @@ object AddPDF_Util {
       case (ex:Exception) => "PDF (Could not get name) "				// Hopefully, this line should never be reached
     }
   }
-  
   
   /**
    * Depending on whether the pauseTimer is set to false or true, count() either counts down and runs the merge method 
@@ -746,6 +752,7 @@ object AddPDF_Util {
     saveSettingsToConfigFile()								// Save the current settings to the CONFIG file.
   }
  
+  
   /** 
    * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist on their respective 
    * servers.  Displays an error Dialog if any folder listed does not exist.
@@ -838,7 +845,7 @@ object AddPDF_Util {
    * @return						Boolean true if the Database exists and is valid, false if otherwise. (TODO)
    * 
    * @author James Watts
-   * Last Updated: June 5th, 2015
+   * Last Updated: June 10th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {
@@ -872,12 +879,11 @@ object AddPDF_Util {
           conn.close()
       }
     }
-    else if(	(new File(s"$dbPathName$separatorIfNeeded$dbName.mdf")).isFile()	// If a Microsoft SQL Server database...
-    		||	(new File(s"$dbPathName$separatorIfNeeded$dbName.sdf")).isFile())
+    else if((new File(s"$dbPathName$separatorIfNeeded$dbName.mdf")).isFile())		// If a Microsoft SQL Server database...
     {
       // type = MS_SQL_DATABASE
       val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-      val jdbcPrefix = """jdbc:sqlserver://"""									// TODO: Make sure this is right!!!!!
+      val jdbcPrefix = """jdbc:sqlserver://"""										// TODO: Make sure this is right!!!!!
       val databaseNamePrefix = ";databaseName="
       val ipaddress = parseOutIP(dbPath)
 

@@ -23,9 +23,11 @@ Text Fields:
 		An amount of seconds for the timer to countdown from before reporting the application's
 		status to the database.  This field must contain a positive whole number to be accepted.
 	Database:
-		The name of the database the Attach PDF application reports to.  The database must be valid 
-		to be accepted.  You may use the button on the right-hand side to select a database from a
-		file chooser dialogue.
+		The name of the database the Attach PDF application reports to.  In order for a database to
+		be considered valid it must be either a Microsoft SQL Server database (*.mdf file extension)
+		or an H2 database (*.mv.db file extension). The database must also contain the correct table
+		for the application to report to.  You may use the button on the right-hand side to select a
+		database file from a file chooser dialogue.
 	
 Check Boxes:
 	When checked, the "Inbound Folder" fields directly beneath will be included in the list of

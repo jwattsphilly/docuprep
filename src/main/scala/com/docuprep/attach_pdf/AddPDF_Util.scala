@@ -419,7 +419,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: June 5th, 2015
+   * Last Updated: June 11th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -438,7 +438,7 @@ object AddPDF_Util {
     	else if(dbType == MS_SQL_DATABASE)
     	{
     	  val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-    	  val jdbcPrefix = """jdbc:sqlserver://"""									// TODO: Make sure this is right!!!!!
+    	  val jdbcPrefix = """jdbc:sqlserver://"""									// TODO: Make sure this is right!
           val databaseNamePrefix = ";databaseName="
           val ipaddress = parseOutIP(dbPath)
           
@@ -845,7 +845,7 @@ object AddPDF_Util {
    * @return						Boolean true if the Database exists and is valid, false if otherwise. (TODO)
    * 
    * @author James Watts
-   * Last Updated: June 10th, 2015
+   * Last Updated: June 11th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {
@@ -883,7 +883,7 @@ object AddPDF_Util {
     {
       // type = MS_SQL_DATABASE
       val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-      val jdbcPrefix = """jdbc:sqlserver://"""										// TODO: Make sure this is right!!!!!
+      val jdbcPrefix = """jdbc:sqlserver://"""										// TODO: Make sure this is right!
       val databaseNamePrefix = ";databaseName="
       val ipaddress = parseOutIP(dbPath)
 
@@ -901,7 +901,6 @@ object AddPDF_Util {
       catch
       {
         case e:Exception => 				// If connection cannot be made or the database does not contain the correct table,
-          println(e.getMessage())// TODO: get rid of this
           if(SettingsIsRunning) SettingsGUI.invalidDatabaseDialog(s"$dbPathName$separatorIfNeeded$dbName", true)
           NO_TYPE							// then display a message and return a NO_TYPE.
       }

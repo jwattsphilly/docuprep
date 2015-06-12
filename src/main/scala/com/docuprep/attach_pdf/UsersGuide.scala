@@ -10,11 +10,11 @@ import AddPDF_Util.{SettingsIsRunning,guiUpdater,pauseTimerLastValue}
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: May 20th, 2014
+ * Last Updated: June 12th, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
-  private val arraySize = 40
+  private val arraySize = 42
   
   def top = new MainFrame{										// Create a new MainFrame for the User's Guide
     title = "User's Guide"										// Entitle it
@@ -67,7 +67,9 @@ object UsersGuide extends SimpleSwingApplication {
     mainPageText(36) = " "
     mainPageText(37) = " "
     mainPageText(38) = " "
-    mainPageText(39) = ""
+    mainPageText(39) = " "
+    mainPageText(40) = " "
+    mainPageText(41) = ""
     
     /* Help Text for Settings Help */
     private val settingsText = new Array[String](arraySize)
@@ -96,21 +98,23 @@ object UsersGuide extends SimpleSwingApplication {
     settingsText(22) = "        An amount of seconds for the timer to countdown from before reporting the application's"
     settingsText(23) = "        status to the database.  This field must contain a positive whole number to be accepted."
     settingsText(24) = "    Database:"
-    settingsText(25) = "        The name of the database the Attach PDF application reports to.  The database must be valid"
-    settingsText(26) = "        to be accepted.  You may use the button on the right-hand side to select a database from a"
-    settingsText(27) = "        file chooser dialogue."
-    settingsText(28) = " "
-    settingsText(29) = "Check Boxes:"
-    settingsText(30) = "    When checked, the \"Inbound Folder\" fields directly beneath will be included in the list of"
-    settingsText(31) = "    folders to be checked for .txt files.  When unchecked, the \"Inbound Folder\" fields directly"
-    settingsText(32) = "    beneath will be excluded from that list."
-    settingsText(33) = " "
-    settingsText(34) = "Buttons:"
-    settingsText(35) = "    Close:"
-    settingsText(36) = "        Safely closes the Settings application."
-    settingsText(37) = "    Apply:"
-    settingsText(38) = "        Applies any and all valid text field changes made to the to the Attach PDF application."
-    settingsText(39) = ""
+    settingsText(25) = "        The name of the database the Attach PDF application reports to.  In order for a database to"
+    settingsText(26) = "        be considered valid it must be either a Microsoft SQL Server database (*.mdf file extension)"
+    settingsText(27) = "        or an H2 database (*.mv.db file extension). The database must also contain the correct table"
+    settingsText(28) = "        for the application to report to.  You may use the button on the right-hand side to select a"
+    settingsText(29) = "        database file from a file chooser dialogue."
+    settingsText(30) = " "
+    settingsText(31) = "Check Boxes:"
+    settingsText(32) = "    When checked, the \"Inbound Folder\" fields directly beneath will be included in the list of"
+    settingsText(33) = "    folders to be checked for .txt files.  When unchecked, the \"Inbound Folder\" fields directly"
+    settingsText(34) = "    beneath will be excluded from that list."
+    settingsText(35) = " "
+    settingsText(36) = "Buttons:"
+    settingsText(37) = "    Close:"
+    settingsText(38) = "        Safely closes the Settings application."
+    settingsText(39) = "    Apply:"
+    settingsText(40) = "        Applies any and all valid text field changes made to the to the Attach PDF application."
+    settingsText(41) = ""
     
     /* Buttons */
     private val closeButton = new Button{						// Button to exit the window
@@ -166,7 +170,7 @@ object UsersGuide extends SimpleSwingApplication {
       border = Swing.EmptyBorder(20,20,20,20)
     }
     
-    size = new Dimension(610, 810)								// Set the size of the GUI window
+    size = new Dimension(610, 835)								// Set the size of the GUI window
     
     listenTo(closeButton, searchButton)							// Listen to the two buttons
     

@@ -12,9 +12,9 @@ private[attach_pdf] case class GuiRunning(guiIsRunning: Boolean)
 private[attach_pdf] case class UsersGuideRunning(usersGuideRunning:Boolean)
 private[attach_pdf] case class PauseTimer(pause: Boolean)
 
-/**An Actor object whose purpose is to update the AddPDF_GUI labels and text box, as well as all important
- * boolean fields in the AddPDF_Util.  This is to prevent race conditions encountered by multi-threading and 
- * to make sure the GUI is updated quickly and by only one thread.
+/**An Actor object whose purpose is to update the AddPDF_GUI labels and text box, as well as all important Boolean fields 
+ * in the AddPDF_Util.  This is to prevent race conditions encountered by multi-threading and to make sure the GUI is 
+ * updated quickly and by only one thread.
  * 
  * If a FilesWaiting case class is sent, the files waiting count label and files waiting text box in AddPDF_GUI are updated.
  * If an Inbound case class is sent, the inbound folder label in AddPDF_GUI is updated.
@@ -28,7 +28,7 @@ private[attach_pdf] case class PauseTimer(pause: Boolean)
  * All other messages are ignored.
  * 
  * @author James Watts
- * Last updated: May 14th, 2015
+ * Last updated: June 15th, 2015
  */
 private[attach_pdf] class LabelUpdater extends Actor {
   

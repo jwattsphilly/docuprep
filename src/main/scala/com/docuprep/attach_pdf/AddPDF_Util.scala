@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: June 10th, 2015
+ * Last Updated: June 18th, 2015
  */
 object AddPDF_Util {
   
@@ -419,7 +419,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: June 11th, 2015
+   * Last Updated: June 18th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -430,7 +430,7 @@ object AddPDF_Util {
     	{
     	  val driverClass = "org.h2.Driver"
           val jdbcPrefix = """jdbc:h2:file:"""
-            
+          
           // Get the Driver class and establish a connection to the database
           Class.forName(driverClass)			// DB pathname 									// username // password
           conn = DriverManager.getConnection(s"$jdbcPrefix$dbPath$separatorIfNeeded$databaseName", dbUser, 		dbPswd)
@@ -442,8 +442,8 @@ object AddPDF_Util {
           val databaseNamePrefix = ";databaseName="
           val ipaddress = parseOutIP(dbPath)
           
-          Class.forName(driverClass)			// DB pathname 											// username // password
-	      conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName;", 	dbUser, 	dbPswd)
+          Class.forName(driverClass)			// DB pathname 										// username // password
+	      conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName;", dbUser, 	dbPswd)
     	}
     	else if(dbType == NO_TYPE)
     	{
@@ -495,12 +495,12 @@ object AddPDF_Util {
   /**
    * When given a String folder pathname that begins with a an IP Address, this method parses out the IP Address and returns it
    * 
-   * @param pathWithIP						A String folder pathname that begins with either "//" or "\\" followed by an IP Address
+   * @param pathWithIP						A String folder pathname that begins with an IP Address (or "C:")
    * 
    * @return								The IP Address contained in the input String as a String
    * 
    * @author James Watts
-   * Last Updated: June 10th, 2015
+   * Last Updated: June 18th, 2015
    */
   def parseOutIP(pathWithIP:String):String = 
   {
@@ -609,7 +609,6 @@ object AddPDF_Util {
       guiUpdater ! ReportCount(generateCountString(timeToNextReport))
     }
   }
-  
   
   /**
    * Converts an input amount of seconds to an easy-to-read string displaying the minutes and seconds (formatted as MM:SS).
@@ -751,7 +750,6 @@ object AddPDF_Util {
     
     saveSettingsToConfigFile()								// Save the current settings to the CONFIG file.
   }
- 
   
   /** 
    * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist on their respective 
@@ -845,7 +843,7 @@ object AddPDF_Util {
    * @return						Boolean true if the Database exists and is valid, false if otherwise. (TODO)
    * 
    * @author James Watts
-   * Last Updated: June 11th, 2015
+   * Last Updated: June 18th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {
@@ -854,7 +852,7 @@ object AddPDF_Util {
     /* First check to see if the database file exists as a file and is of the right file type */
     if((new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile())	// If an H2 database...
     {
-      // type = H2_DATABASE
+      // (type = H2_DATABASE)
       var driverClass = "org.h2.Driver"
       var jdbcPrefix = """jdbc:h2:file:"""
       var conn:Connection = null
@@ -881,7 +879,7 @@ object AddPDF_Util {
     }
     else if((new File(s"$dbPathName$separatorIfNeeded$dbName.mdf")).isFile())		// If a Microsoft SQL Server database...
     {
-      // type = MS_SQL_DATABASE
+      // (type = MS_SQL_DATABASE)
       val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
       val jdbcPrefix = """jdbc:sqlserver://"""										// TODO: Make sure this is right!
       val databaseNamePrefix = ";databaseName="

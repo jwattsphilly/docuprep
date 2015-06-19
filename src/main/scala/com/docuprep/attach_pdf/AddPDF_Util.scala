@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: June 18th, 2015
+ * Last Updated: June 19th, 2015
  */
 object AddPDF_Util {
   
@@ -69,20 +69,20 @@ object AddPDF_Util {
   { currentOutboundFolders = currentOutboundFolders ::: initialOutboundFolderList.get(index) :: List() }
   
   /* Get the checkFilesTime and reportStatusTime from the CONFIG file */
-  private[attach_pdf] var checkFilesTime = config.getInt("attachPDF.checkFilesTime")
-  private[attach_pdf] var reportStatusTime = config.getInt("attachPDF.reportStatusTime")
+  private[attach_pdf] var checkFilesTime 	= config.getInt("attachPDF.checkFilesTime")
+  private[attach_pdf] var reportStatusTime	= config.getInt("attachPDF.reportStatusTime")
   
   /* Get the database info from the CONFIG file */
   private[attach_pdf] var databaseName = config.getString("attachPDF.database.name")
-  private val app = config.getString("attachPDF.database.application")
   private[attach_pdf] var dbPath = config.getString("attachPDF.database.pathname")
-  private val dbUser = config.getString("attachPDF.database.username")
-  private val dbPswd = config.getString("attachPDF.database.password")
+  private val app 	  = config.getString("attachPDF.database.application")
+  private val dbUser  =	config.getString("attachPDF.database.username")
+  private val dbPswd  =	config.getString("attachPDF.database.password")
   private val dbTable = config.getString("attachPDF.database.table")
-  private var dbType = config.getString("attachPDF.database.type") match {
-    case "H2_DATABASE"		=> H2_DATABASE
-    case "MS_SQL_DATABASE"	=> MS_SQL_DATABASE
-  	case _					=> NO_TYPE
+  private var dbType  =	config.getString("attachPDF.database.type") match {
+    					case "H2_DATABASE"		=> H2_DATABASE
+    					case "MS_SQL_DATABASE"	=> MS_SQL_DATABASE
+    					case _					=> NO_TYPE
   }
   
   /** Initialize other important fields **/
@@ -419,7 +419,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: June 18th, 2015
+   * Last Updated: June 19th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -438,7 +438,7 @@ object AddPDF_Util {
     	else if(dbType == MS_SQL_DATABASE)
     	{
     	  val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-    	  val jdbcPrefix = """jdbc:sqlserver://"""									// TODO: Make sure this is right!
+    	  val jdbcPrefix = """jdbc:sqlserver://"""
           val databaseNamePrefix = ";databaseName="
           val ipaddress = parseOutIP(dbPath)
           
@@ -451,7 +451,12 @@ object AddPDF_Util {
     	}
     	
 	    // 'trans_id' will be generated automatically, so no need to worry about that
-	    // 'last_reported' will be the current date and time (NOW())
+	    // 'last_reported' will be the current date and time
+    	// H2 databases use NOW() to receive the current date and time while MS SQL Server databases use GETDATE()
+    	val currentDateString = dbType match{
+    	  case MS_SQL_DATABASE	=> "GETDATE()"
+    	  case H2_DATABASE		=> "NOW()"
+    	}
 	    
 	    // 'machine_name' will be "PDF(" + the machine name + ")"
 	    val machineName = getMachineName()
@@ -459,9 +464,9 @@ object AddPDF_Util {
 	    val queryStatement = conn.prepareStatement(
 	        s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '$machineName'")
 	    val updateStatement = conn.prepareStatement(
-	        s"UPDATE $dbTable SET Last_Reported = NOW() WHERE Application = '$app' AND Machine_Name = '$machineName'")
+	        s"UPDATE $dbTable SET Last_Reported = $currentDateString WHERE Application = '$app' AND Machine_Name = '$machineName'")
 	    val insertStatement = conn.prepareStatement(
-	        s"INSERT INTO $dbTable (application, last_reported, machine_name, comments, status) VALUES ('$app', NOW(), '$machineName', '${" "*255}', '${" "*25}')")
+	        s"INSERT INTO $dbTable (application, last_reported, machine_name, comments, status) VALUES ('$app', $currentDateString, '$machineName', '${" "*255}', '${" "*25}')")
 	    
 	    // Query to see if the machine name (with the given application (PACKAGE CREATOR)) is in the table already
 	    val results = queryStatement.executeQuery()
@@ -665,7 +670,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated June 3rd, 2015
+   * Last Updated: June 19th, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -843,7 +848,7 @@ object AddPDF_Util {
    * @return						Boolean true if the Database exists and is valid, false if otherwise. (TODO)
    * 
    * @author James Watts
-   * Last Updated: June 18th, 2015
+   * Last Updated: June 19th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {
@@ -881,7 +886,7 @@ object AddPDF_Util {
     {
       // (type = MS_SQL_DATABASE)
       val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-      val jdbcPrefix = """jdbc:sqlserver://"""										// TODO: Make sure this is right!
+      val jdbcPrefix = """jdbc:sqlserver://"""
       val databaseNamePrefix = ";databaseName="
       val ipaddress = parseOutIP(dbPath)
 

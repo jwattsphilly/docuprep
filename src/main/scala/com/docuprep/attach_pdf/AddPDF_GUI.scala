@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: May 29th, 2015
+ * Last Updated: June 19th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -31,7 +31,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
     title = "Attach PDF Document"								// Add a title
     
     peer.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
-    override def closeOperation()								// Safely quit the whole application if neither the Settings
+    override def closeOperation()								// Safely quit the whole application only if neither the Settings
     { 															// nor User's Guide GUIs are running
       if(!SettingsIsRunning && !UsersGuideIsRunning) closeGUISafely()
     }
@@ -78,7 +78,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
       contents+=Swing.VStrut(375)								// Add a large vertical space to position the buttons at the bottom
       contents+=new BoxPanel(Orientation.Horizontal){			// of the GUI
         contents+=pauseButton
-        contents+=Swing.HStrut(5)
+        contents+=Swing.HStrut(5)								// A little horizontal space between the two buttons
         contents+=closeButton
       }
     }
@@ -125,9 +125,6 @@ object AddPDF_GUI extends SimpleSwingApplication {
     menuBar = new MenuBar {										// Add a menu bar 
       contents += new Menu("File") 								// Add a menu entitled "File"
       {
-        contents += new MenuItem(Action("Exit")					// Add an "Exit" menu option that exits the application
-          {if(!SettingsIsRunning && !UsersGuideIsRunning) 
-            closeGUISafely()})				
         contents += new MenuItem(Action("Settings"){			// Add a "Settings" menu option
           if(!SettingsIsRunning)								// If there's not already a SettingsGUI application running...
           {
@@ -136,6 +133,9 @@ object AddPDF_GUI extends SimpleSwingApplication {
         	SettingsGUI.startup(inputStringArray)				// and run the SettingsGUI application
           }
         })
+        contents += new MenuItem(Action("Exit")					// Add an "Exit" menu option that exits the application
+          {if(!SettingsIsRunning && !UsersGuideIsRunning)
+            closeGUISafely()})
       }
       contents += new Menu("Help")								// Add a second menu entitled "Help"
       {

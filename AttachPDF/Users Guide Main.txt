@@ -1,10 +1,10 @@
 Main Page Help:
 
 Menu Bars:
-	File -> Exit:
-		Safely closes the Attach PDF application.
 	File -> Settings:
 		Opens the Settings Graphic User Interface.  When Settings is running, the timers are paused.
+	File -> Exit:
+		Safely closes the Attach PDF application.
 	Help -> User's Guide:
 		Opens the interactive User's Guide for the Attach PDF application.  When the User's Guide
 		is running, the timers are paused.

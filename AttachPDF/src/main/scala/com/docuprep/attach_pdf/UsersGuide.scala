@@ -10,7 +10,7 @@ import AddPDF_Util.{SettingsIsRunning,guiUpdater,pauseTimerLastValue}
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: June 12th, 2014
+ * Last Updated: June 23rd, 2014
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -31,10 +31,10 @@ object UsersGuide extends SimpleSwingApplication {
     mainPageText(0)  = "Main Page Help:"
     mainPageText(1)  = " "
     mainPageText(2)  = "Menu Bars:"
-    mainPageText(3)  = "    File -> Exit:"
-    mainPageText(4)  = "        Safely closes the Attach PDF application."
-    mainPageText(5)  = "    File -> Settings:"
-    mainPageText(6)  = "        Opens the Settings Graphic User Interface.  When Settings is running, the timers are paused."
+    mainPageText(3)  = "    File -> Settings:"
+    mainPageText(4)  = "        Opens the Settings Graphic User Interface.  When Settings is running, the timers are paused."
+    mainPageText(5)  = "    File -> Exit:"
+    mainPageText(6)  = "        Safely closes the Attach PDF application."
     mainPageText(7)  = "    Help -> User's Guide:"
     mainPageText(8)  = "        Opens the interactive User's Guide for the Attach PDF application.  When the User's Guide"
     mainPageText(9)  = "        is running, the timers are paused."

@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: June 10th, 2015
+ * Last Updated: June 23rd, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -93,8 +93,8 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       columns = 10
     }
     
-    // Check Boxes
-    private val inbound2CheckBox = new CheckBox{selected = box2checked}	// Initialize all check boxes to their most recent state
+    // Check Boxes (initialize all to their most recent state)
+    private val inbound2CheckBox = new CheckBox{selected = box2checked}
     private val inbound3CheckBox = new CheckBox{selected = box3checked}
     private val inbound4CheckBox = new CheckBox{selected = box4checked}
     

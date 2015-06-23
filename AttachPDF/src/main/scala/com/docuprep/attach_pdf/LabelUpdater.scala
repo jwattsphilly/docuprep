@@ -28,7 +28,7 @@ private[attach_pdf] case class PauseTimer(pause: Boolean)
  * All other messages are ignored.
  * 
  * @author James Watts
- * Last updated: June 15th, 2015
+ * Last updated: June 23rd, 2015
  */
 private[attach_pdf] class LabelUpdater extends Actor {
   
@@ -40,7 +40,7 @@ private[attach_pdf] class LabelUpdater extends Actor {
         AddPDF_GUI.filesWaitingCountLabel.text =						// Update the files waiting count label
           if(count==1) "1 file waiting" 
           else s"$count files waiting"
-        AddPDF_GUI.filesWaitingListBox.text = fileList.mkString("\n")	// And Update the list of files waiting
+        AddPDF_GUI.filesWaitingListBox.text = fileList.mkString("\n")	// And update the list of files waiting
       }
     
     /* Request to update the Inbound Folder label */
@@ -80,7 +80,7 @@ private[attach_pdf] class LabelUpdater extends Actor {
       AddPDF_Util.GuiIsRunning = false									// Set the AddPDF_Util Boolean fields to false
       AddPDF_Util.SettingsIsRunning = false
       AddPDF_Util.UsersGuideIsRunning = false
-      //context.stop(self)												// Stop the current Actor
+      //context.stop(self)												// Stop the current Actor (not used)
       context.system.shutdown()											// Shutdown the Actor System
     
     /* Any other (unknown) request */

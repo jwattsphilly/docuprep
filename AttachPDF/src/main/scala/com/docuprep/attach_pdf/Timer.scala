@@ -1,7 +1,7 @@
 package com.docuprep.attach_pdf
 
 /**A Timer object that uses a Java Swing Timer to perform an input operation (op) every given amount of milliseconds 
- * (millisToCheck).  To be used as new Timer(millisToCheck)(op).
+ * (millisToCheck).  To be used as: "new Timer(millisToCheck)(op)".
  * 
  * @param millisToCheck				An amount in milliseconds denoting how frequently to run the input operation op
  * 
@@ -9,9 +9,9 @@ package com.docuprep.attach_pdf
  * 									milliseconds
  * 
  * @author James Watts
- * Last Updated: March 20th, 2015
+ * Last Updated: June 23rd, 2015
  */
-protected[attach_pdf] class Timer (millisToCheck: Int)(op: => Unit){
+protected[attach_pdf] class Timer(millisToCheck: Int)(op: => Unit){
   
   private val action = new javax.swing.AbstractAction 					// Create a new Java AbstractAction for the Java Timer
   { def actionPerformed(ev: java.awt.event.ActionEvent) = op }			// Define its action performed to be op

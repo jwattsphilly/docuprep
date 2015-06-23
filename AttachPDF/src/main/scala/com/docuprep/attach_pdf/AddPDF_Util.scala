@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: June 19th, 2015
+ * Last Updated: June 23rd, 2015
  */
 object AddPDF_Util {
   
@@ -172,15 +172,15 @@ object AddPDF_Util {
    *   	3. either "Begin" or "End", denoting whether to attach the first file to the beginning or end of the original.
    * The two PDF files (if they exist) are combined in the desired order to create a new PDF file, which replaces the original 
    * (or "to be added to") file.  The new combined file is then copied into the locations provided in the destinationPathNames 
-   * input (one typically being the original file's location).  Both the "to be added" and the original "to be added to" files 
-   * are deleted, as well as the .txt file, leaving only the newly combined PDF file.
+   * input.  Both the "to be added" and the original "to be added to" files are deleted, as well as the .txt file, leaving only 
+   * the newly combined PDF file.
    * 
    * @param inboundFolder:					a String pathname of the folder to search for the .txt file
    * 
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: May 8th, 2015
+   * Last Updated: June 23rd, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {    
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
@@ -419,7 +419,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: June 19th, 2015
+   * Last Updated: June 23rd, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -447,6 +447,7 @@ object AddPDF_Util {
     	}
     	else if(dbType == NO_TYPE)
     	{
+    	  logger.warn("No database to report status to")
     	  return
     	}
     	
@@ -499,13 +500,14 @@ object AddPDF_Util {
   
   /**
    * When given a String folder pathname that begins with a an IP Address, this method parses out the IP Address and returns it
+   * as a String.
    * 
    * @param pathWithIP						A String folder pathname that begins with an IP Address (or "C:")
    * 
    * @return								The IP Address contained in the input String as a String
    * 
    * @author James Watts
-   * Last Updated: June 18th, 2015
+   * Last Updated: June 23rd, 2015
    */
   def parseOutIP(pathWithIP:String):String = 
   {
@@ -670,7 +672,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated: June 19th, 2015
+   * Last Updated: June 23rd, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -750,8 +752,8 @@ object AddPDF_Util {
 	  dbType = tempDbType
     }
     
-    guiUpdater ! Inbound(currentInboundFolders(0))			// Send a message to the LabelUpdater to update the
-    														// inboundFolderLabel to include the first currentInboundFolder.
+    guiUpdater ! Inbound(currentInboundFolders(0))			// Send a message to the LabelUpdater to update the inboundFolderLabel
+    														// to include the first currentInboundFolder.
     
     saveSettingsToConfigFile()								// Save the current settings to the CONFIG file.
   }

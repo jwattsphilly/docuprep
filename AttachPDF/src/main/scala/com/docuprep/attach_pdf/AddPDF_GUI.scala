@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: June 19th, 2015
+ * Last Updated: June 23rd, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -128,7 +128,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
         contents += new MenuItem(Action("Settings"){			// Add a "Settings" menu option
           if(!SettingsIsRunning)								// If there's not already a SettingsGUI application running...
           {
-            if(!UsersGuideIsRunning) guiUpdater ! PauseTimer(true)// When "Settings" is clicked, pause the timer,
+            if(!UsersGuideIsRunning) guiUpdater!PauseTimer(true)// When "Settings" is clicked, pause the timer,
             guiUpdater ! SettingsRunning(true)					// set the SettingsIsRunning flag to true,
         	SettingsGUI.startup(inputStringArray)				// and run the SettingsGUI application
           }
@@ -142,7 +142,7 @@ object AddPDF_GUI extends SimpleSwingApplication {
         contents += new MenuItem(Action("User's Guide"){
           if(!UsersGuideIsRunning)								// If there's not already a UsersGuide application running...
           {
-            if(!SettingsIsRunning) guiUpdater ! PauseTimer(true)// When "User's Guide" is clicked, pause the timer,
+            if(!SettingsIsRunning) guiUpdater!PauseTimer(true)	// When "User's Guide" is clicked, pause the timer,
             guiUpdater ! UsersGuideRunning(true)				// set the UsersGuideIsRunning flag to true,
             UsersGuide.startup(inputStringArray)				// and run the UsersGuide application
           }

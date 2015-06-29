@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: June 23rd, 2015
+ * Last Updated: June 29th, 2015
  */
 object AddPDF_Util {
   
@@ -75,7 +75,6 @@ object AddPDF_Util {
   /* Get the database info from the CONFIG file */
   private[attach_pdf] var databaseName = config.getString("attachPDF.database.name")
   private[attach_pdf] var dbPath = config.getString("attachPDF.database.pathname")
-  private val app 	  = config.getString("attachPDF.database.application")
   private val dbUser  =	config.getString("attachPDF.database.username")
   private val dbPswd  =	config.getString("attachPDF.database.password")
   private val dbTable = config.getString("attachPDF.database.table")
@@ -84,6 +83,9 @@ object AddPDF_Util {
     					case "MS_SQL_DATABASE"	=> MS_SQL_DATABASE
     					case _					=> NO_TYPE
   }
+  private var tempApp = config.getString("attachPDF.database.application")
+		  	  tempApp = if(tempApp.length > 25) tempApp.substring(0,25) else tempApp
+  private val app 	  = s"$tempApp${" " * (25-tempApp.length())}"	// Make sure the application's name is exactly 25 characters long
   
   /** Initialize other important fields **/
   // GUI Label Updater (Actor)

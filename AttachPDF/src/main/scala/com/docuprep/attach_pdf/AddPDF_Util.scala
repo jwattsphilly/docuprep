@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: June 29th, 2015
+ * Last Updated: June 30th, 2015
  */
 object AddPDF_Util {
   
@@ -73,8 +73,8 @@ object AddPDF_Util {
   private[attach_pdf] var reportStatusTime	= config.getInt("attachPDF.reportStatusTime")
   
   /* Get the database info from the CONFIG file */
-  private[attach_pdf] var databaseName = config.getString("attachPDF.database.name")
-  private[attach_pdf] var dbPath = config.getString("attachPDF.database.pathname")
+  private[attach_pdf] var databaseName 	= config.getString("attachPDF.database.name")
+  private[attach_pdf] var dbPath 		= config.getString("attachPDF.database.pathname")
   private val dbUser  =	config.getString("attachPDF.database.username")
   private val dbPswd  =	config.getString("attachPDF.database.password")
   private val dbTable = config.getString("attachPDF.database.table")
@@ -101,14 +101,14 @@ object AddPDF_Util {
   private[attach_pdf] var pauseTimer = false								// Start with the timer running
   private[attach_pdf] var pauseTimerLastValue = false
   
+  /* Flag for whether or not the GUI (AddPDF_GUI) is currently running.  This is for testing purposes so that the application can 
+   * be run/tested without running the GUI. */
+  private[attach_pdf] var GuiIsRunning = false
+  
   /* Flag for whether or not a Settings GUI Application is currently running.  This is to ensure that only one Settings
    * Application can run at a time and that the main AddPDF GUI Application cannot be closed while that Settings Application
    * is running. */
   private[attach_pdf] var SettingsIsRunning = false
-  
-  /* Flag for whether or not the GUI (AddPDF_GUI) is currently running.  This is for testing purposes so that the application can 
-   * be run/tested without running the GUI. */
-  private[attach_pdf] var GuiIsRunning = false
   
   /* Flag for whether or not a User's Guide GUI Application is currently running.  This is to ensure that only one User's Guide
    * Application can run at a time and that the main AddPDF GUI Application cannot be closed while that User's Guide Application
@@ -421,7 +421,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: June 23rd, 2015
+   * Last Updated: June 30th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -456,7 +456,7 @@ object AddPDF_Util {
 	    // 'trans_id' will be generated automatically, so no need to worry about that
 	    // 'last_reported' will be the current date and time
     	// H2 databases use NOW() to receive the current date and time while MS SQL Server databases use GETDATE()
-    	val currentDateString = dbType match{
+    	val currentDateFunction = dbType match{
     	  case MS_SQL_DATABASE	=> "GETDATE()"
     	  case H2_DATABASE		=> "NOW()"
     	}
@@ -467,9 +467,9 @@ object AddPDF_Util {
 	    val queryStatement = conn.prepareStatement(
 	        s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '$machineName'")
 	    val updateStatement = conn.prepareStatement(
-	        s"UPDATE $dbTable SET Last_Reported = $currentDateString WHERE Application = '$app' AND Machine_Name = '$machineName'")
+	        s"UPDATE $dbTable SET Last_Reported = $currentDateFunction WHERE Application = '$app' AND Machine_Name = '$machineName'")
 	    val insertStatement = conn.prepareStatement(
-	        s"INSERT INTO $dbTable (application, last_reported, machine_name, comments, status) VALUES ('$app', $currentDateString, '$machineName', '${" "*255}', '${" "*25}')")
+	        s"INSERT INTO $dbTable (application, last_reported, machine_name, comments, status) VALUES ('$app', $currentDateFunction, '$machineName', '${" "*255}', '${" "*25}')")
 	    
 	    // Query to see if the machine name (with the given application (PACKAGE CREATOR)) is in the table already
 	    val results = queryStatement.executeQuery()

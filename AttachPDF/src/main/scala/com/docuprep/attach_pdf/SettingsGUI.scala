@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: June 23rd, 2015
+ * Last Updated: July 2nd, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -288,16 +288,16 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * the database file is found in.
      * 
      * @author James Watts
-     * Last Updated June 10th, 2015
+     * Last Updated July 2nd, 2015
      */
     private def databaseSelectionDialog()
     {
       val temp = tempDatabasePath
       
       /* Create a FileChooser for the user to select the database from. */
-      val filechooser = new FileChooser(new java.io.File(s"${temp}"))
+      val filechooser = new FileChooser(new java.io.File(temp))
       filechooser.fileSelectionMode = FileChooser.SelectionMode.FilesOnly
-      filechooser.fileFilter = new javax.swing.filechooser.FileNameExtensionFilter("Database", "db", "mdf") // Database files only
+      filechooser.fileFilter = new javax.swing.filechooser.FileNameExtensionFilter("Database", "db", "mdf") // Valid database files only
       
       if(filechooser.showDialog(null, "Select") == FileChooser.Result.Approve)
       {
@@ -310,7 +310,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
         nameWithoutExtension = nameWithoutExtension.stripSuffix(".MDF")
         
         databaseText.text = nameWithoutExtension
-        tempDatabasePath = s"${filechooser.selectedFile.toString.stripSuffix(nameOfDB)}"
+        tempDatabasePath = filechooser.selectedFile.toString.stripSuffix(nameOfDB)
       }
     }
     
@@ -419,7 +419,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
    * @param dbExists					Boolean denoting if the database file exists in the file system or not.
    * 
    * @author James Watts
-   * Last Updated: May 22nd, 2015
+   * Last Updated: July 2nd, 2015
    */
   protected[attach_pdf] def invalidDatabaseDialog(dbPathWithName:String, dbExists:Boolean)
   {
@@ -429,7 +429,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     
     Dialog.showMessage(top.contents.head,
         s"$dbPathWithName is not a valid database!  $messagePart2",
-        title = s"Database name invalid",
+        title = "Database name invalid",
         messageType = Dialog.Message.Error)
   }
 }

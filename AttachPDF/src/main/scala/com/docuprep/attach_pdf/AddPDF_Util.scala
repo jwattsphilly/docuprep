@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: June 30th, 2015
+ * Last Updated: July 2nd, 2015
  */
 object AddPDF_Util {
   
@@ -421,7 +421,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: June 30th, 2015
+   * Last Updated: July 2nd, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -490,7 +490,7 @@ object AddPDF_Util {
     }
     catch
     {
-      case e:Exception => logger.error(s"Problem connecting to the database: ${e.getMessage}")
+      case e:Exception => logger.error(s"Problem connecting to the database: ${e.getMessage}\n")
     }
     finally
     {
@@ -706,7 +706,7 @@ object AddPDF_Util {
      * currentOutboundFolders lists to be the new inputs.  Otherwise, they will remain unchanged. */
     if(checkFolderValidity(tempInboundList, tempOutboundList) && checkFolderDuplicates(tempInboundList, tempOutboundList))
     {
-      currentInboundFolders = tempInboundList
+      currentInboundFolders	 = tempInboundList
       currentOutboundFolders = tempOutboundList
       
       /* Update status of checked/unchecked boxes:									*

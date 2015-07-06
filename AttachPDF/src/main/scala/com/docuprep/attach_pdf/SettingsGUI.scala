@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: July 2nd, 2015
+ * Last Updated: July 6th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -288,14 +288,12 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * the database file is found in.
      * 
      * @author James Watts
-     * Last Updated July 2nd, 2015
+     * Last Updated July 6th, 2015
      */
     private def databaseSelectionDialog()
     {
-      val temp = tempDatabasePath
-      
       /* Create a FileChooser for the user to select the database from. */
-      val filechooser = new FileChooser(new java.io.File(temp))
+      val filechooser = new FileChooser(new java.io.File(tempDatabasePath))
       filechooser.fileSelectionMode = FileChooser.SelectionMode.FilesOnly
       filechooser.fileFilter = new javax.swing.filechooser.FileNameExtensionFilter("Database", "db", "mdf") // Valid database files only
       

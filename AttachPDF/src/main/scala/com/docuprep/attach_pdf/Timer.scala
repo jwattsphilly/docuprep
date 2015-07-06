@@ -9,7 +9,7 @@ package com.docuprep.attach_pdf
  * 									milliseconds
  * 
  * @author James Watts
- * Last Updated: June 23rd, 2015
+ * Last Updated: July 6th, 2015
  */
 protected[attach_pdf] class Timer(millisToCheck: Int)(op: => Unit){
   
@@ -26,7 +26,7 @@ protected[attach_pdf] class Timer(millisToCheck: Int)(op: => Unit){
    * Method used to stop the Timer
    * 
    * @author James Watts
-   * Last Updated: February 2nd, 2014
+   * Last Updated: July 6th, 2015
    */
   def stopTimer:Unit = {
     timer.setRepeats(false)												// Set repeats to false

@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: July 2nd, 2015
+ * Last Updated: July 6th, 2015
  */
 object AddPDF_Util {
   
@@ -182,7 +182,7 @@ object AddPDF_Util {
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: June 23rd, 2015
+   * Last Updated: July 3rd, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {    
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
@@ -215,11 +215,11 @@ object AddPDF_Util {
 	    
 	    // Find FileToAttach = infoList(0)
 	    val FileToAttach:File = new File(infoList(0).trim())
-    	if (!FileToAttach.isFile()){								// If the File to Attach is not a valid file
+    	if(!FileToAttach.isFile()){									// If the File to Attach is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new FileNotFoundException(s"File not found: $FileToAttach")
     	}
-    	if (!infoList(0).toLowerCase.endsWith(".pdf")){				// If the File to Attach is not a .pdf file
+    	if(!infoList(0).toLowerCase.endsWith(".pdf")){				// If the File to Attach is not a .pdf file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new IllegalArgumentException("""File To Attach is not in the form ".pdf"""")
     	}
@@ -227,11 +227,11 @@ object AddPDF_Util {
     	
 	    // OriginalFile = infoList(1)
 	    val OriginalFile:File = new File(infoList(1).trim())
-    	if (!OriginalFile.isFile()){								// If the Original File is not a valid file
+    	if(!OriginalFile.isFile()){									// If the Original File is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new FileNotFoundException(s"File not found: $OriginalFile")
     	}
-    	if (!infoList(1).toLowerCase.endsWith(".pdf")){				// If the Original File is not a .pdf file
+    	if(!infoList(1).toLowerCase.endsWith(".pdf")){				// If the Original File is not a .pdf file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new IllegalArgumentException("""Original File is not in the form ".pdf"""")
     	}
@@ -421,14 +421,14 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: July 2nd, 2015
+   * Last Updated: July 3rd, 2015
    */
   def reportStatus() {
     var conn:Connection = null
     try{
     	val separatorIfNeeded = if(dbPath.endsWith("/") || dbPath.endsWith("\\")) "" else File.separator
     	
-    	if (dbType == H2_DATABASE)
+    	if(dbType == H2_DATABASE)
     	{
     	  val driverClass = "org.h2.Driver"
           val jdbcPrefix = """jdbc:h2:file:"""
@@ -539,7 +539,7 @@ object AddPDF_Util {
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
    * 
    * @author James Watts
-   * Last Updated: May 19th, 2014
+   * Last Updated: July 6th, 2015
    */
   def getMachineName():String = 
   {
@@ -548,7 +548,7 @@ object AddPDF_Util {
       val machineName = s"PDF ($compName)"								// Surround it with "PDF (" and ")"
       
       // Account for a machine name that's too long
-      val returnName = if (machineName.length > 25) (s"${machineName.substring(0, 24)})") else machineName
+      val returnName = if(machineName.length > 25) (s"${machineName.substring(0, 24)})") else machineName
       val paddingAmount = (25 - returnName.length())					// Calculate the amount of needed padding
       s"$returnName${" " * paddingAmount}"								// Return the machine name with the padding
     }

@@ -10,7 +10,7 @@ import AddPDF_Util.{SettingsIsRunning,guiUpdater,pauseTimerLastValue}
  * Graphic User Interface for the User's Guide for the AddPDF application
  * 
  * @author James Watts
- * Last Updated: June 23rd, 2014
+ * Last Updated: July 6th, 2015
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -189,11 +189,12 @@ object UsersGuide extends SimpleSwingApplication {
     }
     
     /**
-     * Unpauses the timer (if Settings GUI is not also running) and closes the User's Guide window.
-     * This method is called when either the close button or the red X in the corner is pressed.
+     * Sets the timer to its most recent value (if Settings GUI is not also running) and closes the 
+     * User's Guide window.  This method is called when either the close button or the red X in the 
+     * corner is pressed.
      * 
      * @author James Watts
-     * Last Updated: May 8th, 2014
+     * Last Updated: July 6th, 2015
      */
     private def closeUsersGuide()
     {

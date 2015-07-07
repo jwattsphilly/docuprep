@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: July 6th, 2015
+ * Last Updated: July 7th, 2015
  */
 object AddPDF_Util {
   
@@ -182,7 +182,7 @@ object AddPDF_Util {
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: July 3rd, 2015
+   * Last Updated: July 7th, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {    
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
@@ -205,8 +205,8 @@ object AddPDF_Util {
         return
     }
     
-    for(txtfile<-filesList if txtfile.getName.endsWith(".txt"))		// Find all .txt files and iterate through each
-    {
+    for(txtfile<-filesList if txtfile.getName.endsWith(".txt"))		// Find all .txt files in the inbound folder
+    {																// and iterate through each
       try{
 	    // Read from the .txt file:
     	val txtSrc = Source.fromFile(txtfile)
@@ -214,7 +214,7 @@ object AddPDF_Util {
 	    logger.info(s"Source Text File: $txtfile")
 	    
 	    // Find FileToAttach = infoList(0)
-	    val FileToAttach:File = new File(infoList(0).trim())
+	    val FileToAttach = new File(infoList(0).trim())
     	if(!FileToAttach.isFile()){									// If the File to Attach is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new FileNotFoundException(s"File not found: $FileToAttach")
@@ -226,7 +226,7 @@ object AddPDF_Util {
     	logger.debug(s"File to Attach: $FileToAttach")
     	
 	    // OriginalFile = infoList(1)
-	    val OriginalFile:File = new File(infoList(1).trim())
+	    val OriginalFile = new File(infoList(1).trim())
     	if(!OriginalFile.isFile()){									// If the Original File is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new FileNotFoundException(s"File not found: $OriginalFile")
@@ -238,7 +238,7 @@ object AddPDF_Util {
     	logger.debug(s"Original File: $OriginalFile")
     	
 	    // Begin/End = infoList(2)
-	    val BeginEnd:String = infoList(2).toLowerCase.trim()
+	    val BeginEnd = infoList(2).toLowerCase.trim()
 	    if(!(BeginEnd.equals("begin") || BeginEnd.equals("end"))){	// The third string must be "Begin" or "End" (case does not matter)
 	      txtSrc.close()											// Otherwise, close the txtSrc and throw an exception
 	      throw new IllegalArgumentException("""Third String must by "Begin" or "End"""")
@@ -376,11 +376,11 @@ object AddPDF_Util {
    * If the timer is running, this method loops through the folders in currentInboundFolders and runs the countTextFiles 
    * method on each inbound folder in order to obtain a set and count of all .txt files contained within the inbound folders.
    * 
-   * This information is then passed in a message to the LabelUpdator so it can update the filesWaitingCountLabel 
-   * and filesWaitingListBox.
+   * This information is then passed in a message to the LabelUpdator so it can update the filesWaitingCountLabel and 
+   * filesWaitingListBox.
    * 
    * @author James Watts
-   * Last Updated: March 30th, 2015
+   * Last Updated: July 7th, 2015
    */
   private def updateFilesWaiting() {
     if(!pauseTimer)	{											// If the pauseTimer flag is false (the timer is running)
@@ -421,7 +421,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: July 3rd, 2015
+   * Last Updated: July 7th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -486,7 +486,6 @@ object AddPDF_Util {
 	    }
 	    
 	    logger.debug("Reported Status to Database")
-//	    println("I'm working :)")	// Helpful console message
     }
     catch
     {
@@ -509,11 +508,11 @@ object AddPDF_Util {
    * @return								The IP Address contained in the input String as a String
    * 
    * @author James Watts
-   * Last Updated: June 23rd, 2015
+   * Last Updated: July 7th, 2015
    */
   def parseOutIP(pathWithIP:String):String = 
   {
-    var ipAddress:String = ""
+    var ipAddress = ""
     if(pathWithIP.startsWith("""\\""") || pathWithIP.startsWith("""//"""))
     {
       val endpoint = (pathWithIP.substring(2)).indexOf(File.separator) + 2		// Index of the end of the IP Address
@@ -627,14 +626,14 @@ object AddPDF_Util {
    * @return					A String representation of minutes and seconds for a timer label
    * 
    * @author James Watts
-   * Last Updated: April 10th, 2015
+   * Last Updated: July 7th, 2015
    */
   def generateCountString(time:Int):String = {
     val minutes = time/60										// Get the minutes and seconds based off of the input time
     val seconds = time%60
     
-    val minutesString:String = if(minutes>9) minutes.toString else s"0$minutes"
-    val secondsString:String = if(seconds>9) seconds.toString else s"0$seconds"
+    val minutesString = if(minutes>9) minutes.toString else s"0$minutes"
+    val secondsString = if(seconds>9) seconds.toString else s"0$seconds"
     
     s"$minutesString:$secondsString"							// Return the count string formatted as MM:SS
 //    s"${if(minutes>9) minutes.toString else s"0$minutes"}:${if(seconds>9) seconds.toString else s"0$seconds"}" // Alternate method
@@ -849,10 +848,10 @@ object AddPDF_Util {
    * @param dbPathName				String pathname of the folder the Database is found in.
    * @param dbName					String name of Database to report to.
    * 
-   * @return						Boolean true if the Database exists and is valid, false if otherwise. (TODO)
+   * @return						Boolean true if the Database exists and is valid, false if otherwise.
    * 
    * @author James Watts
-   * Last Updated: June 19th, 2015
+   * Last Updated: July 7th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {

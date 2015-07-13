@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: July 7th, 2015
+ * Last Updated: July 13th, 2015
  */
 object AddPDF_Util {
   
@@ -65,7 +65,7 @@ object AddPDF_Util {
   /* Get the outbound folders from the CONFIG file */
   private val initialOutboundFolderList = config.getStringList("attachPDF.OutboundFolders")
   private[attach_pdf] var currentOutboundFolders = List[String]()
-  for(index <- 0 until initialOutboundFolderList.size())
+  for(index <- 0 until initialOutboundFolderList.size)
   { currentOutboundFolders = currentOutboundFolders ::: initialOutboundFolderList.get(index) :: List() }
   
   /* Get the checkFilesTime and reportStatusTime from the CONFIG file */
@@ -85,7 +85,7 @@ object AddPDF_Util {
   }
   private var tempApp = config.getString("attachPDF.database.application")
 		  	  tempApp = if(tempApp.length > 25) tempApp.substring(0,25) else tempApp
-  private val app 	  = s"$tempApp${" " * (25-tempApp.length())}"	// Make sure the application's name is exactly 25 characters long
+  private val app 	  = s"$tempApp${" " * (25-tempApp.length)}"		// Make sure the application's name is exactly 25 characters long
   
   /** Initialize other important fields **/
   // GUI Label Updater (Actor)
@@ -161,7 +161,6 @@ object AddPDF_Util {
 //      if(new File(inboundFoldersMyPC(index)) isDirectory)
 //    	  merge(inboundFoldersMyPC(index), PDFFoldersMyPC)
 //    }
-    
   }
   
   /**
@@ -182,7 +181,7 @@ object AddPDF_Util {
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: July 7th, 2015
+   * Last Updated: July 13th, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {    
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
@@ -195,7 +194,7 @@ object AddPDF_Util {
       filesList = (new File(inboundFolder)).listFiles				// Obtain all the contents of the inbound folder
     }
     catch{
-      case ex:FileNotFoundException => 								// If inbound folder could not be opened,
+      case ex:FileNotFoundException => 								// If the inbound folder could not be opened or found,
         logger.error(s"${ex.getMessage()}\n")						// Log the error, pause the timer, and return
         guiUpdater ! PauseTimer(true)
         return
@@ -215,7 +214,7 @@ object AddPDF_Util {
 	    
 	    // Find FileToAttach = infoList(0)
 	    val FileToAttach = new File(infoList(0).trim())
-    	if(!FileToAttach.isFile()){									// If the File to Attach is not a valid file
+    	if(!FileToAttach.isFile){									// If the File to Attach is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new FileNotFoundException(s"File not found: $FileToAttach")
     	}
@@ -227,7 +226,7 @@ object AddPDF_Util {
     	
 	    // OriginalFile = infoList(1)
 	    val OriginalFile = new File(infoList(1).trim())
-    	if(!OriginalFile.isFile()){									// If the Original File is not a valid file
+    	if(!OriginalFile.isFile){									// If the Original File is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
     	  throw new FileNotFoundException(s"File not found: $OriginalFile")
     	}
@@ -293,22 +292,28 @@ object AddPDF_Util {
 	      AppendSrc.close
 	      AppendPDF.close
 	      Append.delete
+	      logger.debug("Append PDF deleted")
 	    }
 	    else
 	    {
 	      MasterSrc.close
 	      MasterPDF.close
 	      Master.delete
+	      logger.debug("Master PDF deleted")
 	    }
 	    
     	// Merge the files (Here's where the real magic happens)
 	    merger.mergeDocuments()
 	    
 	    val combinedFile = new File(s"${destinationPathNames(0)}$folderSeparator$ParsedOriginalName")
+	    logger.debug(s"Merged File ($ParsedOriginalName) copied into ${destinationPathNames(0)}")
 	    
 	    /* Copy new Combined File into the other 3 destination locations: */
 	    for(i <- 1 until destinationPathNames.size)
+	    {
 	      FileUtils.copyFile(combinedFile, new File(s"${destinationPathNames(i)}$folderSeparator$ParsedOriginalName"))
+	      logger.debug(s"Merged File ($ParsedOriginalName) copied into ${destinationPathNames(i)}")
+	    }
 	    
     	// Close and Delete File to Attach
 	    if(beginTrue)
@@ -316,16 +321,19 @@ object AddPDF_Util {
 	      MasterSrc.close
 	      MasterPDF.close
 	      Master.delete
+	      logger.debug("Master PDF deleted")
 	    }
 	    else
 	    {
 	      AppendSrc.close
 	      AppendPDF.close
 	      Append.delete
+	      logger.debug("Append PDF deleted")
 	    }
 	    
 	    // Finally, delete the .txt file
 	    txtfile.delete
+	    logger.debug("Text file deleted")
 	    
 	    logger.info("Merge Successful")
       }
@@ -368,7 +376,7 @@ object AddPDF_Util {
    * @return								The original raw String without any quotation marks
    * 
    * @author James Watts
-   * Last Updated: November 13th, 2014
+   * Last Updated: July 8th, 2015
    */
   private def deleteQuotes(line: String) = line.replaceAll(""""""", "")
   
@@ -445,7 +453,7 @@ object AddPDF_Util {
           val ipaddress = parseOutIP(dbPath)
           
           Class.forName(driverClass)			// DB pathname 										// username // password
-	      conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName;", dbUser, 	dbPswd)
+	      conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName", dbUser, 	dbPswd)
     	}
     	else if(dbType == NO_TYPE)
     	{
@@ -538,7 +546,7 @@ object AddPDF_Util {
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
    * 
    * @author James Watts
-   * Last Updated: July 6th, 2015
+   * Last Updated: July 13th, 2015
    */
   def getMachineName():String = 
   {
@@ -548,7 +556,7 @@ object AddPDF_Util {
       
       // Account for a machine name that's too long
       val returnName = if(machineName.length > 25) (s"${machineName.substring(0, 24)})") else machineName
-      val paddingAmount = (25 - returnName.length())					// Calculate the amount of needed padding
+      val paddingAmount = (25 - returnName.length)						// Calculate the amount of needed padding
       s"$returnName${" " * paddingAmount}"								// Return the machine name with the padding
     }
     catch{
@@ -851,14 +859,14 @@ object AddPDF_Util {
    * @return						Boolean true if the Database exists and is valid, false if otherwise.
    * 
    * @author James Watts
-   * Last Updated: July 7th, 2015
+   * Last Updated: July 13th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {
     val separatorIfNeeded = if(dbPathName.endsWith("/") || dbPathName.endsWith("\\")) "" else File.separator
     
     /* First check to see if the database file exists as a file and is of the right file type */
-    if((new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile())	// If an H2 database...
+    if((new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile)	// If an H2 database...
     {
       // (type = H2_DATABASE)
       var driverClass = "org.h2.Driver"
@@ -885,7 +893,7 @@ object AddPDF_Util {
           conn.close()
       }
     }
-    else if((new File(s"$dbPathName$separatorIfNeeded$dbName.mdf")).isFile())		// If a Microsoft SQL Server database...
+    else if((new File(s"$dbPathName$separatorIfNeeded$dbName.mdf")).isFile)		// If a Microsoft SQL Server database...
     {
       // (type = MS_SQL_DATABASE)
       val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
@@ -898,7 +906,7 @@ object AddPDF_Util {
       
     	/* Get the Driver class and establish a connection to the database */
 	    Class.forName(driverClass)			// DB pathname 											// username // password
-	    conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName;", 	dbUser, 	dbPswd)
+	    conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName", 	dbUser, 	dbPswd)
 	    
 	    val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
 	    query.executeQuery()				// If this query works, then the database is a valid MS SQL database. Otherwise, invalid.

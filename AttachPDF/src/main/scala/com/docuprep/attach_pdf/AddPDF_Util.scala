@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: July 13th, 2015
+ * Last Updated: July 15th, 2015
  */
 object AddPDF_Util {
   
@@ -83,9 +83,8 @@ object AddPDF_Util {
     					case "MS_SQL_DATABASE"	=> MS_SQL_DATABASE
     					case _					=> NO_TYPE
   }
-  private var tempApp = config.getString("attachPDF.database.application")
-		  	  tempApp = if(tempApp.length > 25) tempApp.substring(0,25) else tempApp
-  private val app 	  = s"$tempApp${" " * (25-tempApp.length)}"		// Make sure the application's name is exactly 25 characters long
+  private var tempApp = config.getString("attachPDF.database.application")// Make sure the application's name is exactly 25 characters long
+  private val app	  = if(tempApp.length > 25) tempApp.substring(0,25) else s"$tempApp${" " * (25-tempApp.length)}"
   
   /** Initialize other important fields **/
   // GUI Label Updater (Actor)
@@ -429,7 +428,7 @@ object AddPDF_Util {
    * in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: July 7th, 2015
+   * Last Updated: July 15th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -493,7 +492,13 @@ object AddPDF_Util {
 	      insertStatement.executeUpdate()
 	    }
 	    
-	    logger.debug("Reported Status to Database")
+	    val extension = dbType match{
+	      case H2_DATABASE => ".mv.db"
+	      case MS_SQL_DATABASE => ".mdf"
+	      case _ => ""
+	    }
+	    
+	    logger.debug(s"Reported Status to Database: $databaseName$extension")
     }
     catch
     {
@@ -546,7 +551,7 @@ object AddPDF_Util {
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
    * 
    * @author James Watts
-   * Last Updated: July 13th, 2015
+   * Last Updated: July 15th, 2015
    */
   def getMachineName():String = 
   {
@@ -554,10 +559,8 @@ object AddPDF_Util {
       val compName = java.net.InetAddress.getLocalHost().getHostName()	// Get the machine name
       val machineName = s"PDF ($compName)"								// Surround it with "PDF (" and ")"
       
-      // Account for a machine name that's too long
-      val returnName = if(machineName.length > 25) (s"${machineName.substring(0, 24)})") else machineName
-      val paddingAmount = (25 - returnName.length)						// Calculate the amount of needed padding
-      s"$returnName${" " * paddingAmount}"								// Return the machine name with the padding
+      // Account for a machine name that's either too long or too short
+      if(machineName.length > 25) (s"${machineName.substring(0,24)})") else s"$machineName${" " * (25-machineName.length)}"
     }
     catch{
       case (ex:Exception) => "PDF (Could not get name) "				// Hopefully, this line should never be reached

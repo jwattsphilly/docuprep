@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: July 6th, 2015
+ * Last Updated: July 16th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -88,7 +88,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       text = reportStatusTime.toString							// Initialize to reportStatusText from AddPDF_Util
       columns = 5
     }
-    private val databaseText	  = new TextField {				// Text field to input database to extract and place the PDF files
+    private val databaseText	  = new TextField {				// Text field to input database to report to
       text = databaseName										// Initialize to databaseName from AddPDF_Util
       columns = 10
     }

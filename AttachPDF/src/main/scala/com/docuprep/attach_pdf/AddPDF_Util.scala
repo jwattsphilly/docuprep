@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: July 15th, 2015
+ * Last Updated: July 16th, 2015
  */
 object AddPDF_Util {
   
@@ -781,11 +781,11 @@ object AddPDF_Util {
    * 								False if any inbound or outbound folder listed is not valid.
    * 
    * @author James Watts
-   * Last Updated: April 3rd, 2015
+   * Last Updated: July 16th, 2015
    */
   def checkFolderValidity(inboundList:MutableList[String], outboundList:List[String]):Boolean = {	
-    var allFoldersAreValid = true								// Check if all of the inbound folders are valid folders.
-    for(folder <- inboundList if folder!=null)
+    var allFoldersAreValid = true
+    for(folder <- inboundList if folder!=null)					// Check if all of the inbound folders are valid folders.
       if( !(new File(folder).isDirectory) )						// Search through all non-null inbound folders.  If any
       {															// inbound folder is not a valid directory, display an
         if(SettingsIsRunning)									// error and return a false.

@@ -423,9 +423,8 @@ object AddPDF_Util {
   }
   
   /**
-   * Method that reports the status of the PDF Merger by sending information to the 'dbTable' table in the database
-   * having the pathname of 'dbPath' (both of these parameters - as well as database username and password - are set
-   * in the application.CONF file).
+   * Reports the status of the PDF Merger by sending information to the 'dbTable' table in the database having the pathname 
+   * of 'dbPath' (both of these parameters - as well as database username and password - are set in the application.CONF file).
    * 
    * @author James Watts
    * Last Updated: July 15th, 2015
@@ -772,7 +771,7 @@ object AddPDF_Util {
   
   /** 
    * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist on their respective 
-   * servers.  Displays an error Dialog if any folder listed does not exist.
+   * servers.  Displays an error Dialog and returns a Boolean false if any folder listed does not exist.
    * 
    * @param inboundList				MutableList of inbound folders (may contain nulls, but not empty strings)
    * @param outboundList			List of outbound folders (must not contain nulls or empty strings)
@@ -781,7 +780,7 @@ object AddPDF_Util {
    * 								False if any inbound or outbound folder listed is not valid.
    * 
    * @author James Watts
-   * Last Updated: July 16th, 2015
+   * Last Updated: July 20th, 2015
    */
   def checkFolderValidity(inboundList:MutableList[String], outboundList:List[String]):Boolean = {	
     var allFoldersAreValid = true
@@ -805,8 +804,8 @@ object AddPDF_Util {
   }
   
   /**
-   * Checks for duplicates in both the Inbound and Outbound folders lists.  Displays an error Dialog if any duplicates
-   * appear in either list.
+   * Checks for duplicates in both the Inbound and Outbound folders lists.  Displays an error Dialog and returns a Boolean
+   * false if any duplicates appear in either list.
    * 
    * @param inboundList				MutableList of inbound folders (may contain nulls, but not empty strings)
    * @param outboundList			List of outbound folders (must not contain nulls or empty strings)
@@ -814,7 +813,7 @@ object AddPDF_Util {
    * @return						Boolean true if there are no duplicates, false if otherwise.
    * 
    * @author James Watts
-   * Last Updated: February 9th, 2015
+   * Last Updated: July 20th, 2015
    */
   def checkFolderDuplicates(inboundList:MutableList[String], outboundList:List[String]):Boolean = {
     var allFoldersAreUnique = true								// Boolean flag, initialized at true.
@@ -854,15 +853,17 @@ object AddPDF_Util {
   }
   
   /**
-   * Checks the validity of the database on the input file path.  Displays an error Dialog if the database is invalid.
+   * Checks the validity of the database on the input file path.  Displays an error Dialog and returns a NO_TYPE 
+   * if the database is invalid.
    * 
    * @param dbPathName				String pathname of the folder the Database is found in.
    * @param dbName					String name of Database to report to.
    * 
-   * @return						Boolean true if the Database exists and is valid, false if otherwise.
+   * @return						The DatabaseType (H2_DATABASE or MS_SQL_DATABASE) of the database if valid.
+   * 								A NO_TYPE if database is invalid.
    * 
    * @author James Watts
-   * Last Updated: July 13th, 2015
+   * Last Updated: July 20th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {

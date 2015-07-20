@@ -7,10 +7,10 @@ import event.ButtonClicked
 import AddPDF_Util.{SettingsIsRunning,guiUpdater,pauseTimerLastValue}
 
 /**
- * Graphic User Interface for the User's Guide for the AddPDF application
+ * Graphic User Interface for the User's Guide of the AddPDF application
  * 
  * @author James Watts
- * Last Updated: July 6th, 2015
+ * Last Updated: July 20th, 2015
  */
 object UsersGuide extends SimpleSwingApplication {
   

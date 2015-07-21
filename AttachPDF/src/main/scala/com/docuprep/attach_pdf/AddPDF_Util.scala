@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: July 16th, 2015
+ * Last Updated: July 21st, 2015
  */
 object AddPDF_Util {
   
@@ -163,6 +163,36 @@ object AddPDF_Util {
   }
   
   /**
+   * Checks for validity of current values of important fields.  To be used at the startup of the AddPDF application.
+   * 
+   * @return						Boolean true if all fields are valid.  False if any field is invalid.
+   * 
+   * @author James Watts
+   * Last Updated: July 21st, 2015
+   */
+  private[attach_pdf] def initialValidityCheck():Boolean = 
+  {
+    var allOkay = true	// Boolean flag to denote validity of fields found in the configuration file
+    
+    if((checkFilesTime <= 0) || (reportStatusTime <= 0))		// If either the checkFilesTime or reportStatusTime is <= 0, return a false
+      allOkay = false
+    
+    /* Check validity of inbound and outbound folders */
+	if(	!checkFolderValidity(currentInboundFolders,currentOutboundFolders))		// If any of the folders are invalid, return a false
+	  allOkay = false
+	
+	/* Check duplicity of inbound and outbound folders */
+	if( !checkFolderDuplicates(currentInboundFolders, currentOutboundFolders))	// If any of the folders are duplicates, return a false
+	  allOkay = false
+	
+	/* Check validity of database fields */
+	if((dbType == NO_TYPE) || (checkDatabaseValidity(dbPath, databaseName) == NO_TYPE))	// If any of the database fields are invalid,
+	  allOkay = false																	// return a false
+	
+	allOkay	// If Everything is fine, return a true. Otherwise, this will return a false.
+  }
+  
+  /**
    * Merges two PDF files as instructed by a .txt file located in the inboundFolder and copies the newly created PDF file 
    * into all of the folders in destinationPathNames.
    * 
@@ -180,7 +210,7 @@ object AddPDF_Util {
    * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: July 13th, 2015
+   * Last Updated: July 21st, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {    
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
@@ -387,7 +417,7 @@ object AddPDF_Util {
    * filesWaitingListBox.
    * 
    * @author James Watts
-   * Last Updated: July 7th, 2015
+   * Last Updated: July 21st, 2015
    */
   private def updateFilesWaiting() {
     if(!pauseTimer)	{											// If the pauseTimer flag is false (the timer is running)
@@ -395,10 +425,10 @@ object AddPDF_Util {
       for(index <- 0 until currentInboundFolders.length; 		// Loop through the Inbound folders
     	if currentInboundFolders(index) != null) 
       	{
-    	  val (s, c) = countTextFiles(new File(					// Use the countTextFiles method to obtain a set
-    	  	currentInboundFolders(index)).listFiles)			// and count of text files to be processed
+    	  val (s, c) = countTextFiles(new File(				// Use the countTextFiles method to obtain a set
+    	   currentInboundFolders(index)).listFiles)			// and count of text files to be processed
     	  guiUpdater ! FilesWaiting(s, c)						// Send a message to the LabelUpdater to update the
-      	}														// labels accordingly
+      	}													// labels accordingly
     }
   }
   

@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: July 21st, 2015
+ * Last Updated: July 28th, 2015
  */
 object AddPDF_Util {
   
@@ -417,18 +417,16 @@ object AddPDF_Util {
    * filesWaitingListBox.
    * 
    * @author James Watts
-   * Last Updated: July 21st, 2015
+   * Last Updated: July 28th, 2015
    */
   private def updateFilesWaiting() {
     if(!pauseTimer)	{											// If the pauseTimer flag is false (the timer is running)
       filesWaitingSet = Set[String]()							// Reset the filesWaitingSet
-      for(index <- 0 until currentInboundFolders.length; 		// Loop through the Inbound folders
-    	if currentInboundFolders(index) != null) 
-      	{
-    	  val (s, c) = countTextFiles(new File(				// Use the countTextFiles method to obtain a set
-    	   currentInboundFolders(index)).listFiles)			// and count of text files to be processed
-    	  guiUpdater ! FilesWaiting(s, c)						// Send a message to the LabelUpdater to update the
-      	}													// labels accordingly
+      for(folder<-currentInboundFolders; if folder != null)		// Loop through the Inbound folders
+      {
+        val(s, c) = countTextFiles(new File(folder).listFiles)	// Use the countTextFiles method to obtain a set and count
+        guiUpdater ! FilesWaiting(s, c)							// of text files to be processed.  Then send a message to the
+      }															// LabelUpdater to update the labels accordingly
     }
   }
   
@@ -550,10 +548,10 @@ object AddPDF_Util {
    * @return								The IP Address contained in the input String as a String
    * 
    * @author James Watts
-   * Last Updated: July 7th, 2015
+   * Last Updated: July 28th, 2015
    */
   def parseOutIP(pathWithIP:String):String = 
-  {
+  {	
     var ipAddress = ""
     if(pathWithIP.startsWith("""\\""") || pathWithIP.startsWith("""//"""))
     {
@@ -573,6 +571,8 @@ object AddPDF_Util {
     
     /* If the 'IP Address' obtained is actually just 'C:', then return 'localhost' */
     if(ipAddress == "C:") "localhost" else ipAddress
+    
+    // TODO: What if the 'IP Address' is something like 'Z:' or 'D:' or another drive apart from 'C:'?
   }
   
   /**
@@ -615,16 +615,15 @@ object AddPDF_Util {
    * The timerLabel and reportTimerLabel are updated every time this method runs.
    * 
    * @author James Watts
-   * Last Updated: May 27th, 2015
+   * Last Updated: July 28th, 2015
    */
   def count() {
     if(!pauseTimer)														// If the pauseTimer flag is false (counter not paused)
     {
       if(timeToNextCheck<=0)
       {																	// If the timeToNextCheck counter reached zero (or below)
-        for(index <- 0 until currentInboundFolders.length; 				// Loop through the inbound folders
-          if currentInboundFolders(index) != null)
-           merge(currentInboundFolders(index),currentOutboundFolders)	// Start the merging process
+        for(folder<-currentInboundFolders; if folder != null)			// Loop through the inbound folders
+          merge(folder, currentOutboundFolders)							// Start the merging process
         
         timeToNextCheck=checkFilesTime									// Restart the timer
         guiUpdater ! Count(generateCountString(timeToNextCheck))		// Update the timer label
@@ -635,7 +634,6 @@ object AddPDF_Util {
         if(timeToNextCheck == 1) updateFilesWaiting()					// Update the files waiting if we're at 1 second left
         timeToNextCheck-=1												// Decrement the timer by 1 second
         guiUpdater ! Count(generateCountString(timeToNextCheck))		// Update the timer label
-        
       }
       if(timeToNextReport<=0)
       {																	// If the timeToNextReport counter reached zero (or below)
@@ -843,7 +841,7 @@ object AddPDF_Util {
    * @return						Boolean true if there are no duplicates, false if otherwise.
    * 
    * @author James Watts
-   * Last Updated: July 20th, 2015
+   * Last Updated: July 28th, 2015
    */
   def checkFolderDuplicates(inboundList:MutableList[String], outboundList:List[String]):Boolean = {
     var allFoldersAreUnique = true								// Boolean flag, initialized at true.
@@ -851,8 +849,8 @@ object AddPDF_Util {
     /* Sort each list first.  Then compare each entry with the immediate next entry to check for duplicates. */
     // Filter out all nulls from the inbound list and sort it
     var inbnd = List[String]()
-    for(index <- 0 until inboundList.size if inboundList(index) != null)
-      inbnd = inboundList(index) :: inbnd
+    for(folder<-inboundList if folder != null)
+      inbnd = folder :: inbnd
     
     val inbound = inbnd.sorted
     
@@ -893,14 +891,14 @@ object AddPDF_Util {
    * 								A NO_TYPE if database is invalid.
    * 
    * @author James Watts
-   * Last Updated: July 20th, 2015
+   * Last Updated: July 28th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {
     val separatorIfNeeded = if(dbPathName.endsWith("/") || dbPathName.endsWith("\\")) "" else File.separator
     
     /* First check to see if the database file exists as a file and is of the right file type */
-    if((new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile)	// If an H2 database...
+    if((new File(s"$dbPathName$separatorIfNeeded$dbName.mv.db")).isFile)		// If an H2 database...
     {
       // (type = H2_DATABASE)
       var driverClass = "org.h2.Driver"

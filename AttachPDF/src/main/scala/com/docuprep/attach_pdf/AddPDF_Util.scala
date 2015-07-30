@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: July 28th, 2015
+ * Last Updated: July 30th, 2015
  */
 object AddPDF_Util {
   
@@ -548,7 +548,7 @@ object AddPDF_Util {
    * @return								The IP Address contained in the input String as a String
    * 
    * @author James Watts
-   * Last Updated: July 28th, 2015
+   * Last Updated: July 30th, 2015
    */
   def parseOutIP(pathWithIP:String):String = 
   {	
@@ -569,10 +569,8 @@ object AddPDF_Util {
       ipAddress = pathWithIP.substring(0, endpoint)								// Get the IP Address
     }
     
-    /* If the 'IP Address' obtained is actually just 'C:', then return 'localhost' */
-    if(ipAddress == "C:") "localhost" else ipAddress
-    
-    // TODO: What if the 'IP Address' is something like 'Z:' or 'D:' or another drive apart from 'C:'?
+    /* If the 'IP Address' obtained is actually just one of the local drives (i.e. 'C:', 'Z:', etc.), then return 'localhost' */
+    if(ipAddress.matches("[A-Z]:")) "localhost" else ipAddress
   }
   
   /**
@@ -711,7 +709,7 @@ object AddPDF_Util {
    * @param dbName						String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated: June 23rd, 2015
+   * Last Updated: July 30th, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 

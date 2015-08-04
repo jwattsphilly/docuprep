@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: July 30th, 2015
+ * Last Updated: August 4th, 2015
  */
 object AddPDF_Util {
   
@@ -212,7 +212,7 @@ object AddPDF_Util {
    * @author James Watts
    * Last Updated: July 21st, 2015
    */
-  def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {    
+  def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {
     // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
     // Otherwise, if a Windows computer is being used, "\" is used as the folder separator
     val folderSeparator = File.separator
@@ -455,7 +455,7 @@ object AddPDF_Util {
    * of 'dbPath' (both of these parameters - as well as database username and password - are set in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: July 15th, 2015
+   * Last Updated: August 4th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -474,9 +474,9 @@ object AddPDF_Util {
     	else if(dbType == MS_SQL_DATABASE)
     	{
     	  val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+    	  val ipaddress = parseOutIP(dbPath)
     	  val jdbcPrefix = """jdbc:sqlserver://"""
           val databaseNamePrefix = ";databaseName="
-          val ipaddress = parseOutIP(dbPath)
           
           Class.forName(driverClass)			// DB pathname 										// username // password
 	      conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName", dbUser, 	dbPswd)
@@ -536,7 +536,7 @@ object AddPDF_Util {
       // Make sure to close the database connection whether the queries worked or not
       if(conn != null)
     	  conn.close()
-    }  
+    }
   }
   
   /**
@@ -551,7 +551,7 @@ object AddPDF_Util {
    * Last Updated: July 30th, 2015
    */
   def parseOutIP(pathWithIP:String):String = 
-  {	
+  {
     var ipAddress = ""
     if(pathWithIP.startsWith("""\\""") || pathWithIP.startsWith("""//"""))
     {
@@ -760,8 +760,8 @@ object AddPDF_Util {
         checkFilesTime = temp
         throw new NumberFormatException()
       }
-    }														
-    catch{													
+    }
+    catch{
       case ex: NumberFormatException => 
         if(SettingsIsRunning) SettingsGUI.invalidTimeDialog(true)
     }
@@ -806,9 +806,10 @@ object AddPDF_Util {
    * 								False if any inbound or outbound folder listed is not valid.
    * 
    * @author James Watts
-   * Last Updated: July 20th, 2015
+   * Last Updated: August 4th, 2015
    */
-  def checkFolderValidity(inboundList:MutableList[String], outboundList:List[String]):Boolean = {	
+  def checkFolderValidity(inboundList:MutableList[String], outboundList:List[String]):Boolean = 
+  {
     var allFoldersAreValid = true
     for(folder <- inboundList if folder!=null)					// Check if all of the inbound folders are valid folders.
       if( !(new File(folder).isDirectory) )						// Search through all non-null inbound folders.  If any
@@ -839,9 +840,10 @@ object AddPDF_Util {
    * @return						Boolean true if there are no duplicates, false if otherwise.
    * 
    * @author James Watts
-   * Last Updated: July 28th, 2015
+   * Last Updated: August 4th, 2015
    */
-  def checkFolderDuplicates(inboundList:MutableList[String], outboundList:List[String]):Boolean = {
+  def checkFolderDuplicates(inboundList:MutableList[String], outboundList:List[String]):Boolean = 
+  {
     var allFoldersAreUnique = true								// Boolean flag, initialized at true.
     
     /* Sort each list first.  Then compare each entry with the immediate next entry to check for duplicates. */
@@ -889,7 +891,7 @@ object AddPDF_Util {
    * 								A NO_TYPE if database is invalid.
    * 
    * @author James Watts
-   * Last Updated: July 28th, 2015
+   * Last Updated: August 4th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {
@@ -927,9 +929,9 @@ object AddPDF_Util {
     {
       // (type = MS_SQL_DATABASE)
       val driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+      val ipaddress = parseOutIP(dbPath)
       val jdbcPrefix = """jdbc:sqlserver://"""
       val databaseNamePrefix = ";databaseName="
-      val ipaddress = parseOutIP(dbPath)
 
       var conn:Connection = null
       try{

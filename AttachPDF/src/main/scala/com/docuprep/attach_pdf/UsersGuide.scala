@@ -10,7 +10,7 @@ import AddPDF_Util.{SettingsIsRunning,guiUpdater,pauseTimerLastValue}
  * Graphic User Interface for the User's Guide of the AddPDF application
  * 
  * @author James Watts
- * Last Updated: July 20th, 2015
+ * Last Updated: August 7th, 2015
  */
 object UsersGuide extends SimpleSwingApplication {
   
@@ -51,7 +51,7 @@ object UsersGuide extends SimpleSwingApplication {
     mainPageText(20) = "    When the first timer, labeled \"next check in,\" reaches 0, the inbound folders set in Settings"
     mainPageText(21) = "    are searched for text files containing the necessary information to merge two PDF files.  The"
     mainPageText(22) = "    names of these text files are displayed in the white box underneath \"Files Waiting to be"
-    mainPageText(23) = "    Processed.\"  The PDF files are then automatically merged and copied to the four outbound"
+    mainPageText(23) = "    Processed.\"  The PDF files are then automatically merged and copied to the four outbound (PDF)"
     mainPageText(24) = "    folders."
     mainPageText(25) = "    When the second timer, labeled \"next report in,\" reaches 0, the application reports its status"
     mainPageText(26) = "    to the database set in Settings."

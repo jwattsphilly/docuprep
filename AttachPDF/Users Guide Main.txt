@@ -21,7 +21,7 @@ Timers:
 	When the first timer, labeled "next check in," reaches 0, the inbound folders set in Settings
 	are searched for text files containing the necessary information to merge two PDF files.  The
 	names of these text files are displayed in the white box underneath "Files Waiting to be
-	Processed."  The PDF files are then automatically merged and copied to the four outbound
+	Processed."  The PDF files are then automatically merged and copied to the four outbound (PDF)
 	folders.
 	When the second timer, labeled "next report in," reaches 0, the application reports its status
 	to the database set in Settings.

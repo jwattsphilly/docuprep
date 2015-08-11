@@ -1,6 +1,6 @@
 package com.docuprep.attach_pdf
 
-import akka.actor.Actor
+import akka.actor.Actor							// For multi-threading
 
 /* Case Classes to pass to the LabelUpdater as Requests */
 private[attach_pdf] case class FilesWaiting(fileList: Set[String], count: Int)

@@ -1,6 +1,6 @@
 package com.docuprep.attach_pdf
 
-import swing._
+import swing._									// For GUI creation/editing
 import BorderPanel.Position.{West, East}
 import event.ButtonClicked
 

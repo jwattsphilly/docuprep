@@ -28,7 +28,7 @@ private[attach_pdf] case class PauseTimer(pause: Boolean)
  * All other messages are ignored.
  * 
  * @author James Watts
- * Last updated: June 23rd, 2015
+ * Last updated: August 11th, 2015
  */
 private[attach_pdf] class LabelUpdater extends Actor {
   
@@ -84,7 +84,6 @@ private[attach_pdf] class LabelUpdater extends Actor {
       context.system.shutdown()											// Shutdown the Actor System
     
     /* Any other (unknown) request */
-    case _ =>
-      // Do nothing
+    case _ =>															// Do nothing
   }
 }

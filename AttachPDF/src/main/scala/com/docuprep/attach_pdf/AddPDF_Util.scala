@@ -1,19 +1,19 @@
 package com.docuprep.attach_pdf
 
-import java.io.{File, PrintWriter, FileNotFoundException}
+import java.io.{File, PrintWriter, FileNotFoundException}	// For working with files
 import scala.io.Source
-import java.sql.{Connection, DriverManager}
-import collection.mutable.MutableList
-import akka.actor.{ActorSystem, Props}
+import java.sql.{Connection, DriverManager}					// For database work
+import collection.mutable.MutableList						// To hold list of Inbound folders
+import akka.actor.{ActorSystem, Props}						// For multi-threading
 
-import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDDocument					// For PDF File manipulation
 import org.apache.pdfbox.util.PDFMergerUtility
 import org.apache.commons.io.FileUtils
 
-import org.slf4j.LoggerFactory
+import org.slf4j.LoggerFactory								// For logging
 import ch.qos.logback.classic.{Logger, LoggerContext}
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.ConfigFactory					// For working with the configuration file
 
 /**
  * Enumeration to distinguish the types of databases allowed for use by the AddPDF_GUI application.
@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: August 4th, 2015
+ * Last Updated: August 11th, 2015
  */
 object AddPDF_Util {
   
@@ -165,31 +165,31 @@ object AddPDF_Util {
   /**
    * Checks for validity of current values of important fields.  To be used at the startup of the AddPDF application.
    * 
-   * @return						Boolean true if all fields are valid.  False if any field is invalid.
+   * @return								Boolean true if all fields are valid.  False if any field is invalid.
    * 
    * @author James Watts
-   * Last Updated: July 21st, 2015
+   * Last Updated: August 11th, 2015
    */
   private[attach_pdf] def initialValidityCheck():Boolean = 
   {
-    var allOkay = true	// Boolean flag to denote validity of fields found in the configuration file
+    var allOkay = true											// Boolean flag to denote validity of fields found in the configuration file
     
     if((checkFilesTime <= 0) || (reportStatusTime <= 0))		// If either the checkFilesTime or reportStatusTime is <= 0, return a false
       allOkay = false
     
     /* Check validity of inbound and outbound folders */
-	if(	!checkFolderValidity(currentInboundFolders,currentOutboundFolders))		// If any of the folders are invalid, return a false
-	  allOkay = false
+	if(	!checkFolderValidity(currentInboundFolders,currentOutboundFolders))				// If any of the folders are invalid,
+	  allOkay = false																	// return a false
 	
 	/* Check duplicity of inbound and outbound folders */
-	if( !checkFolderDuplicates(currentInboundFolders, currentOutboundFolders))	// If any of the folders are duplicates, return a false
-	  allOkay = false
+	if( !checkFolderDuplicates(currentInboundFolders, currentOutboundFolders))			// If any of the folders are duplicates,
+	  allOkay = false																	// return a false
 	
 	/* Check validity of database fields */
 	if((dbType == NO_TYPE) || (checkDatabaseValidity(dbPath, databaseName) == NO_TYPE))	// If any of the database fields are invalid,
 	  allOkay = false																	// return a false
 	
-	allOkay	// If Everything is fine, return a true. Otherwise, this will return a false.
+	allOkay														// If Everything is fine, return a true. Otherwise, this will return a false.
   }
   
   /**
@@ -205,16 +205,16 @@ object AddPDF_Util {
    * input.  Both the "to be added" and the original "to be added to" files are deleted, as well as the .txt file, leaving only 
    * the newly combined PDF file.
    * 
-   * @param inboundFolder:					a String pathname of the folder to search for the .txt file
+   * @param inboundFolder:					A String pathname of the folder to search for the .txt file
    * 
-   * @param destinationPathNames:			a list of String pathnames of the folders to copy the newly combined file into
+   * @param destinationPathNames:			A list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: July 21st, 2015
+   * Last Updated: August 11th, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {
-    // If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"
-    // Otherwise, if a Windows computer is being used, "\" is used as the folder separator
+    /* If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"	*
+     * Otherwise, if a Windows computer is being used, "\" is used as the folder separator 					*/
     val folderSeparator = File.separator
     
     var filesList = Array[File]()
@@ -236,12 +236,12 @@ object AddPDF_Util {
     for(txtfile<-filesList if txtfile.getName.endsWith(".txt"))		// Find all .txt files in the inbound folder
     {																// and iterate through each
       try{
-	    // Read from the .txt file:
+	    /* Read from the .txt file: */
     	val txtSrc = Source.fromFile(txtfile)
 	    val infoList = separateString(deleteQuotes(txtSrc.mkString))// The three items of the text file in a List
 	    logger.info(s"Source Text File: $txtfile")
 	    
-	    // Find FileToAttach = infoList(0)
+	    /* Find FileToAttach = infoList(0) */
 	    val FileToAttach = new File(infoList(0).trim())
     	if(!FileToAttach.isFile){									// If the File to Attach is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
@@ -253,7 +253,7 @@ object AddPDF_Util {
     	}
     	logger.debug(s"File to Attach: $FileToAttach")
     	
-	    // OriginalFile = infoList(1)
+	    /* OriginalFile = infoList(1) */
 	    val OriginalFile = new File(infoList(1).trim())
     	if(!OriginalFile.isFile){									// If the Original File is not a valid file
     	  txtSrc.close()											// Close the txtSrc and throw an exception
@@ -265,7 +265,7 @@ object AddPDF_Util {
     	}
     	logger.debug(s"Original File: $OriginalFile")
     	
-	    // Begin/End = infoList(2)
+	    /* Begin/End = infoList(2) */
 	    val BeginEnd = infoList(2).toLowerCase.trim()
 	    if(!(BeginEnd.equals("begin") || BeginEnd.equals("end"))){	// The third string must be "Begin" or "End" (case does not matter)
 	      txtSrc.close()											// Otherwise, close the txtSrc and throw an exception
@@ -275,47 +275,47 @@ object AddPDF_Util {
 	    
 	    val beginTrue = (BeginEnd.equals("begin"))					// Boolean true if "Begin", false if "End"
 	    
-	    // Close the .txt file
+	    /* Close the .txt file */
 	    txtSrc.close()
 	    
-	    // Parse the filename of original (to be used later)
+	    /* Parse the filename of original (to be used later) */
 	    val ParsedOriginalName = OriginalFile.getName				// Parsed Original Name
 	    logger.debug(s"Parsed File Name: $ParsedOriginalName")
 	    
-	    // Determine the "Master" and "Append" files using the "BeginEnd" field
+	    /* Determine the "Master" and "Append" files using the "BeginEnd" field */
 	    val Master = if(beginTrue) FileToAttach else OriginalFile
 	    val Append = if(beginTrue) OriginalFile else FileToAttach
 	    logger.info(s"Master File: $Master")
 	    logger.info(s"Append File: $Append")
 	    
-	    // Open Master PDF file
+	    /* Open Master PDF file */
 	    val MasterSrc = Source.fromFile(Master)
 	    
-	    // Open Append PDF file
+	    /* Open Append PDF file */
 	    val AppendSrc = Source.fromFile(Append)
 	    
-	    // Count # of pages of Master
+	    /* Count # of pages of Master */
 	    val MasterPDF = PDDocument.load(Master)
 	    val MasterPageLength = MasterPDF.getNumberOfPages()
 	    logger.info(s"Master PDF has $MasterPageLength pages")
 	    
-	    // Count # of pages of Append
+	    /* Count # of pages of Append */
 	    val AppendPDF = PDDocument.load(Append)
 	    val AppendPageLength = AppendPDF.getNumberOfPages()
 	    logger.info(s"Append PDF has $AppendPageLength pages")
 	    
-	    // Add # of pages to get new total page #
+	    /* Add # of pages to get new total page # */
 	    logger.info(s"Combined PDF has ${MasterPageLength + AppendPageLength} pages")
 	    
-	    // Append "Append" to end of "Master"
-	    // Create a PDFMergerUtility object and set the destination path name
+	    /* Append "Append" to end of "Master"								  *
+	     * Create a PDFMergerUtility object and set the destination path name */
 	    val merger = new PDFMergerUtility()
 	    merger.setDestinationFileName(s"${destinationPathNames(0)}$folderSeparator$ParsedOriginalName")
 	    
 	    merger.addSource(Master)
 	    merger.addSource(Append)
 	    
-	    // Close and Delete Original file
+	    /* Close and Delete Original file */
 	    if(beginTrue)
 	    {
 	      AppendSrc.close
@@ -331,7 +331,7 @@ object AddPDF_Util {
 	      logger.debug("Master PDF deleted")
 	    }
 	    
-    	// Merge the files (Here's where the real magic happens)
+    	/* Merge the files (Here's where the real magic happens) */
 	    merger.mergeDocuments()
 	    
 	    val combinedFile = new File(s"${destinationPathNames(0)}$folderSeparator$ParsedOriginalName")
@@ -344,7 +344,7 @@ object AddPDF_Util {
 	      logger.debug(s"Merged File ($ParsedOriginalName) copied into ${destinationPathNames(i)}")
 	    }
 	    
-    	// Close and Delete File to Attach
+    	/* Close and Delete File to Attach */
 	    if(beginTrue)
 	    {
 	      MasterSrc.close
@@ -360,7 +360,7 @@ object AddPDF_Util {
 	      logger.debug("Append PDF deleted")
 	    }
 	    
-	    // Finally, delete the .txt file
+	    /* Finally, delete the .txt file */
 	    txtfile.delete
 	    logger.debug("Text file deleted")
 	    
@@ -455,7 +455,7 @@ object AddPDF_Util {
    * of 'dbPath' (both of these parameters - as well as database username and password - are set in the application.CONF file).
    * 
    * @author James Watts
-   * Last Updated: August 4th, 2015
+   * Last Updated: August 11th, 2015
    */
   def reportStatus() {
     var conn:Connection = null
@@ -468,7 +468,7 @@ object AddPDF_Util {
           val jdbcPrefix = """jdbc:h2:file:"""
           
           // Get the Driver class and establish a connection to the database
-          Class.forName(driverClass)			// DB pathname 									// username // password
+          Class.forName(driverClass)			// DB Connection String							// username // password
           conn = DriverManager.getConnection(s"$jdbcPrefix$dbPath$separatorIfNeeded$databaseName", dbUser, 		dbPswd)
     	}
     	else if(dbType == MS_SQL_DATABASE)
@@ -478,7 +478,8 @@ object AddPDF_Util {
     	  val jdbcPrefix = """jdbc:sqlserver://"""
           val databaseNamePrefix = ";databaseName="
           
-          Class.forName(driverClass)			// DB pathname 										// username // password
+          // Get the Driver class and establish a connection to the database
+          Class.forName(driverClass)			// DB Connection String 							// username // password
 	      conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName", dbUser, 	dbPswd)
     	}
     	else if(dbType == NO_TYPE)
@@ -578,7 +579,7 @@ object AddPDF_Util {
    * Makes sure that there are exactly 25 characters in the string by adding whitespace to pad the end of the string.
    * 
    * @author James Watts
-   * Last Updated: July 15th, 2015
+   * Last Updated: August 11th, 2015
    */
   def getMachineName():String = 
   {
@@ -586,7 +587,7 @@ object AddPDF_Util {
       val compName = java.net.InetAddress.getLocalHost().getHostName()	// Get the machine name
       val machineName = s"PDF ($compName)"								// Surround it with "PDF (" and ")"
       
-      // Account for a machine name that's either too long or too short
+      // Account for a machine name that's either too long				or too short
       if(machineName.length > 25) (s"${machineName.substring(0,24)})") else s"$machineName${" " * (25-machineName.length)}"
     }
     catch{
@@ -657,12 +658,12 @@ object AddPDF_Util {
   /**
    * Converts an input amount of seconds to an easy-to-read string displaying the minutes and seconds (formatted as MM:SS).
    * 
-   * @param time				Int representing the number of seconds to convert to minutes and seconds
+   * @param time							Int representing the number of seconds to convert to minutes and seconds
    * 
-   * @return					A String representation of minutes and seconds for a timer label
+   * @return								A String representation of minutes and seconds for a timer label
    * 
    * @author James Watts
-   * Last Updated: July 7th, 2015
+   * Last Updated: August 11th, 2015
    */
   def generateCountString(time:Int):String = {
     val minutes = time/60										// Get the minutes and seconds based off of the input time
@@ -691,25 +692,25 @@ object AddPDF_Util {
    * Fields 6-8 are considered individually and each will be updated if its respective change results in a valid
    * value for that field (for example, a positive integer for checkFilesTime or reportStatusTime).
    * 
-   * @param inbound1 - inbound4			String pathnames to the four inbound folders.  Empty Strings are 
-   * 									allowed for all but inbound1.  Must be non-null.
-   * @param PDF1 - PDF4					String pathnames to the four outbound (PDF) folders.  Empty Strings 
-   * 									are not allowed.  Must be non-null.
-   * @param inbound2Checked				Boolean denoting if the 2nd inbound folder is to be included in the 
-   * 									currentInboundFolders list.
-   * @param inbound3Checked				Boolean denoting if the 3rd inbound folder is to be included in the 
-   * 									currentInboundFolders list.
-   * @param inbound4Checked				Boolean denoting if the 4th inbound folder is to be included in the 
-   * 									currentInboundFolders list.
-   * @param checkFilesTimeString		String representation of the check files time amount.  Must be a 
-   * 									positive integer to be valid.
-   * @param reportStatusTimeString		String representation of the report status time amount.  Must be a 
-   * 									positive integer to be valid.
-   * @param dbPathName					String pathname of the folder the Database is found in.
-   * @param dbName						String name of Database to report to.
+   * @param inbound1 - inbound4				String pathnames to the four inbound folders.  Empty Strings are 
+   * 										allowed for all but inbound1.  Must be non-null.
+   * @param PDF1 - PDF4						String pathnames to the four outbound (PDF) folders.  Empty Strings 
+   * 										are not allowed.  Must be non-null.
+   * @param inbound2Checked					Boolean denoting if the 2nd inbound folder is to be included in the 
+   * 										currentInboundFolders list.
+   * @param inbound3Checked					Boolean denoting if the 3rd inbound folder is to be included in the 
+   * 										currentInboundFolders list.
+   * @param inbound4Checked					Boolean denoting if the 4th inbound folder is to be included in the 
+   * 										currentInboundFolders list.
+   * @param checkFilesTimeString			String representation of the check files time amount.  Must be a 
+   * 										positive integer to be valid.
+   * @param reportStatusTimeString			String representation of the report status time amount.  Must be a 
+   * 										positive integer to be valid.
+   * @param dbPathName						String pathname of the folder the Database is found in.
+   * @param dbName							String name of Database to report to.
    * 
    * @author James Watts
-   * Last Updated: July 30th, 2015
+   * Last Updated: August 11th, 2015
    */
   def applyChanges(	inbound1:String, inbound2:String, inbound3:String, inbound4:String, 
 		  			PDF1:String, PDF2:String, PDF3:String, PDF4:String, 
@@ -782,7 +783,7 @@ object AddPDF_Util {
     
     /* Test the validity of the database */
     val tempDbType = checkDatabaseValidity(dbPathName, dbName)
-    if(tempDbType == MS_SQL_DATABASE || tempDbType == H2_DATABASE) // Update data from database text box only if the database is valid.
+    if(tempDbType != NO_TYPE) 								// Update data from database text box only if the database is valid.
     {
       databaseName = dbName
 	  dbPath = dbPathName
@@ -799,14 +800,14 @@ object AddPDF_Util {
    * Checks each member of the Inbound and Outbound folders lists and makes sure all folders listed exist on their respective 
    * servers.  Displays an error Dialog and returns a Boolean false if any folder listed does not exist.
    * 
-   * @param inboundList				MutableList of inbound folders (may contain nulls, but not empty strings)
-   * @param outboundList			List of outbound folders (must not contain nulls or empty strings)
+   * @param inboundList						MutableList of inbound folders (may contain nulls, but not empty strings)
+   * @param outboundList					List of outbound folders (must not contain nulls or empty strings)
    * 
-   * @return						Boolean true if all folders in the inboundList and outboundList lists are valid folders.
-   * 								False if any inbound or outbound folder listed is not valid.
+   * @return								Boolean true if all folders in the inboundList and outboundList lists are valid folders.
+   * 										False if any inbound or outbound folder listed is not valid.
    * 
    * @author James Watts
-   * Last Updated: August 4th, 2015
+   * Last Updated: August 11th, 2015
    */
   def checkFolderValidity(inboundList:MutableList[String], outboundList:List[String]):Boolean = 
   {
@@ -834,13 +835,13 @@ object AddPDF_Util {
    * Checks for duplicates in both the Inbound and Outbound folders lists.  Displays an error Dialog and returns a Boolean
    * false if any duplicates appear in either list.
    * 
-   * @param inboundList				MutableList of inbound folders (may contain nulls, but not empty strings)
-   * @param outboundList			List of outbound folders (must not contain nulls or empty strings)
+   * @param inboundList						MutableList of inbound folders (may contain nulls, but not empty strings)
+   * @param outboundList					List of outbound folders (must not contain nulls or empty strings)
    * 
-   * @return						Boolean true if there are no duplicates, false if otherwise.
+   * @return								Boolean true if there are no duplicates, false if otherwise.
    * 
    * @author James Watts
-   * Last Updated: August 4th, 2015
+   * Last Updated: August 11th, 2015
    */
   def checkFolderDuplicates(inboundList:MutableList[String], outboundList:List[String]):Boolean = 
   {
@@ -884,14 +885,14 @@ object AddPDF_Util {
    * Checks the validity of the database on the input file path.  Displays an error Dialog and returns a NO_TYPE 
    * if the database is invalid.
    * 
-   * @param dbPathName				String pathname of the folder the Database is found in.
-   * @param dbName					String name of Database to report to.
+   * @param dbPathName						String pathname of the folder the Database is found in.
+   * @param dbName							String name of Database to report to.
    * 
-   * @return						The DatabaseType (H2_DATABASE or MS_SQL_DATABASE) of the database if valid.
-   * 								A NO_TYPE if database is invalid.
+   * @return								The DatabaseType (H2_DATABASE or MS_SQL_DATABASE) of the database if valid.
+   * 										A NO_TYPE if database is invalid.
    * 
    * @author James Watts
-   * Last Updated: August 4th, 2015
+   * Last Updated: August 11th, 2015
    */
   private[attach_pdf] def checkDatabaseValidity(dbPathName:String, dbName:String):DatabaseType = 
   {
@@ -906,7 +907,7 @@ object AddPDF_Util {
       var conn:Connection = null
       try{
     	/* Get the Driver class and establish a connection to the database */
-	    Class.forName(driverClass)			// DB pathname 									// username // password
+	    Class.forName(driverClass)			// DB Connection String 							// username // password
 	    conn = DriverManager.getConnection(s"$jdbcPrefix$dbPathName$separatorIfNeeded$dbName", 	dbUser, 	dbPswd)
 	    
 	    val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
@@ -937,7 +938,7 @@ object AddPDF_Util {
       try{
       
     	/* Get the Driver class and establish a connection to the database */
-	    Class.forName(driverClass)			// DB pathname 											// username // password
+	    Class.forName(driverClass)			// DB Connection String									// username // password
 	    conn = DriverManager.getConnection(s"$jdbcPrefix$ipaddress$databaseNamePrefix$databaseName", 	dbUser, 	dbPswd)
 	    
 	    val query = conn.prepareStatement(s"SELECT * FROM $dbTable WHERE Application = '$app' AND Machine_Name = '${getMachineName}'")
@@ -968,7 +969,7 @@ object AddPDF_Util {
    * In order to do this, this method rewrites the CONFIG file from scratch.
    * 
    * @author James Watts
-   * Last Updated: June 3rd, 2015
+   * Last Updated: August 11th, 2015
    */
   private def saveSettingsToConfigFile()
   {
@@ -1000,7 +1001,7 @@ object AddPDF_Util {
       /* checkFilesTime and reportStatusTime */
       pw.append(s"\tcheckFilesTime = $checkFilesTime\r\n\treportStatusTime = $reportStatusTime\r\n")
       
-      /* database */
+      /* database fields */
       pw.append("\tdatabase {\r\n\t\ttype = \"")										// type
       pw.append(dbType.toString)
       pw.append("\"\r\n\t\tpathname = \"\"\"")											// pathname

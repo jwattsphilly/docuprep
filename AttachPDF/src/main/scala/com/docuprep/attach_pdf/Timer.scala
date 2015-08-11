@@ -3,13 +3,13 @@ package com.docuprep.attach_pdf
 /**A Timer object that uses a Java Swing Timer to perform an input operation (op) every given amount of milliseconds 
  * (millisToCheck).  To be used as: "new Timer(millisToCheck)(op)".
  * 
- * @param millisToCheck				An amount in milliseconds denoting how frequently to run the input operation op
+ * @param millisToCheck					An amount in milliseconds denoting how frequently to run the input operation op
  * 
- * @param op						Any parameterless function that returns a Unit for the Timer to run every millisToCheck 
- * 									milliseconds
+ * @param op							Any parameterless function that returns a Unit for the Timer to run every
+ * 										millisToCheck milliseconds
  * 
  * @author James Watts
- * Last Updated: July 6th, 2015
+ * Last Updated: August 11th, 2015
  */
 protected[attach_pdf] class Timer(millisToCheck: Int)(op: => Unit){
   

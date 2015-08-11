@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: July 16th, 2015
+ * Last Updated: August 11th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -317,10 +317,10 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * object.  Once a folder is chosen from the File Chooser dialog, this method resets the input 
      * TextField's text to be the pathname of the newly chosen folder.
      * 
-     * @param tf					A TextField object
+     * @param tf							A TextField object
      * 
      * @author James Watts
-     * Last Updated April 29th, 2015
+     * Last Updated August 11th, 2015
      */
     private def folderSelectionDialog(tf:TextField)
     {
@@ -352,13 +352,13 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   /**
    * Displays an error Dialog when an inbound or outbound folder pathname is invalid.
    * 
-   * @param folder						Invalid String pathname of a file folder
+   * @param folder							Invalid String pathname of a file folder
    * 
-   * @param isInbound					Boolean denoting if the pathname is from the inbound or outbound folder list.
-   * 									True if inbound, false if outbound.
+   * @param isInbound						Boolean denoting if the pathname is from the inbound or outbound folder list.
+   * 										True if inbound, false if outbound.
    * 
    * @author James Watts
-   * Last Updated: April 27th, 2015
+   * Last Updated: August 11th, 2015
    */
   protected[attach_pdf] def invalidFolderDialog(folder: String, isInbound: Boolean)
   {
@@ -373,13 +373,13 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   /**
    * Displays an error Dialog when an inbound or outbound folder pathname is repeated.
    * 
-   * @param folder						Invalid String pathname of a file folder
+   * @param folder							Invalid String pathname of a file folder
    * 
-   * @param isInbound					Boolean denoting if the pathname is from the inbound or outbound folder list.
-   * 									True if inbound, false if outbound.
+   * @param isInbound						Boolean denoting if the pathname is from the inbound or outbound folder list.
+   * 										True if inbound, false if outbound.
    * 
    * @author James Watts
-   * Last Updated: April 27th, 2015
+   * Last Updated: August 11th, 2015
    */
   protected[attach_pdf] def duplicateFolderDialog(folder: String, isInbound: Boolean)
   {
@@ -394,11 +394,11 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   /**
    * Displays an error Dialog when the Check Files Time or Report Status Time is invalid.
    * 
-   * @param isCheckFilesTime			Boolean denoting if the Check Files Time or Report Status Time is invalid.
-   * 									True if 'Check Files Time,' false if 'Report Status Time.'
+   * @param isCheckFilesTime				Boolean denoting if the Check Files Time or Report Status Time is invalid.
+   * 										True if 'Check Files Time,' false if 'Report Status Time.'
    * 
    * @author James Watts
-   * Last Updated: April 27th, 2015
+   * Last Updated: August 11th, 2015
    */
   protected[attach_pdf] def invalidTimeDialog(isCheckFilesTime: Boolean)
   {
@@ -413,11 +413,11 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   /**
    * Displays an error Dialog when the database name is invalid.
    * 
-   * @param dbPathWithName				Full pathname of the invalid database as a String.
-   * @param dbExists					Boolean denoting if the database file exists in the file system or not.
+   * @param dbPathWithName					Full pathname of the invalid database as a String.
+   * @param dbExists						Boolean denoting if the database file exists in the file system or not.
    * 
    * @author James Watts
-   * Last Updated: July 2nd, 2015
+   * Last Updated: August 11th, 2015
    */
   protected[attach_pdf] def invalidDatabaseDialog(dbPathWithName:String, dbExists:Boolean)
   {

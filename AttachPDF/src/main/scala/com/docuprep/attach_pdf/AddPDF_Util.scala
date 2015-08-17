@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: August 11th, 2015
+ * Last Updated: August 17th, 2015
  */
 object AddPDF_Util {
   
@@ -393,9 +393,9 @@ object AddPDF_Util {
    * @return								A list of separated Strings that were previously "," delimited
    * 
    * @author James Watts
-   * Last Updated: May 27th, 2015
+   * Last Updated: August 17th, 2015
    */
-  private def separateString(line: String) = line.split(",").toList
+  private def separateString(line: String):List[String] = line.split(",").toList
   
   /**
    * Private helper method to remove quotation marks from inside of a String.
@@ -405,9 +405,9 @@ object AddPDF_Util {
    * @return								The original raw String without any quotation marks
    * 
    * @author James Watts
-   * Last Updated: July 8th, 2015
+   * Last Updated: August 17th, 2015
    */
-  private def deleteQuotes(line: String) = line.replaceAll(""""""", "")
+  private def deleteQuotes(line: String):String = line.replaceAll(""""""", "")
   
   /**
    * If the timer is running, this method loops through the folders in currentInboundFolders and runs the countTextFiles 
@@ -440,9 +440,9 @@ object AddPDF_Util {
    * 										input array and a count of those .txt files.
    * 
    * @author James Watts
-   * Last Updated: January 16th, 2015
+   * Last Updated: August 17th, 2015
    */
-  private def countTextFiles(filesList: scala.Array[File]) = 
+  private def countTextFiles(filesList:scala.Array[File]): (Set[String],Int) = 
   {
     for(txtfile <- filesList if txtfile.getName.endsWith(".txt")) {			// Loop through the array of files
       filesWaitingSet += (txtfile.getName())								// Update the set of text files waiting

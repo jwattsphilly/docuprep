@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: August 11th, 2015
+ * Last Updated: August 17th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -43,60 +43,60 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
     private val databaseLabel		= new Label("Database: ")					// Database Label
     
     // Text Boxes for West Panel
-    private val inbound1Text = new TextField {					// Text field to input primary inbound folder to find .txt file
+    private val inbound1Text		= new TextField {			// Text field to input primary inbound folder to find .txt file
       text = currentInboundFolders(0)							// Initialize Inbound Folder 1
       columns = 30
     }
-    private val inbound2Text = new TextField {					// Text field to input secondary inbound folder to find .txt file
+    private val inbound2Text		= new TextField {			// Text field to input secondary inbound folder to find .txt file
       if(currentInboundFolders(1) != null)						// Initialize Inbound Folder 2 if applicable
     	text = currentInboundFolders(1)
       columns = 30
     }
-    private val inbound3Text = new TextField {					// Text field to input third inbound folder to find .txt file
+    private val inbound3Text		= new TextField {			// Text field to input third inbound folder to find .txt file
       if(currentInboundFolders(2) != null)						// Initialize Inbound Folder 3 if applicable
     	text = currentInboundFolders(2)
       columns = 30
     }
-    private val inbound4Text = new TextField {					// Text field to input fourth inbound folder to find .txt file
+    private val inbound4Text		= new TextField {			// Text field to input fourth inbound folder to find .txt file
       if(currentInboundFolders(3) != null)						// Initialize Inbound Folder 4 if applicable
     	text = currentInboundFolders(3)
       columns = 30
     }
-    private val PDF1Text	 = new TextField {					// Text field to input primary PDF folder to copy the new PDF file into
+    private val PDF1Text			= new TextField {			// Text field to input primary PDF folder to copy the new PDF file into
       text = currentOutboundFolders(0) 							// Initialize PDF Folder 1
       columns = 30
     }
-    private val PDF2Text	 = new TextField {					// Text field to input secondary PDF folder to copy the new PDF file into
+    private val PDF2Text			= new TextField {			// Text field to input secondary PDF folder to copy the new PDF file into
       text = currentOutboundFolders(1) 							// Initialize PDF Folder 2
       columns = 30
     }
-    private val PDF3Text	 = new TextField {					// Text field to input third PDF folder to copy the new PDF file into
+    private val PDF3Text	 		= new TextField {			// Text field to input third PDF folder to copy the new PDF file into
       text = currentOutboundFolders(2)							// Initialize PDF Folder 3
       columns = 30
     }
-    private val PDF4Text	 = new TextField {					// Text field to input fourth PDF folder to copy the new PDF file into
+    private val PDF4Text	 		= new TextField {			// Text field to input fourth PDF folder to copy the new PDF file into
       text = currentOutboundFolders(3)							// Initialize PDF Folder 4
       columns = 30
     }
     
     // Text Boxes for East Panel
-    private val checkNewFilesText = new TextField {				// Text field to input time lapse between checking for new files
+    private val checkNewFilesText	= new TextField {			// Text field to input time lapse between checking for new files
       text = checkFilesTime.toString							// Initialize to checkFilesTime from AddPDF_Util
       columns = 5
     }
-    private val reportStatusText  = new TextField {				// Text field to input time lapse for reporting the current status
+    private val reportStatusText 	= new TextField {			// Text field to input time lapse for reporting the current status
       text = reportStatusTime.toString							// Initialize to reportStatusText from AddPDF_Util
       columns = 5
     }
-    private val databaseText	  = new TextField {				// Text field to input database to report to
+    private val databaseText	  	= new TextField {			// Text field to input database to report to
       text = databaseName										// Initialize to databaseName from AddPDF_Util
       columns = 10
     }
     
     // Check Boxes (initialize all to their most recent state)
-    private val inbound2CheckBox = new CheckBox{selected = box2checked}
-    private val inbound3CheckBox = new CheckBox{selected = box3checked}
-    private val inbound4CheckBox = new CheckBox{selected = box4checked}
+    private val inbound2CheckBox	= new CheckBox{selected = box2checked}
+    private val inbound3CheckBox	= new CheckBox{selected = box3checked}
+    private val inbound4CheckBox	= new CheckBox{selected = box4checked}
     
     // Buttons
     private val closeButton 		 = new Button{				// Button to exit the window

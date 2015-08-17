@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: August 11th, 2015
+ * Last Updated: August 17th, 2015
  */
 object AddPDF_GUI extends SimpleSwingApplication {
   
@@ -155,6 +155,20 @@ object AddPDF_GUI extends SimpleSwingApplication {
   }
   
   /**
+   * Displays an error Dialog when the AddPDF application is started with invalid fields set in the configuration file.
+   * 
+   * @author James Watts
+   * Last Updated: July 21st, 2015
+   */
+  protected[attach_pdf] def openFieldsInvalidDialog()
+  {
+    Dialog.showMessage(null,
+        "There is a problem with one or more of the fields set in the configuration file. \nPlease open settings to fix these fields.",
+        title = "Please open Settings",
+        messageType = Dialog.Message.Error)
+  }
+  
+  /**
    * Private helper method used to close the program safely.
    * 
    * This method is called when either the close button or the red X in the corner is pressed or when the Exit 
@@ -167,20 +181,6 @@ object AddPDF_GUI extends SimpleSwingApplication {
     guiUpdater ! GuiRunning(false)								// Set the GuiIsRunning field to false
     closeUtility()												// Call AddPDF_Util's closeUtility method
     quit														// Quit the GUI
-  }
-  
-  /**
-   * Displays an error Dialog when the AddPDF application is started with invalid fields set in the configuration file.
-   * 
-   * @author James Watts
-   * Last Updated: July 21st, 2015
-   */
-  protected[attach_pdf] def openFieldsInvalidDialog()
-  {
-    Dialog.showMessage(null,
-        "There is a problem with one or more of the fields set in the configuration file. \nPlease open settings to fix these fields.",
-        title = "Please open Settings",
-        messageType = Dialog.Message.Error)
   }
   
 }

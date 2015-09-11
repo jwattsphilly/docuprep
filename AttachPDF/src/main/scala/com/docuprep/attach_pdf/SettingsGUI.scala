@@ -10,7 +10,7 @@ import AddPDF_Util._
  * Graphic User Interface for the settings menu of the AddPDF application.
  * 
  * @author James Watts
- * Last Updated: August 17th, 2015
+ * Last Updated: September 11th, 2015
  */
 private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
   
@@ -288,7 +288,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * the database file is found in.
      * 
      * @author James Watts
-     * Last Updated July 6th, 2015
+     * Last Updated September 11th, 2015
      */
     private def databaseSelectionDialog()
     {
@@ -307,6 +307,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
         nameWithoutExtension = nameWithoutExtension.stripSuffix(".mdf")	// If an MS SQL Express database, the extension is .mdf (or .MDF)
         nameWithoutExtension = nameWithoutExtension.stripSuffix(".MDF")
         
+        /* Set the database TextField's text to be the name of the newly chosen database and update the tempDatabasePath field */
         databaseText.text = nameWithoutExtension
         tempDatabasePath = filechooser.selectedFile.toString.stripSuffix(nameOfDB)
       }
@@ -320,7 +321,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
      * @param tf							A TextField object
      * 
      * @author James Watts
-     * Last Updated August 11th, 2015
+     * Last Updated September 11th, 2015
      */
     private def folderSelectionDialog(tf:TextField)
     {
@@ -328,6 +329,7 @@ private[attach_pdf] object SettingsGUI extends SimpleSwingApplication {
       val filechooser = new FileChooser(new java.io.File(s"${tf.text}${java.io.File.separator}.."))
       filechooser.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
       
+      /* Set the TextField's text to be the pathname of the newly chosen directory */
       if(filechooser.showDialog(null, "Select") == FileChooser.Result.Approve)
         tf.text = filechooser.selectedFile.toString
     }

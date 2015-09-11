@@ -30,7 +30,7 @@ object DatabaseType extends Enumeration {
  * Utility object that contains a list of fields and methods designed for use by the AddPDF_GUI application.
  * 
  * @author James Watts
- * Last Updated: August 17th, 2015
+ * Last Updated: September 11th, 2015
  */
 object AddPDF_Util {
   
@@ -210,7 +210,7 @@ object AddPDF_Util {
    * @param destinationPathNames:			A list of String pathnames of the folders to copy the newly combined file into
    * 
    * @author James Watts
-   * Last Updated: August 11th, 2015
+   * Last Updated: September 11th, 2015
    */
   def merge(inboundFolder:String, destinationPathNames:List[String]):Unit = {
     /* If a Unix-based computer is being used (i.e. Linux or Macintosh), the folder separator String is "/"	*
@@ -237,7 +237,7 @@ object AddPDF_Util {
     {																// and iterate through each
       try{
 	    /* Read from the .txt file: */
-    	val txtSrc = Source.fromFile(txtfile)
+    	val txtSrc = Source.fromFile(txtfile)						// Open the text file
 	    val infoList = separateString(deleteQuotes(txtSrc.mkString))// The three items of the text file in a List
 	    logger.info(s"Source Text File: $txtfile")
 	    
@@ -417,10 +417,10 @@ object AddPDF_Util {
    * filesWaitingListBox.
    * 
    * @author James Watts
-   * Last Updated: July 28th, 2015
+   * Last Updated: September 11th, 2015
    */
   private def updateFilesWaiting() {
-    if(!pauseTimer)	{											// If the pauseTimer flag is false (the timer is running)
+    if(!pauseTimer)	{											// If the pauseTimer flag is false (i.e. the timer is running)
       filesWaitingSet = Set[String]()							// Reset the filesWaitingSet
       for(folder<-currentInboundFolders; if folder != null)		// Loop through the Inbound folders
       {
@@ -614,10 +614,10 @@ object AddPDF_Util {
    * The timerLabel and reportTimerLabel are updated every time this method runs.
    * 
    * @author James Watts
-   * Last Updated: July 28th, 2015
+   * Last Updated: September 11th, 2015
    */
   def count() {
-    if(!pauseTimer)														// If the pauseTimer flag is false (counter not paused)
+    if(!pauseTimer)														// If the pauseTimer flag is false (i.e. counter not paused)
     {
       if(timeToNextCheck<=0)
       {																	// If the timeToNextCheck counter reached zero (or below)
@@ -647,7 +647,7 @@ object AddPDF_Util {
       }
     }
     else
-    {																	// If the pauseTimer is true (counter is paused)
+    {																	// If the pauseTimer is true (i.e. counter is paused)
       timeToNextCheck = checkFilesTime 									// Restart both timers and keep them at their max values
       timeToNextReport = reportStatusTime
       guiUpdater ! Count(generateCountString(timeToNextCheck))			// Update the two timer labels

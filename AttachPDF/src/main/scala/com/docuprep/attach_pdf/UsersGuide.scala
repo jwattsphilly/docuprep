@@ -1,6 +1,6 @@
 package com.docuprep.attach_pdf
 
-import swing._															// For GUI creation/editing
+import swing._													// For GUI creation/editing
 import BorderPanel.Position.{North, South}
 import event.ButtonClicked
 
@@ -10,7 +10,7 @@ import AddPDF_Util.{SettingsIsRunning,guiUpdater,pauseTimerLastValue}	// Only th
  * Graphic User Interface for the User's Guide of the AddPDF application
  * 
  * @author James Watts
- * Last Updated: August 7th, 2015
+ * Last Updated: August 18th, 2015
  */
 object UsersGuide extends SimpleSwingApplication {
   
